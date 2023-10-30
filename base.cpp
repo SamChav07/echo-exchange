@@ -42,6 +42,14 @@ void redeem();
 void checkPts();
 void record();
 
+//variables globales 
+int lastReg = 1;
+
+int main()
+{
+
+}
+
 void searchMclt()
 {
     int options, pos;
