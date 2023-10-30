@@ -50,6 +50,21 @@ int main()
 
 }
 
+void addClt(clt currentClt)
+{
+    clt[lastReg] = currentClt;
+    lastReg++;
+}
+
+void initClt(int cltPos)    //inicializa los datos del cliente
+{
+    strcpy(clt[cltPos].client_id, "");
+    strcpy(clt[cltPos].client_name, "");
+    strcpy(clt[cltPos].client_lstName, "");
+    strcpy(clt[cltPos].client_mail, "");
+    strcpy(clt[cltPos].client_telf, "");
+}
+
 void searchMclt()
 {
     int options, pos;
@@ -76,31 +91,68 @@ void searchMclt()
         {
         case 1:
             system("cls || clear");
-            cout <<"Buscar por nombre de Cliente"<<endl;
-            cout <<"Nombre a buscar: ";
-            scanf(" , enteredClt_name");
-            pos = searchCltname(enteredClt_name);
-            if (pos != -1)
-            {
-                sh
-            }
+            cout << "Buscar por nombre de Cliente" << endl;
+            cout << "Nombre a buscar: ";
+            scanf(" %[^\n]", enteredClt_name[20]);
+            searchCltname(enteredClt_name[20]);
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        case 2:
+            system("cls || clear");
+            cout << "Buscar por apellido de Cliente" << endl;
+            cout << "Apellido a buscar: ";
+            scanf(" %[^\n]", enteredClt_lstName[20]);
+            searchCltlstname(enteredClt_lstName[20]);
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        case 3:
+            system("cls || clear");
+            cout << "Buscar por id de Cliente" << endl;
+            cout << "ID a buscar: ";
+            scanf(" %[^\n]", enteredClt_id);
+            searchCltId(enteredClt_id);
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        case 4:
+            system("cls || clear");
+            cout << "Buscar por e-mail de Cliente" << endl;
+            cout << "E-mail a buscar: ";
+            scanf(" %[^\n]", enteredClt_mail[50]);
+            searchCltmail(enteredClt_mail[50]);
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        case 5:
+            system("cls || clear");
+            cout << "Buscar por telefono de Cliente" << endl;
+            cout << "Telefono a buscar: ";
+            scanf(" %[^\n]", enteredClt_telf[15]);
+            searchCltelf(enteredClt_telf[15]);
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        case 6:
+            system("cls || clear");
+            cout << "Visualizando todos los registros..." << endl;
+            showClt()
+            system("cls || clear");
+            break;
+        case 7:
+            system("cls || clear");
+            cout << "Saliendo..." << endl;
+            login();
+            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            system("cls || clear");
+            break;
+        default:
+            cout << "Opcion Invalida. Ingrese una opcion valida del 1 - 7" << endl; 
+            break;
         }
-    }
-}
-
-void addClt(clt currentClt)
-{
-    clt[lastReg] = currentClt;
-    lastReg++;
-}
-
-void initClt(int cltPos)    //inicializa los datos del cliente
-{
-    strcpy(clt[cltPos].client_id, "");
-    strcpy(clt[cltPos].client_name, "");
-    strcpy(clt[cltPos].client_lstName, "");
-    strcpy(clt[cltPos].client_mail, "");
-    strcpy(clt[cltPos].client_telf, "");
+        
+    } while (options != 9);
 }
 
 void showClt(int pos) // mostrara todos los datos del Clt
