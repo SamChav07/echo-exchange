@@ -6,10 +6,10 @@ using namespace std;
 
 struct cliente {
     char client_name[20];
-    char client_lstName[20]
+    char client_lstName[20];
     int client_id;
-    char client_mail;
-    char client_telf;
+    char client_mail[50];
+    char client_telf[15];
 }clt[MAX];
 
 struct reg_compra {

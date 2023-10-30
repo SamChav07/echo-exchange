@@ -21,7 +21,7 @@ void searchMclt();  //menu de busqueda de cliente
 void addClt();
 void initClt(int cltPos);
 //read
-void showClt()
+void showClt();
 void searchCltname(char client_name[]);
 void searchCltlstname(int client_lstName[]);
 int searchCltId(int client_id);
@@ -50,7 +50,7 @@ int main()
 
 }
 
-void addClt(clt currentClt)
+void addClt(cliente currentClt)
 {
     clt[lastReg] = currentClt;
     lastReg++;
@@ -58,11 +58,11 @@ void addClt(clt currentClt)
 
 void initClt(int cltPos)    //inicializa los datos del cliente
 {
-    strcpy(clt[cltPos].client_id, "");
-    strcpy(clt[cltPos].client_name, "");
-    strcpy(clt[cltPos].client_lstName, "");
-    strcpy(clt[cltPos].client_mail, "");
-    strcpy(clt[cltPos].client_telf, "");
+    clt[cltPos].client_id = '\0';  // Inicializa con cadena vacía
+    strcpy(clt[cltPos].client_name[20], "");
+    strcpy(clt[cltPos].client_lstName[20], "");
+    strcpy(clt[cltPos].client_mail[50], "");
+    strcpy(clt[cltPos].client_telf[15], "");
 }
 
 void searchMclt()
@@ -137,7 +137,7 @@ void searchMclt()
         case 6:
             system("cls || clear");
             cout << "Visualizando todos los registros..." << endl;
-            showClt()
+            showClt();
             system("cls || clear");
             break;
         case 7:
@@ -168,7 +168,7 @@ void showClt(int pos) // mostrara todos los datos del Clt
 void searchCltname(char enteredClt_name)
 {
     int position = -1;
-    for (int i =0; i < lastReg; i++)
+    for (int i = 0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_name, clt[i].client_name) == 0)
         {

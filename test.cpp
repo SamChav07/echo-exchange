@@ -1,83 +1,47 @@
 #include <iostream>
 using namespace std;
 
-#define MAX = 100;
-struct cliente
+void mainmenu();
+void searchmenu();
+
+void login()
 {
-    char client_name[20];
-    char client_lstNa[20];
-    int client_id;
-    char client_mail[50];
-    char client_telf[15];
-}clt;
-
-
-void addClt();
-void readClt();
-
-int main()
-{
-    int op;
-    switch (op)
+    string password;
+    string username;
+    int login = 0;
+    do
     {
-    case 1:
-        addClt();
-        break;
-    case 2:
-        readClt();
-        break;
-    
-    default:
-        break;
-    }
-}
 
-int numClt;
-void addClt(cliente currentClient) 
-{   
-    if(numClt < MAX) {
-        cliente newClt;
-        cout <<"Nombre: ";
-        cin.getline(clt.client_name, sizeof(clt.client_name));
-        cout <<"Apellido: ";
-        cin.getline(clt.client_lstNa, sizeof(clt.client_lstNa));
+        cout << "Bienvenido a Echo-Exchange " << endl;
+        cout << "Escriba su usuario: " << endl;
+        cin >> username;
+        cout << "Escriba su contraseña: " << endl;
+        cin >> password;
 
-        newClt.client_id = 0123 + 1;
-
-        cout <<"E-mail: ";
-        cin>>clt.client_mail;
-        cout <<"Telefono: ";
-        cin>>clt.client_telf;
-
-        clientes[numClt] = newClt;
-        numClt++;
-    } else {
-        cout <<"El numero de Clientes supero el limite."<<endl;
-    }
-}
-
-/*
-void readClt(int &id)
-{
-    cout <<"ID: ";
-    cin>>id;
-    bool encontrado = false;
-
-    for (int i = 0; i < numClt; i++)
-    {
-        if (clientes[i].client_id == id) 
+        if (username == "Admin" && password == "admPass007")
         {
-            cout << "Información del cliente con ID " << id << ":\n";
-            cout << "Nombre: " << clientes[i].client_name << endl;
-            cout << "Apellido: " << clientes[i].client_lstNa << endl;
-            cout << "Correo electrónico: " << clientes[i].client_mail << endl;
-            cout << "Número de teléfono: " << clientes[i].client_telf << endl;
-            encontrado = true;
-            break;
+
+            cout << "Acceso concedidio" << endl;
+            login = 1;
+            mainmenu();
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            system("cls || clear");
+        } 
+        else if (username == "User1" && password == "12345")
+        {
+            cout << "Acceso concedidio" << endl;
+            login = 1;
+            searchmenu();
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            system("cls || clear");
         }
-    }
-    if (!encontrado) {
-        cout <<"Cliente con ID "<<id<<" no encontrado."<<endl;
-    }
+        else
+        {
+            cout << "Acceso denegado..." << endl;
+            cout << "*** Presione enter para volver a introdocir las credenciales ***" << endl;
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            system("cls || clear");
+        }
+
+    } while (login != 1);
 }
-*/
