@@ -14,6 +14,8 @@ bool verification_clt();
 bool verification_adm();
 
 //menus
+void Madmin();
+void Mdclient();
 void searchMclt();  //menu de busqueda de cliente
 
 //CRUD clientes
@@ -36,7 +38,6 @@ void delClt();
 void admin();
 void clientS();
 void regPurchase();
-void client();
 void rewards();
 void redeem();
 void checkPts();
@@ -47,7 +48,88 @@ int lastReg = 1;
 
 int main()
 {
+    Mdclient();
+    return 0;
+}
 
+void admin()
+{
+    int optAdm;
+
+    cout << "Bienvenido Administrador" << endl;
+
+    cout << "***--Opciones--***" << endl;
+    cout << "1. Registrar compras." << endl;
+    cout << "2. Clientes." << endl;
+    cout << "3. Recompensas." << endl;
+    cout << "4. Salir" << endl;
+    cin >> optAdm;
+    system("pause");
+
+    switch (optAdm)
+    {
+    case 1: 
+        regPurchase();
+        break;
+    case 2:
+        Mdclient();
+        break;
+    case 3:
+        rewards();
+        break;
+    case 4:
+        login();
+        break;
+
+    default:
+        cout << "Ingrese opciones validas. Sean de 1-4..." << endl;
+        break;
+    }
+}
+
+void Mdclient() 
+{
+    int actions, pos, resp, driverPos;
+    char entered 
+    cliente currentClt;
+
+    int optMdclt;
+    cout << "Clientes" << endl;
+
+    cout << "***--Opciones--***" << endl;
+    cout << "1. Agregar cliente." << endl;
+    cout << "2. Buscar cliente." << endl;
+    cout << "3. Modificar cliente." << endl;
+    cout << "4. Eliminar cliente." << endl;
+    cout << "5. Salir..." << endl;
+    cin >> optMdclt;
+    system("pause");
+
+    switch (optMdclt)
+    {
+    case 1:                                     //no se como poner para que genere el id necesito que se imprima de primero antes del nombre
+        system("cls || clear");
+        cout << "** Ingrese los datos a añadir **" << endl;
+        system("cls || clear");
+        cout << "Nombre del cliente: " << endl;
+        cout << "Apellido del cliente: " << endl;
+        cout << "E-mail del cliente: " << endl;
+        cout << "Telefono del cliente: " << endl;
+        cout << "" << endl;
+        break;
+    case 2:
+        searchMclt();
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    
+    default:
+        break;
+    }
 }
 
 void addClt(cliente currentClt)
@@ -167,7 +249,7 @@ void showClt(int pos) // mostrara todos los datos del Clt
 
 void searchCltname(char enteredClt_name)
 {
-    int position = -1;
+    int position = 0;
     for (int i = 0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_name, clt[i].client_name) == 0)
@@ -181,7 +263,7 @@ void searchCltname(char enteredClt_name)
 
 void searchCltlstname(char enteredClt_lstName)
 {
-    int position = -1;
+    int position = 0;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_lstName, clt[i].client_lstName) == 0)
@@ -195,7 +277,7 @@ void searchCltlstname(char enteredClt_lstName)
 
 int searchCltId(char enteredClt_id)
 {
-    int position = -1;
+    int position = 0;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_id, clt[i].client_id) == 0)
@@ -209,7 +291,7 @@ int searchCltId(char enteredClt_id)
 
 void searchCltmail(char enteredClt_mail)//busq por mail
 {
-    int position = -1;
+    int position = 0;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_mail, clt[i].client_mail) == 0)
@@ -223,7 +305,7 @@ void searchCltmail(char enteredClt_mail)//busq por mail
 
 int searchCltelf(char enteredClt_telf) //busqueda por numero telef
 {
-    int position = -1;
+    int position = 0;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_telf, clt[i].client_telf) == 0)
