@@ -35,7 +35,6 @@ void uptdClt();
 void delClt();
 
 //funciones 
-void admin();
 void clientS();
 void regPurchase();
 void rewards();
@@ -90,7 +89,7 @@ void admin()
 void Mdclient() 
 {
     int actions, pos, resp, driverPos;
-    char entered 
+    char entered;
     cliente currentClt;
 
     int optMdclt;
@@ -115,7 +114,7 @@ void Mdclient()
         cout << "Apellido del cliente: " << endl;
         cout << "E-mail del cliente: " << endl;
         cout << "Telefono del cliente: " << endl;
-        cout << "" << endl;
+
         break;
     case 2:
         searchMclt();
@@ -140,11 +139,10 @@ void addClt(cliente currentClt)
 
 void initClt(int cltPos)    //inicializa los datos del cliente
 {
-    clt[cltPos].client_id = '\0';  // Inicializa con cadena vacía
-    strcpy(clt[cltPos].client_name[20], "");
-    strcpy(clt[cltPos].client_lstName[20], "");
-    strcpy(clt[cltPos].client_mail[50], "");
-    strcpy(clt[cltPos].client_telf[15], "");
+    clt[cltPos].client_name[sizeof (clt[cltPos].client_name) - 1] = '\0';
+    clt[cltPos].client_lstName[sizeof (clt[cltPos].client_lstName) - 1] = '\0';
+    clt[cltPos].client_mail[sizeof (clt[cltPos].client_mail) - 1] = '\0';
+    clt[cltPos].client_telf[sizeof (clt[cltPos].client_telf) - 1] = '\0';
 }
 
 void searchMclt()
@@ -237,7 +235,7 @@ void searchMclt()
     } while (options != 9);
 }
 
-void showClt(int pos) // mostrara todos los datos del Clt
+void showClt(int pos) // muestra los datos del cliente en X posición
 {
     cout << endl;
     cout << "ID: " << clt[pos].client_id << endl;
@@ -249,7 +247,7 @@ void showClt(int pos) // mostrara todos los datos del Clt
 
 void searchCltname(char enteredClt_name)
 {
-    int position = 0;
+    int position = -1;
     for (int i = 0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_name, clt[i].client_name) == 0)
@@ -263,7 +261,7 @@ void searchCltname(char enteredClt_name)
 
 void searchCltlstname(char enteredClt_lstName)
 {
-    int position = 0;
+    int position = -1;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_lstName, clt[i].client_lstName) == 0)
@@ -277,7 +275,7 @@ void searchCltlstname(char enteredClt_lstName)
 
 int searchCltId(char enteredClt_id)
 {
-    int position = 0;
+    int position = -1;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_id, clt[i].client_id) == 0)
@@ -291,7 +289,7 @@ int searchCltId(char enteredClt_id)
 
 void searchCltmail(char enteredClt_mail)//busq por mail
 {
-    int position = 0;
+    int position = -1;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_mail, clt[i].client_mail) == 0)
@@ -305,7 +303,7 @@ void searchCltmail(char enteredClt_mail)//busq por mail
 
 int searchCltelf(char enteredClt_telf) //busqueda por numero telef
 {
-    int position = 0;
+    int position = -1;
     for (int i =0; i < lastReg; i++)
     {
         if (strcmp(enteredClt_telf, clt[i].client_telf) == 0)
