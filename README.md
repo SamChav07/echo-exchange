@@ -28,6 +28,13 @@
 - **void initClt(int cltPos):** Inicializa los datos del cliente con valores nulos como "" ó '\0'
 
 ###### //Read
+
+- **String.h:** Para el uso de strcmp(comparador de cadenas) su estructura es int strcmp(const char *s1, const char *s2); ejemplo:
+
+searchCltmail(): como parametro de la funcion esta char enteredClt_mail y char client_mail. strcmp opera con const char*, por eso usamos el "reinterpret_cast" que permite convertir un tipo de puntero en otro y <const char*> para declarar el tipo a convertir. Al final el code queda así:
+`strcmp(reinterpret_cast<const char *>(enteredClt_mail, clt[i].client_mail) == 0)`
+ 
+
 - **void showClt():** Muestra los datos del cliente según "int pos".
 - **void searchCltname(char client_name[]):** Hace una comparación de los nombres con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
 - **void searchCltlstname(int client_lstName[]):** Hace una comparación de los apellidos con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
