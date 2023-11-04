@@ -25,7 +25,7 @@ struct cliente {
     int client_id;
     char client_mail[50];
     char client_telf[15];
-}clt;
+}clt[MAX];
 
 struct cmpr_fecha {
     int day;
@@ -50,33 +50,34 @@ struct gift {
     string gft_name;
     int gft_pts;
 };
+// fin de strutura
 
 // LOG
-void login(); // -------------pendiente
+void login(); // --listo
 
 // menus
-void MDclient(); //listo
-void searchMclt(); // menu de busqueda de cliente   //listo
+void MDclient(); //--listo
+void searchMclt(); // menu de busqueda de cliente   //--listo
 
-class cliente;
 // CRUD clientes
 // create
-void addClt(); //listo
-void initClt(int cltPos); //listo
+void addClt(cliente currentClt); //--listo
+void initClt(int cltPos); //--listo
 // read
-void showClt(); //listo
-int searchCltname(char client_name[]);  //listo
-int searchCltlstname(char *client_lstName); //listo
+void showClt(); //--listo
+void showCltRegister();
+cliente getClt(int pos);
+int searchCltname(char client_name[]);  //--listo
+int searchCltlstname(char *client_lstName[]); //--listo
 int searchCltId(int client_id); //listo
-int searchCltmail(char client_mail[]);  //listo
-int searchCltelf(char client_telf[]);   //listo
+int searchCltmail(char client_mail[]);  //--listo
+int searchCltelf(char client_telf[]);   //--listo
 // uptade
-void uptdClt(); // -------------pendiente
+void uptdClt(); // --listo
 // delete
-void delClt();  // -------------pendiente
+void delClt();  // --listo
 
 // funciones
-void clientS(); // -------------pendiente
 void regPurchase(); // -------------pendiente
 void MDrewards(); // -------------pendiente
 void redeem();  // -------------pendiente
@@ -88,7 +89,7 @@ void record();  // -------------pendiente
 
 // variables globales
 int lastReg = 1;
-int position = pos;
+
 
 int main()
 {
@@ -271,13 +272,14 @@ void login() {
 
 void Mdclient()
 {
-    int actions, pos, resp, driverPos;
-    char entered;
     cliente currentClt;
+    int actions, pos, resp;
+    char enteredClt_id;
+
 
     int optMdclt;
     cout << "Clientes" << endl;
-
+    cout << "Cantidad de registros de clientes: " << lastReg <<endl;
     cout << "***--Opciones--***" << endl;
     cout << "1. Agregar cliente." << endl;
     cout << "2. Buscar cliente." << endl;
@@ -297,19 +299,76 @@ void Mdclient()
         cout << "Apellido del cliente: " << endl;
         cout << "E-mail del cliente: " << endl;
         cout << "Telefono del cliente: " << endl;
-        // scanf(" %[^\n]", enteredClt_name[20]);
+        scanf(" %[^\n]", currentClt.client_name);
+        scanf(" %[^\n]", currentClt.client_lastname);
+        scanf(" %[^\n]", currentClt.client_mail);
+        scanf(" %[^\n]", currentClt.client_telf);
+
+        addClt(currentClt);
+        system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
         break;
     case 2:
         searchMclt();
         break;
     case 3:
+        system("cls || clear");
+            cout << "** Escribe el id del cliente a modificar **" << endl;
+            cin >> enteredClt_id;
+            pos = searchCltId(enteredClt_id);
+            if (pos != -1) {
+                system("cls || clear");
+                showClt(pos);
+                cout << "Datos a modificar: " << endl;
+                cout << "Nombre del cliente: " << endl;
+                cout << "Apellido del cliente: " << endl;
+                cout << "E-mail del cliente: " << endl;
+                cout << "Telefono del cliente: " << endl;
+                scanf(" %[^\n]", currentClt.client_name);
+                scanf(" %[^\n]", currentClt.client_lastname);
+                scanf(" %[^\n]", currentClt.client_mail);
+                scanf(" %[^\n]", currentClt.client_telf);
+
+                cout << "Registro actualizado...\n";
+                system("cls || clear");
+                uptdClt(currentClt, pos);
+            } else {
+                cout << "Registro inexistente" << endl;
+            }
+
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
         break;
     case 4:
+        system("cls || clear");
+        if (lastReg == 0)
+        {
+            cout << "No hay nada que eliminar\n";
+            break;
+        }
+        cout << "Escribe el ID del cliente: " << endl;
+        cin >> enteredClt_id;
+        pos = searchCltId(enteredClt_id);
+        if (pos != -1) {
+            currentClt = getClt(pos);
+            cout << "¿Realmente deseas eliminar el cliente ?" << endl;
+            cout << "Escriba 1 para SI o 2 para NO : ";
+            cin >> resp;
+            if (resp == 1) {
+                delClt(pos);
+                cout << "Registro eliminado...\n";
+            } else {
+                cout << "Operacion cancelada...\n";
+            }
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+        } else {
+            cout << "Registro inexistente" << endl;
+        }
         break;
     case 5:
+        log();
         break;
 
     default:
+        cout << "Ingrese una opcion valida. Del 1 - 5..." << endl;
         break;
     }
 }
@@ -320,12 +379,12 @@ void addClt(cliente currentClt)
     lastReg++;
 }
 
-void initClt(int cltPos) // inicializa los datos del cliente
+void initClt(int pos) // inicializa los datos del cliente
 {
-    clt[position].client_name[sizeof(clt[position].client_name) - 1] = '\0';
-    clt[position].client_lstName[sizeof(clt[position].client_lstName) - 1] = '\0';
-    clt[position].client_mail[sizeof(clt[position].client_mail) - 1] = '\0';
-    clt[position].client_telf[sizeof(clt[position].client_telf) - 1] = '\0';
+    clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';
+    clt[pos].client_lstName[sizeof(clt[pos].client_lstName) - 1] = '\0';
+    clt[pos].client_mail[sizeof(clt[pos].client_mail) - 1] = '\0';
+    clt[pos].client_telf[sizeof(clt[pos].client_telf) - 1] = '\0';
 }
 
 void searchMclt()
@@ -402,7 +461,7 @@ void searchMclt()
         case 6:
             system("cls || clear");
             cout << "Visualizando todos los registros..." << endl;
-            showClt();
+            showCltRegister();
             system("cls || clear");
             break;
         case 7:
@@ -430,19 +489,41 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     cout << "Telefono: " << clt[pos].client_telf << endl;
 }
 
+void showCltRegister()
+{
+    system("cls || clear");
+    if (lastReg == 0)
+    {
+        cout << "No hay registros" << endl;
+        return;
+    }
+    for (int i = 0; i < lastReg; i++)
+    {
+        cout << "=========================" << endl;
+        showClt(i);
+    }
+    cout << "Ultimo registro..." << endl;
+}
+
+cliente getClt(int pos)
+{
+    return clt[pos];
+}
+
 int searchCltname(char enteredClt_name)
 {
-    int position = -1;
+    int position = 0;
     for (int i = 0; i < lastReg; i++)
     {
         if (strcmp(reinterpret_cast<const char *>(enteredClt_name), clt[i].client_name) == 0)
-        // (strcmp(enteredClt_name, clt[i].client_name) == 0)
         {
-            position = i;
-            break;
+            cout << "=========================" << endl;
+            showClt(i);
+            position++;
+        } if (position == 0) {
+            cout << "No se encontraron resultados" << endl;
         }
     }
-    return position;
 }
 
 int searchCltlstname(char enteredClt_lstName)
@@ -452,11 +533,13 @@ int searchCltlstname(char enteredClt_lstName)
     {
         if (strcmp(reinterpret_cast<const char *>(enteredClt_lstName), clt[i].client_lstName) == 0)
         {
-            position = i;
-            break;
+            cout << "=========================" << endl;
+            showClt(i);
+            position++;
+        } if (position == 0) {
+            cout << "No se encontraron resultados" << endl;
         }
     }
-    return position;
 }
 
 int searchCltId(char enteredClt_id)
@@ -466,11 +549,13 @@ int searchCltId(char enteredClt_id)
     {
         if (strcmp(reinterpret_cast<const char *>(enteredClt_id), reinterpret_cast<const char *>(clt[i].client_id)) == 0)
         {
-            position = i;
-            break;
+            cout << "=========================" << endl;
+            showClt(i);
+            position++;
+        } if (position == 0) {
+            cout << "No se encontraron resultados" << endl;
         }
     }
-    return position;
 }
 
 int searchCltmail(char enteredClt_mail) // busq por mail
@@ -480,11 +565,13 @@ int searchCltmail(char enteredClt_mail) // busq por mail
     {
         if (strcmp(reinterpret_cast<const char *>(enteredClt_mail), clt[i].client_mail) == 0)
         {
-            position = i;
-            break;
+            cout << "=========================" << endl;
+            showClt(i);
+            position++;
+        } if (position == 0) {
+            cout << "No se encontraron resultados" << endl;
         }
     }
-    return position;
 }
 
 int searchCltelf(char enteredClt_telf) // busqueda por numero telef
@@ -494,11 +581,31 @@ int searchCltelf(char enteredClt_telf) // busqueda por numero telef
     {
         if (strcmp(reinterpret_cast<const char *>(enteredClt_telf), clt[i].client_telf) == 0)
         {
-            position = i;
-            break;
+            cout << "=========================" << endl;
+            showClt(i);
+            position++;
+        } if (position == 0) {
+            cout << "No se encontraron resultados" << endl;
         }
-        position = i;
-        break;
     }
-    return position;
+}
+
+void uptdClt(cliente currentClt, int pos)
+{
+    clt[pos] = currentClt;
+}
+
+void delClt(int pos)
+{
+    if (pos == lastReg)
+    {
+        cout << "No hay registros " << endl;
+        return;
+    }
+    for (int i = pos; i < lastReg - 1; i++)
+    {
+        clt[i] = clt[i + 1];
+    }
+    lastReg--;
+    initClt(lastReg);
 }
