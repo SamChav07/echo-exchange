@@ -5,7 +5,7 @@
 #include <cstring>
 using namespace std;
 
-// Definici�n de estructuras
+// Definicion de estructuras
 const int MAX = 100;
 
 struct accounts {
@@ -88,7 +88,7 @@ void MDrewards(); // -------------pendiente
 void redeem();  // -------------pendiente
 void checkPts();    // -------------pendiente
 void record();  // -------------pendiente
-
+// falkta 
 
 // variables globales
 int lastRegClt = 0;
