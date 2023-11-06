@@ -71,7 +71,7 @@ void showClt(); //--listo
 void showCltRegister();
 cliente getClt(int pos);
 int searchCltname(char client_name[]);  //--listo
-int searchCltlstname(char *client_lstName[]); //--listo
+int searchCltlstname(char *client_lstName); //--listo
 int searchCltId(int client_id); //listo
 int searchCltmail(char client_mail[]);  //--listo
 int searchCltelf(char client_telf[]);   //--listo
@@ -131,7 +131,7 @@ void login() {
                 cin >> pass;
 
                 // Verificaci�n de credenciales del administrador
-                if (strcmp(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0) {
+                if (reinterpret_cast<const char *>(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0) {
                     int op1;
                     cout<<"\n***Acceso concedido***\n";
                     cout << "Bienvenido Administrador" << endl;
@@ -377,7 +377,7 @@ void Mdclient()
             cout << "Escriba 1 para SI o 2 para NO : ";
             cin >> resp;
             if (resp == 1) {
-                delClt(pos);
+                delClt(int pos);
                 cout << "Registro eliminado...\n";
             } else {
                 cout << "Operacion cancelada...\n";
@@ -410,7 +410,7 @@ void initClt(int pos) // inicializa los datos del cliente
 {
     clt[pos].client_id[sizeof(clt[pos].client_id) - 1] = '\0';
     strcpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
-    strcpy(clt[pos].client_lstName, "", sizeof(clt[pos].client_lstName));
+    strcpy(clt[pos].client_lastName, "", sizeof(clt[pos].client_lastName));
     strcpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
     strcpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
 }
@@ -516,7 +516,7 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     cout << "====================================" << endl;
     cout << "ID: " << clt[pos].client_id << endl;
     cout << "Nombre: " << clt[pos].client_name << endl;
-    cout << "Apellido: " << clt[pos].client_lstName << endl;
+    cout << "Apellido: " << clt[pos].client_lastname << endl;
     cout << "E-mail: " << clt[pos].client_mail << endl;
     cout << "Telefono: " << clt[pos].client_telf << endl;
     cout << "====================================" << endl;
@@ -572,7 +572,7 @@ int searchCltlstname(const char* enteredClt_lstName)
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (strcmp(enteredClt_lstName, clt[i].client_lstName) == 0)
+        if (strcmp(enteredClt_lstName, clt[i].client_lastname) == 0)
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -592,7 +592,7 @@ int searchCltId(const char* enteredClt_id)
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (strcmp(enteredClt_id, clt[i].client_id) == 0)
+        if (strcmp(enteredClt_id, reinterpret_cast<const char *>(clt[i].client_id)) == 0)
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -632,7 +632,7 @@ int searchCltelf(char enteredClt_telf) // busqueda por numero telef
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (strcmp(enteredClt_telf, clt[i].client_telf) == 0)
+        if (strcmp(reinterpret_cast<const char *>(enteredClt_telf), clt[i].client_telf) == 0)
         {
             cout << "=========================" << endl;
             showClt(i);
