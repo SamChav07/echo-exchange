@@ -6,6 +6,8 @@
 using namespace std;
 
 // Definici�n de estructuras
+const int MAX = 100;
+
 struct accounts {
     char adminU[50];     // "00017"
     char admP[50];       // "admPass007"
@@ -25,7 +27,7 @@ struct cliente {
     int client_id;
     char client_mail[50];
     char client_telf[15];
-}clt[MAX_clt];
+}clt[MAX];
 
 struct cmpr_fecha {
     int day;
@@ -102,7 +104,7 @@ int main()
 
 void login() {
     int intentos = 3;
-
+    string user, pass;
     cout << "Bienvenido al sistema EchoExchange" << endl;
     cout << "\nSeleccione una opcion para entrar al sistema:\n";
     cout << "1. Administrador\n";
@@ -147,10 +149,10 @@ void login() {
                             regPurchase();
                             break;
                         case 2:
-                            MDclient()
+                            MDclient();
                             break;
                         case 3:
-                            MDrewards()
+                            MDrewards();
                             break;
                         case 4:
                             system("cls");
@@ -397,10 +399,10 @@ void Mdclient()
 
 void addClt(cliente currentClt)
 {
-    if (lastRegClt < MAX_clt) {
+    if (lastRegClt < MAX) {
         clt[lastRegClt] = currentClt;
         lastRegClt++;
-    } else { cout << "Clientes esta en MAX_cltima capacidad..." << endl; }
+    } else { cout << "Clientes esta en MAXima capacidad..." << endl; }
     
 }
 
@@ -463,7 +465,7 @@ void searchMclt()
             cout << "Buscar por id de Cliente" << endl;
             cout << "ID a buscar: ";
             cin.ignore();
-            cin >> enteredClt_id
+            cin >> enteredClt_id;
             searchCltId(*reinterpret_cast<char *>(enteredClt_id));
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
             system("cls || clear");
