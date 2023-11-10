@@ -54,10 +54,11 @@ struct historial
 
 struct gift
 {
+    int gft_id;
     int gft_cant;
-    string gft_name;
+    char gft_name[50];
     int gft_pts;
-} gft;
+} gft[MAX];
 // fin de struct
 
 // LOG
@@ -65,6 +66,7 @@ void login(); // --ready
 
 // menus
 void MDclient();   //--listo
+void MDgift(); //vacio 
 void searchMclt(); // menu de busqueda de cliente   //--listo
 
 // CRUD clt
@@ -85,6 +87,10 @@ void uptdClt(cliente cliente, int i); // --listo
 // delete
 void delClt(int pos); // --listo
 
+// create gft
+void addGft(gift currentGft);
+void initGft(int gftPos);
+
 void addPurchase();
 
 // funciones
@@ -96,8 +102,10 @@ void record();      // ---------———----pendiente
 
 // variables globales
 int lastRegClt = 0;
+int lasTregGft = 0;
+int lastREgCmp = 0;
 int proxIDclt = 123;
-int lastRegCmp = 0;
+
 int idCmp = 321;
 
 int main()
@@ -305,7 +313,7 @@ void login()
 void Mdclient()
 {
     cliente currentClt;
-    int actions, pos, resp;
+    int pos, resp;
     char enteredClt_id;
 
     int optMdclt;
@@ -415,6 +423,12 @@ void Mdclient()
     }
 }
 
+void MDgift()
+{
+    gift currentGft;
+    int pos, resp;
+}
+
 void addClt(cliente currentClt)
 {
     if (lastRegClt < MAX)
@@ -424,7 +438,20 @@ void addClt(cliente currentClt)
     }
     else
     {
-        cout << "Clientes esta en MAXima capacidad..." << endl;
+        cout << "Clientes esta en Maxima capacidad..." << endl;
+    }
+}
+
+void addGft(gift currentGft)
+{
+    if (lasTregGft < MAX)
+    {
+        gft[lasTregGft] = currentGft;
+        lasTregGft++;
+    }
+    else 
+    {
+        cout << "Recompensas esta en Maxima capacidad..." << endl;
     }
 }
 
@@ -443,6 +470,14 @@ void initClt(int pos) // inicializa los datos del cliente
 
     strncpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
     clt[pos].client_telf[sizeof(clt[pos].client_telf) - 1] = '\0';
+}
+
+void initGft(int gftPos)
+{
+    gft[pos].gft_id = 0;
+
+    strncpy(gft[pos].client_name, "", sizeof(clt[pos].client_name));
+    clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';    
 }
 
 void searchMclt()
