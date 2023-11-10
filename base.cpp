@@ -1,8 +1,8 @@
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
-#include <cstdlib>
+#include <cstdio>
 #include <cstring>
+#include <string>
+#include <cstdlib>
 using namespace std;
 
 // Definici�n de estructuras
@@ -87,7 +87,7 @@ void regPurchase(); // -------------pendiente
 void MDrewards(); // -------------pendiente
 void redeem();  // -------------pendiente
 void checkPts();    // -------------pendiente
-void record();  // -------------pendiente
+void record();  // ---------———----pendiente
 
 
 // variables globales
@@ -104,7 +104,8 @@ int main()
 
 void login() {
     int intentos = 3;
-    string user, pass;
+    const char *user;
+    string pass;
     cout << "Bienvenido al sistema EchoExchange" << endl;
     cout << "\nSeleccione una opcion para entrar al sistema:\n";
     cout << "1. Administrador\n";
@@ -131,41 +132,47 @@ void login() {
                 cin >> pass;
 
                 // Verificaci�n de credenciales del administrador
-                if (reinterpret_cast<const char *>(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0) {
-                    int op1;
-                    cout<<"\n***Acceso concedido***\n";
-                    cout << "Bienvenido Administrador" << endl;
+                if (strcmp(pass, administrador1.admP) == 0) {
+                    if (reinterpret_cast<const char *>(user) == administrador1.adminU) {
+                        int op1;
+                        cout << "\n***Acceso concedido***\n";
+                        cout << "Bienvenido Administrador" << endl;
 
-                    cout << "***--Opciones--***" << endl;
-                    cout << "1. Registrar compras." << endl;
-                    cout << "2. Gestionar clientes." << endl;
-                    cout << "3. Gestionar recompensas." << endl;
-                    cout << "4. Salir" << endl;
-                    cin >> op1;
-                    system("pause");
+                        cout << "***--Opciones--***" << endl;
+                        cout << "1. Registrar compras." << endl;
+                        cout << "2. Gestionar clientes." << endl;
+                        cout << "3. Gestionar recompensas." << endl;
+                        cout << "4. Salir" << endl;
+                        cin >> op1;
+                        system("pause");
 
-                    switch (op1) {
-                        case 1:
-                            regPurchase();
-                            break;
-                        case 2:
-                            MDclient();
-                            break;
-                        case 3:
-                            MDrewards();
-                            break;
-                        case 4:
-                            system("cls");
-                            login();
-                            break;
-                        default:
-                            cout <<"Ingrese opciones validas. Sean de 1-4..." << endl;
-                            break;
+                        switch (op1) {
+                            case 1:
+                                regPurchase();
+                                break;
+                            case 2:
+                                MDclient();
+                                break;
+                            case 3:
+                                MDrewards();
+                                break;
+                            case 4:
+                                system("cls");
+                                login();
+                                break;
+                            default:
+                                cout << "Ingrese opciones validas. Sean de 1-4..." << endl;
+                                break;
+                        }
+                    } else {
+                        cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
+                        cout << "Intentos restantes: \n" << intentos - 1 << endl;
+
+                        intentos--;
                     }
                 } else {
                     cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-                    cout << "Intentos restantes: \n" << intentos-1 << endl;
-
+                    cout << "Intentos restantes: \n" << intentos - 1 << endl;
                     intentos--;
                 }
             }while (intentos > 0);
@@ -388,7 +395,7 @@ void Mdclient()
         }
         break;
     case 5:
-        log();
+        login();
         break;
 
     default:
@@ -409,10 +416,18 @@ void addClt(cliente currentClt)
 void initClt(int pos) // inicializa los datos del cliente
 {
     clt[pos].client_id[sizeof(clt[pos].client_id) - 1] = '\0';
-    strcpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
-    strcpy(clt[pos].client_lastName, "", sizeof(clt[pos].client_lastName));
-    strcpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
-    strcpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
+
+    strncpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
+    clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';
+
+    strncpy(clt[pos].client_lastname, "", sizeof(clt[pos].client_lastname));
+    clt[pos].client_lastname[sizeof(clt[pos].client_lastname) - 1] = '\0';
+
+    strncpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
+    clt[pos].client_mail[sizeof(clt[pos].client_mail) - 1] = '\0';
+
+    strncpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
+    clt[pos].client_telf[sizeof(clt[pos].client_telf) - 1] = '\0';
 }
 
 void searchMclt()
