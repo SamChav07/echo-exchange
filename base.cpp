@@ -109,7 +109,7 @@ int main()
 void login()
 {
     int intentos = 3;
-
+    char user[50], pass[50];
     cout << "Bienvenido al sistema EchoExchange" << endl;
     cout << "\nSeleccione una opcion para entrar al sistema:\n";
     cout << "1. Administrador\n";
@@ -123,7 +123,7 @@ void login()
     switch (opcion)
     {
     case 1: // Acceso al men� del administrador
-
+        
         do
         {
             accounts administrador1;
