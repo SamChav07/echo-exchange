@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include <cstdlib>
+#include <fstring>
 using namespace std;
 
 // Definici�n de estructuras
@@ -104,8 +105,7 @@ int main()
 
 void login() {
     int intentos = 3;
-    const char *user;
-    string pass;
+    
     cout << "Bienvenido al sistema EchoExchange" << endl;
     cout << "\nSeleccione una opcion para entrar al sistema:\n";
     cout << "1. Administrador\n";
@@ -132,47 +132,41 @@ void login() {
                 cin >> pass;
 
                 // Verificaci�n de credenciales del administrador
-                if (strcmp(pass, administrador1.admP) == 0) {
-                    if (reinterpret_cast<const char *>(user) == administrador1.adminU) {
-                        int op1;
-                        cout << "\n***Acceso concedido***\n";
-                        cout << "Bienvenido Administrador" << endl;
+                if (strcmp(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0) {
+                    int op1;
+                    cout<<"\n***Acceso concedido***\n";
+                    cout << "Bienvenido Administrador" << endl;
 
-                        cout << "***--Opciones--***" << endl;
-                        cout << "1. Registrar compras." << endl;
-                        cout << "2. Gestionar clientes." << endl;
-                        cout << "3. Gestionar recompensas." << endl;
-                        cout << "4. Salir" << endl;
-                        cin >> op1;
-                        system("pause");
+                    cout << "***--Opciones--***" << endl;
+                    cout << "1. Registrar compras." << endl;
+                    cout << "2. Gestionar clientes." << endl;
+                    cout << "3. Gestionar recompensas." << endl;
+                    cout << "4. Salir" << endl;
+                    cin >> op1;
+                    system("pause");
 
-                        switch (op1) {
-                            case 1:
-                                regPurchase();
-                                break;
-                            case 2:
-                                MDclient();
-                                break;
-                            case 3:
-                                MDrewards();
-                                break;
-                            case 4:
-                                system("cls");
-                                login();
-                                break;
-                            default:
-                                cout << "Ingrese opciones validas. Sean de 1-4..." << endl;
-                                break;
-                        }
-                    } else {
-                        cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-                        cout << "Intentos restantes: \n" << intentos - 1 << endl;
-
-                        intentos--;
+                    switch (op1) {
+                        case 1:
+                            regPurchase();
+                            break;
+                        case 2:
+                            MDclient();
+                            break;
+                        case 3:
+                            MDrewards();
+                            break;
+                        case 4:
+                            system("cls");
+                            login();
+                            break;
+                        default:
+                            cout <<"Ingrese opciones validas. Sean de 1-4..." << endl;
+                            break;
                     }
                 } else {
                     cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-                    cout << "Intentos restantes: \n" << intentos - 1 << endl;
+                    cout << "Intentos restantes: \n" << intentos-1 << endl;
+
                     intentos--;
                 }
             }while (intentos > 0);
@@ -196,7 +190,7 @@ void login() {
                 cin >> pass;
 
                 // Verificaci�n de credenciales del cliente
-                if (strcmp(user, empleado1.empU) == 0 && strcmp(pass, empleado1.empP) == 0)
+                if (strcmp(user, empleado1.empU) == 0 && strcmp(pass, empleado1.empP)
                 {
                     reg_compra currentCmp;
                     int op2;
@@ -384,7 +378,7 @@ void Mdclient()
             cout << "Escriba 1 para SI o 2 para NO : ";
             cin >> resp;
             if (resp == 1) {
-                delClt(int pos);
+                delClt(pos);
                 cout << "Registro eliminado...\n";
             } else {
                 cout << "Operacion cancelada...\n";
@@ -415,7 +409,7 @@ void addClt(cliente currentClt)
 
 void initClt(int pos) // inicializa los datos del cliente
 {
-    clt[pos].client_id[sizeof(clt[pos].client_id) - 1] = '\0';
+    (clt[pos].client_id - 1) = '\0';
 
     strncpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
     clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';
