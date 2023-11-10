@@ -472,13 +472,13 @@ void initClt(int pos) // inicializa los datos del cliente
     clt[pos].client_telf[sizeof(clt[pos].client_telf) - 1] = '\0';
 }
 
-void initGft(int gftPos)
+/*void initGft(int gftPos)
 {
     gft[pos].gft_id = 0;
 
     strncpy(gft[pos].client_name, "", sizeof(clt[pos].client_name));
     clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';    
-}
+}*/
 
 void searchMclt()
 {
@@ -730,4 +730,26 @@ void delClt(int pos)
     }
     lastRegClt--;
     initClt(lastRegClt);
+}
+
+
+void regPurchase() // -------------pendiente
+{
+    cout << "Registro de compra" << endl;
+}
+void MDrewards()   // -------------pendiente
+{
+    cout << "MD recompensas" << endl;
+}
+void redeem()      // -------------pendiente
+{
+    cout << "Canje de puntos" << endl;
+}
+void checkPts()    // -------------pendiente
+{
+    cout << "Visualizar puntos" << endl;
+}
+void record()
+{
+    cout << "historial" << endl;
 }
