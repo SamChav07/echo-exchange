@@ -79,7 +79,7 @@ void showCltRegister();
 cliente getClt(int pos);
 int searchCltname(char client_name[]);      //--listo
 int searchCltlstname(char *client_lstName); //--listo
-int searchCltId(int client_id);             // listo
+int searchCltId(char enteredClt_id[]);             // listo
 int searchCltmail(char client_mail[]);      //--listo
 int searchCltelf(char client_telf[]);       //--listo
 // uptade
@@ -310,7 +310,7 @@ void login()
     }
 }
 
-void Mdclient()
+void MDclient()
 {
     cliente currentClt;
     int pos, resp;
@@ -355,7 +355,7 @@ void Mdclient()
         system("cls || clear");
         cout << "** Escribe el id del cliente a modificar **" << endl;
         cin >> enteredClt_id;
-        pos = searchCltId(enteredClt_id);
+        pos = searchCltId(&enteredClt_id);
         if (pos != -1)
         {
                 system("cls || clear");
@@ -390,7 +390,7 @@ void Mdclient()
         }
         cout << "Escribe el ID del cliente: " << endl;
         cin >> enteredClt_id;
-        pos = searchCltId(enteredClt_id);
+        pos = searchCltId(&enteredClt_id);
         if (pos != -1)
         {
                 currentClt = getClt(pos);
@@ -531,7 +531,7 @@ void searchMclt()
                 cout << "ID a buscar: ";
                 cin.ignore();
                 cin >> enteredClt_id;
-                searchCltId(*reinterpret_cast<char *>(enteredClt_id));
+                searchCltId(reinterpret_cast<char *>(enteredClt_id));
                 system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                 system("cls || clear");
                 break;
@@ -612,7 +612,7 @@ cliente getClt(int pos)
     return clt[pos];
 }
 
-int searchCltname(const char *enteredClt_name)
+int searchCltname(char *enteredClt_name)
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
@@ -632,7 +632,7 @@ int searchCltname(const char *enteredClt_name)
     return position;
 }
 
-int searchCltlstname(const char *enteredClt_lstName)
+int searchCltlstname(char *enteredClt_lstName)
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
@@ -652,7 +652,7 @@ int searchCltlstname(const char *enteredClt_lstName)
     return position;
 }
 
-int searchCltId(const char *enteredClt_id)
+int searchCltId(char *enteredClt_id)
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
@@ -672,7 +672,7 @@ int searchCltId(const char *enteredClt_id)
     return position;
 }
 
-int searchCltmail(const char *enteredClt_mail) // busq por mail
+int searchCltmail(char *enteredClt_mail) // busq por mail
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
@@ -692,7 +692,7 @@ int searchCltmail(const char *enteredClt_mail) // busq por mail
     return position;
 }
 
-int searchCltelf(char enteredClt_telf) // busqueda por numero telef
+int searchCltelf(char enteredClt_telf[]) // busqueda por numero telef
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
