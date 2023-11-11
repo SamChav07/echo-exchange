@@ -8,15 +8,15 @@ const int MAX = 100;
 
 struct accounts
 {
-    char adminU[50]; // "00017"
-    char admP[50];   // "admPass007"
+    char adminU[50]; // "admin1"
+    char admP[50];   // "password123"
 };
 
 struct empleado
 {
     char nombre[20];
-    char empU[50]; // "00016"
-    char empP[50]; // "enployee123"
+    char empU[50]; // "usuario1"
+    char empP[50]; // "password123"
     string empmail;
     string emptel;
 } emp;
@@ -62,7 +62,9 @@ struct gift
 // fin de struct
 
 // LOG
-void login(); // --ready
+void SuperAdmin();
+void logAdm();
+void logClt();
 
 // menus
 void MDclient();   //--listo
@@ -101,6 +103,9 @@ void checkPts();    // -------------pendiente
 void record();      // ---------———----pendiente
 
 // variables globales
+char user[50], pass[50];
+int intentos = 4;
+
 int lastRegClt = 0;
 int lasTregGft = 0;
 int lastREgCmp = 0;
@@ -108,60 +113,87 @@ int proxIDclt = 123;
 
 int idCmp = 321;
 
+// codigos colores ANSI
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+
 int main()
 {
-    login();
+    SuperAdmin();
     return 0;
 }
 
-void login()
+void SuperAdmin()
 {
+    int spOpcion;
     int intentos = 3;
-    char user[50], pass[50];
-    cout << "Bienvenido al sistema EchoExchange" << endl;
-    cout << "\nSeleccione una opcion para entrar al sistema:\n";
-    cout << "1. Administrador\n";
-    cout << "2. Empleado\n";
-    cout << "3. Gestionar credenciales de acceso.\n";
-    cout << "4. Salir del sistema.\n";
 
-    int opcion;
-    cin >> opcion;
-
-    switch (opcion)
+    cout << GREEN << "EEEE CCCC HH  HH OOOOOO     EEEE XX    XX CCCC HH  HH AAAAAA NN     NN GGGGGG  EEEE" << RESET << endl;
+    cout << GREEN << "EE   CC   HH  HH OO  OO     EE    XX  XX  CC   HH  HH AA  AA NN NN  NN GG      EE" << RESET << endl;
+    cout << GREEN << "EEEE CC   HHHHHH OO  OO === EEEE   XXXX   CC   HHHHHH AAAAAA NN  NN NN GG  GGG EEEE" << RESET << endl;
+    cout << GREEN << "EE   CC   HH  HH OO  OO     EE    XX  XX  CC   HH  HH AA  AA NN   NNNN GG  GG  EE" << RESET << endl;
+    cout << GREEN << "EEEE CCCC HH  HH OOOOOO     EEEE XX    XX CCCC HH  HH AA  AA NN    NNN GGGGGG  EEEE" << RESET << endl;
+    cout << "Bienvenido Super-Admin" << endl;
+    cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
+    cout << "1. Administrador." << endl;
+    cout << "2. Cliente." << endl;
+    cout << "3. Cerrar.";
+    cout << "\n --> ";
+    cin >> spOpcion;
+    switch (spOpcion)
     {
-    case 1: // Acceso al men� del administrador
-        
-        do
+        case 1:
+            logAdm();
+            break;
+        case 2:
+            logClt();
+            break;
+        case 3:
+            cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
+            exit(0);
+            break;
+        default:
+            cout << "Ingrese una opcion valida. 1 - 3..." << endl;
+            break;
+    }
+
+}
+
+void logAdm()
+{
+    do
+    {
+        accounts administrador1;
+        strcpy(administrador1.adminU, "admin1");
+        strcpy(administrador1.admP, "password123");
+
+        cout << "\n---Administrador---" << endl;
+        cout << "-------------" << endl;
+        cout << "Usuario: ";
+        cin >> user;
+        cout << "\nContrasena: ";
+        cin >> pass;
+
+        // Verificaci�n de credenciales del administrador
+        if (strcmp(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0)
         {
-            accounts administrador1;
-            strcpy(administrador1.adminU, "admin1");
-            strcpy(administrador1.admP, "password123");
+            int op1;
+            cout << "\n***Acceso concedido***\n";
+            cout << "Bienvenido Administrador" << endl;
 
-            cout << "\n---Administrador---" << endl;
-            cout << "-------------" << endl;
-            cout << "Usuario: ";
-            cin >> user;
-            cout << "\nContrasena: ";
-            cin >> pass;
+            cout << "***--Opciones--***" << endl;
+            cout << "1. Registrar compras." << endl;
+            cout << "2. Gestionar clientes." << endl;
+            cout << "3. Gestionar recompensas." << endl;
+            cout << "4. Salir" << endl;
+            cin >> op1;
+            system("pause");
 
-            // Verificaci�n de credenciales del administrador
-            if (strcmp(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0)
+            switch (op1)
             {
-                int op1;
-                cout << "\n***Acceso concedido***\n";
-                cout << "Bienvenido Administrador" << endl;
-
-                cout << "***--Opciones--***" << endl;
-                cout << "1. Registrar compras." << endl;
-                cout << "2. Gestionar clientes." << endl;
-                cout << "3. Gestionar recompensas." << endl;
-                cout << "4. Salir" << endl;
-                cin >> op1;
-                system("pause");
-
-                switch (op1)
-                {
                 case 1:
                     regPurchase();
                     break;
@@ -173,141 +205,89 @@ void login()
                     break;
                 case 4:
                     system("cls");
-                    login();
+                    logAdm();
                     break;
                 default:
                     cout << "Ingrese opciones validas. Sean de 1-4..." << endl;
                     break;
-                }
             }
-            else
-            {
-                cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-                cout << "Intentos restantes: \n"
-                     << intentos - 1 << endl;
-
-                intentos--;
-            }
-        } while (intentos > 0);
-        cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-        cout << "***Acceso bloqueado, saliendo del sistema...***";
-        break;
-    case 2: // Acceso al men� de empleado
-        do
+        }
+        else
         {
-            empleado empleado1;
-            strcpy(empleado1.empU, "usuario1");
-            strcpy(empleado1.empP, "password123");
+            cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
+            cout << "Intentos restantes: \n"
+                 << intentos - 1 << endl;
 
-            int intentos = 4;
+            intentos--;
+        }
+    } while (intentos > 0);
+    cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
+    cout << "***Acceso bloqueado, saliendo del sistema...***";
+}
 
-            cout << "---Empleado---" << endl;
-            cout << "-------------" << endl;
+void logClt()
+{
+    do
+    {
+        empleado empleado1;
+        strcpy(empleado1.empU, "usuario1");
+        strcpy(empleado1.empP, "password123");
 
-            cout << "\nUsuario: ";
-            cin >> user;
-            cout << "\nContrasena: ";
-            cin >> pass;
+        int intentos = 4;
 
-            // Verificaci�n de credenciales del cliente
-                if (strcmp(user, empleado1.empU) == 0 && strcmp(pass, empleado1.empP) == 0)
-                {
-                reg_compra currentCmp;
-                int op2;
-                cout << "\n***Acceso concedido***\n";
+        cout << "---Empleado---" << endl;
+        cout << "-------------" << endl;
 
-                cout << "\nBienvenido Empleado" << endl;
-                cout << "\n***--Opciones--***" << endl;
-                cout << "\n1. Registrar compra." << endl;
-                cout << "\n2. Canjear puntos." << endl;
-                cout << "\n3. Consultar puntos." << endl;
-                cout << "\n4. Historial de compra." << endl;
-                cout << "\n5. Salir." << endl;
-                cin >> op2;
-                system("pause");
+        cout << "\nUsuario: ";
+        cin >> user;
+        cout << "\nContrasena: ";
+        cin >> pass;
 
-                switch (op2)
-                {
+        // Verificaci�n de credenciales del cliente
+        if (strcmp(user, empleado1.empU) == 0 && strcmp(pass, empleado1.empP) == 0)
+        {
+            reg_compra currentCmp;
+            int op2;
+            cout << "\n***Acceso concedido***\n";
+
+            cout << "\nBienvenido Empleado" << endl;
+            cout << "\n***--Opciones--***" << endl;
+            cout << "\n1.. Canjear puntos." << endl;
+            cout << "\n2. Consultar puntos." << endl;
+            cout << "\n3. Historial de compra." << endl;
+            cout << "\n4. Salir." << endl;
+            cin >> op2;
+            system("pause");
+
+            switch (op2)
+            {
                 case 1:
-                    system("cls || clear");
-                    cout << "** Ingrese los datos de la compra **" << endl;
-                    system("cls || clear");
-
-                    cout << "ID de la compra" << endl;
-                    cout << "Nombre del cliente: " << endl;
-                    cout << "Apellido del cliente: " << endl;
-                    cout << "E-mail del cliente: " << endl;
-                    cout << "Telefono del cliente: " << endl;
-
-                    system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-                    break;
-                    regPurchase();
-                    break;
-                case 2:
                     redeem();
                     break;
-                case 3:
+                case 2:
                     checkPts();
                     break;
-                case 4:
+                case 3:
                     record();
                     break;
-                case 5:
+                case 4:
                     system("cls");
-                    login();
+                    logClt();
                     break;
                 default:
                     cout << "Ingrese opciones v�lidas. Sean de 1-4.." << endl;
                     break;
-                }
+            }
 
-                } else
-                {
-                cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
-                cout << "Intentos restantes: " << intentos - 1 << endl;
-                intentos--;
-                }
-        } while (intentos > 0);
-        cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
-        cout << "***Acceso bloqueado, saliendo del sistema...***";
-        break;
-    case 3: // Men� de gesti�n de credenciales
-
-        do
+        } else
         {
-                cout << "\n***ADMINISTRADOR DE CREDENCIALES***" << endl;
-                cout << "\n1.Gestionar administradores." << endl;
-                cout << "2. Gestionar usuarios" << endl;
-                cout << "3. Salir a menu principal" << endl;
-                cout << "Digite una opcion: ";
-                cin >> opcion;
-
-                switch (opcion)
-                {
-                case 1:
-
-                    break;
-                case 2:
-
-                    break;
-                case 3:
-
-                    break;
-                default:
-
-                    break;
-                }
-
-        } while (opcion != 3);
-
-        break;
-    case 4:
-        cout << "---Gracias por utilizar el sistema EchoExchange, que tenga un buen dia---" << endl;
-        break;
-    default:
-        cout << "Ingrese una opcion valida." << endl;
-        break;
-    }
+            cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
+            cout << "Intentos restantes: " << intentos - 1 << endl;
+            intentos--;
+        }
+    } while (intentos > 0);
+    cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
+    cout << "***Acceso bloqueado, saliendo del sistema...***";
 }
 
 void MDclient()
@@ -324,7 +304,7 @@ void MDclient()
     cout << "2. Buscar cliente." << endl;
     cout << "3. Modificar cliente." << endl;
     cout << "4. Eliminar cliente." << endl;
-    cout << "5. Salir..." << endl;
+    cout << "5. Atras..." << endl;
     cin >> optMdclt;
     system("pause");
 
@@ -347,6 +327,7 @@ void MDclient()
 
         addClt(currentClt);
         system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+        MDclient();
         break;
     case 2:
         searchMclt();
@@ -414,7 +395,7 @@ void MDclient()
         }
         break;
     case 5:
-        login();
+        logAdm();
         break;
 
     default:
@@ -564,7 +545,7 @@ void searchMclt()
         case 7:
                 system("cls || clear");
                 cout << "Saliendo..." << endl;
-                login();
+                logAdm();
                 system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                 system("cls || clear");
                 break;
@@ -614,7 +595,7 @@ cliente getClt(int pos)
 
 int searchCltname(char *enteredClt_name)
 {
-    int position = 0;
+    int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
         if (strcmp(enteredClt_name, clt[i].client_name) == 0)
@@ -634,7 +615,7 @@ int searchCltname(char *enteredClt_name)
 
 int searchCltlstname(char *enteredClt_lstName)
 {
-    int position = -1;
+    int position = 0;
     for (int i = 0; i < lastRegClt; i++)
     {
         if (strcmp(enteredClt_lstName, clt[i].client_lastname) == 0)
@@ -735,15 +716,68 @@ void delClt(int pos)
 
 void regPurchase() // -------------pendiente
 {
-    cout << "Registro de compra" << endl;
+    cout << "||=========================||" << endl;
+    cout << "--------Echo-Exchange--------" << endl;
+    cout << "" << endl;
+    cout << "\tRegistro de Compras" << endl;
+    cout << "______________________________" << endl;
+    cout << "------------------------------" << endl;
+    cout << "ID:    00071012" << endl;
+    cout << "Fecha de compra:   28-09-23" << endl;
+    cout << "Monto de compra:   $ 200.00" << endl;
+    cout << "Puntos por compra: 20" << endl;
+    cout << "||=========================||" << endl;
+    cout << "¿Desea volver a registrar otra compra o salir al menu? (v/s): " << endl;
 }
 void MDrewards()   // -------------pendiente
 {
-    cout << "MD recompensas" << endl;
+    cout << "||=========================||" << endl;
+    cout << "--------Echo-Exchange--------" << endl;
+    cout << "" << endl;
+    cout << "\tCRUD rewards" << endl;
+    cout << "______________________________" << endl;
+    cout << "------------------------------" << endl;
+    cout << " Agregar - Editar - Eliminar " << endl;
+    cout << "¿Desea volver Agregar, Editar, Eliminar recompensas? (a/ e/ d): " << endl;
+    cout << "a" << endl;
+    cout << "=============================" << endl;
+    cout << "ID-gft:    00190" << endl;
+    cout << "Nombre de la recompensa:    MX log S2" << endl;
+    cout << "Cantidad:    02" << endl;
+    cout << "Puntos necesarios:  320 pts" << endl;
+    cout << "||=========================||" << endl;
+    cout << "¿Desea volver al CRUD o salir al menu? (v/s): " << endl;
 }
 void redeem()      // -------------pendiente
 {
-    cout << "Canje de puntos" << endl;
+    cout << "||=========================||" << endl;
+    cout << "--------Echo-Exchange--------" << endl;
+    cout << "" << endl;
+    cout << "\tSeleccion de recompensas" << endl;
+    cout << "______________________________" << endl;
+    cout << "------------------------------" << endl;
+    cout << "Puntos actuales:   495" << endl;
+    cout << "=======================" << endl;
+    cout << "ID:    123" << endl;
+    cout << "Cantidad:  2" << endl;
+    cout << "Descuento del 20%" << endl;
+    cout << "Puntos necesarios: 295" << endl;
+    cout << "+++++++++++++++++++++++" << endl;
+    cout << "ID:    234" << endl;
+    cout << "Cantidad:  3" << endl;
+    cout << "Producto Gratis" << endl;
+    cout << "Puntos necesarios: 500" << endl;
+    cout << "+++++++++++++++++++++++" << endl;
+    cout << "ID:    345" << endl;
+    cout << "Cantidad:  1" << endl;
+    cout << "Bonus" << endl;
+    cout << "Puntos necesarios: 700" << endl;
+    cout << "=======================" << endl;
+    cout << "Elija su recompensa: \n(escriba el ID correspondiente)" << endl;
+    cout << "ID:    123" << endl;
+    cout << "***Transaccion exitosa***" << endl;
+    cout << "||=========================||" << endl;
+    cout << "¿Desea volver a mostrar de nuevo su historial o salir al menu? (v/s): " << endl;
 }
 void checkPts()    // -------------pendiente
 {
@@ -751,5 +785,34 @@ void checkPts()    // -------------pendiente
 }
 void record()
 {
-    cout << "historial" << endl;
+    cout << "||=========================||" << endl;
+    cout << "--------Echo-Exchange--------" << endl;
+    cout << "" << endl;
+    cout << "\tHistorial de compra" << endl;
+    cout << "______________________________" << endl;
+    cout << "------------------------------" << endl;
+    cout << "Cliente:   Ivan Arguello" << endl;
+    cout << "ID:    00071012" << endl;
+    cout << "E-mail:    iArg@gmail.com" << endl;
+    cout << "Telefono:  8899-1033" << endl;
+    cout << "=============================" << endl;
+    cout << "ID de compra:    00001" << endl;
+    cout << "Fecha de compra:   28-09-23" << endl;
+    cout << "Monto de compra:   $ 200.00" << endl;
+    cout << "Puntos por compra: 20" << endl;
+    cout << "+++++++++++++++++++++++++++++" << endl;
+    cout << "ID de compra:    00002" << endl;
+    cout << "Fecha de compra:   30-09-23" << endl;
+    cout << "Monto de compra:   $ 2,000.00" << endl;
+    cout << "Puntos por compra: 200" << endl;
+    cout << "+++++++++++++++++++++++++++++" << endl;
+    cout << "ID de compra:    00003" << endl;
+    cout << "Fecha de compra:   01-10-23" << endl;
+    cout << "Monto de compra:   $ 2750.00" << endl;
+    cout << "Puntos por compra: 275" << endl;
+    cout << "=============================" << endl;
+    cout << "Puntos totales acumulados: 495" << endl;
+    cout << "Puntos actuales: 200" << endl;
+    cout << "||=========================||" << endl;
+    cout << "¿Desea mostrar de nuevo su historial o salir al menu? (v/s): " << endl;
 }
