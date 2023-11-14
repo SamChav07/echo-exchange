@@ -346,12 +346,12 @@ void MDclient()
             currentClt.client_id = proxIDclt;
             cout << "ID: " << proxIDclt << endl;
             cout << "Nombre del cliente: " << endl;
-            cout << "Apellido del cliente: " << endl;
-            cout << "E-mail del cliente: " << endl;
-            cout << "Telefono del cliente: " << endl;
             scanf(" %[^\n]", currentClt.client_name);
+            cout << "Apellido del cliente: " << endl;
             scanf(" %[^\n]", currentClt.client_lastname);
+            cout << "E-mail del cliente: " << endl;
             scanf(" %[^\n]", currentClt.client_mail);
+            cout << "Telefono del cliente: " << endl;
             scanf(" %[^\n]", currentClt.client_telf);
 
             addClt(currentClt);
@@ -681,12 +681,12 @@ cliente getClt(int pos)
     return clt[pos];
 }
 
-int searchCltname(char *enteredClt_name)
+int searchCltname(char *enteredClt_name) //funcion de busqueda por caracter prueba
 {
-    int position = -1;
-    for (int i = 0; i < lastRegClt; i++)
+    int position = 0;
+    for (int i = 0; i <= lastRegClt; i++)
     {
-        if (strcmp(enteredClt_name, clt[i].client_name) == 0)
+        if (strchr(clt[i].client_name, *enteredClt_name) != nullptr )
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -694,7 +694,7 @@ int searchCltname(char *enteredClt_name)
         }
     }
 
-    if (position == -1)
+    if (position == 0)
     {
         cout << "No se encontraron resultados" << endl;
     }
@@ -703,10 +703,10 @@ int searchCltname(char *enteredClt_name)
 
 int searchCltlstname(char *enteredClt_lstName)
 {
-    int position = -1; // Inicializar en 0
-    for (int i = 0; i < lastRegClt; i++)
+    int position = 0; // Inicializar en 0
+    for (int i = 0; i <= lastRegClt; i++)
     {
-        if (strcmp(enteredClt_lstName, clt[i].client_lastname) == 0)
+        if (strchr(clt[i].client_lastname, *enteredClt_lstName) != nullptr )
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -714,18 +714,17 @@ int searchCltlstname(char *enteredClt_lstName)
         }
     }
 
-    if (position == -1)
+    if (position == 0)
     {
         cout << "No se encontraron resultados" << endl;
     }
-
     return position;
 }
 
 int searchCltId(int enteredClt_id)
 {
-    int position = -1;
-    for (int i = 0; i < lastRegClt; i++)
+    int position = 0;
+    for (int i = 0; i <= lastRegClt; i++)
     {
         if (enteredClt_id == (clt[i].client_id))
         {
@@ -735,7 +734,7 @@ int searchCltId(int enteredClt_id)
         }
     }
 
-    if (position == -1)
+    if (position == 0)
     {
         cout << "No se encontraron resultados" << endl;
     }
@@ -744,10 +743,10 @@ int searchCltId(int enteredClt_id)
 
 int searchCltmail(char *enteredClt_mail) // busq por mail
 {
-    int position = -1;
-    for (int i = 0; i < lastRegClt; i++)
+    int position = 0;
+    for (int i = 0; i <= lastRegClt; i++)
     {
-        if (strcmp(enteredClt_mail, clt[i].client_mail) == 0)
+        if (strchr(clt[i].client_mail, *enteredClt_mail) != nullptr )
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -755,7 +754,7 @@ int searchCltmail(char *enteredClt_mail) // busq por mail
         }
     }
 
-    if (position == -1)
+    if (position == 0)
     {
         cout << "No se encontraron resultados" << endl;
     }
@@ -764,10 +763,10 @@ int searchCltmail(char *enteredClt_mail) // busq por mail
 
 int searchCltelf(char enteredClt_telf[]) // busqueda por numero telef
 {
-    int position = -1;
-    for (int i = 0; i < lastRegClt; i++)
+    int position = 0;
+    for (int i = 0; i <= lastRegClt; i++)
     {
-        if (strcmp(reinterpret_cast<const char *>(enteredClt_telf), clt[i].client_telf) == 0)
+        if (enteredClt_telf == (clt[i].client_telf))
         {
             cout << "=========================" << endl;
             showClt(i);
@@ -775,7 +774,7 @@ int searchCltelf(char enteredClt_telf[]) // busqueda por numero telef
         }
     }
 
-    if (position == -1)
+    if (position == 0)
     {
         cout << "No se encontraron resultados" << endl;
     }
