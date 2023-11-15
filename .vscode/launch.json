@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
+            "name": "base.cpp",
             "type": "cppdbg",
             "request": "launch",
-            "program": "base.cpp, for example ${workspaceFolder}/base.cpp",
+            "program": "${workspaceFolder}/base.cpp",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb"

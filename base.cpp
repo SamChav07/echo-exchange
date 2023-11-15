@@ -4,6 +4,8 @@
 
 #include <unistd.h>
 #include "gotox.cpp"
+
+#include <fstream>
 using namespace std;
 
 // Definici�n de estructuras
@@ -64,6 +66,9 @@ struct gift
 } gft[MAX];
 // fin de struct
 
+void loadCSVdata();
+void saveCSVdata();
+int cntClt();
 // LOG
 void SuperAdmin();
 void logAdm();
@@ -116,7 +121,7 @@ void checkPts();  // -------------pendiente
 char user[50], pass[50];
 int intentos = 4;
 
-int lastRegClt = 0;
+int lastRegClt = cntClt();
 int lasTregGft = 0;
 int lastREgCmp = 0;
 int proxIDclt = 123;
@@ -132,9 +137,52 @@ int idCmp = 321;
 
 int main()
 {
+    loadCSVdata();
     SuperAdmin();
     return 0;
 }
+
+void loadCSVdata(){
+    ifstream file("clientes.csv"); //archvo csv
+
+    if (!file.is_open()) {
+        cout << "No se puedo abrir el archivo CSV..." << endl;
+        return;
+    }
+    lastRegClt = 0;
+    while (file >> clt[lastRegClt].client_id >> clt[lastRegClt].client_name >> clt[lastRegClt].client_lastname >> clt[lastRegClt].client_mail >> clt[lastRegClt].client_telf) {
+        lastRegClt++;
+    }
+    file.close();
+}
+
+void saveCSVdata() {
+    ofstream file("clientes.csv");
+
+    if (!file.is_open()) {
+        cout << "No se pudo abrir el acrchivo CSV para guardar los datos del cliente..." << endl;
+        return;
+    }
+    for (int i = 0; i < lastRegClt; i++) {
+        file << clt[i].client_id << "," << clt[i].client_name << "," << clt[i].client_lastname << "," << clt[i].client_mail << "," << clt[i].client_telf << "\n";
+    }
+    file.close();
+}
+
+int cntClt() {
+    ifstream file("clientes.csv");
+    if(!file.is_open()) {
+        return 0;
+    }
+    int registro = 0;
+    string line;
+    while (getline(file,line)) {
+        registro++;
+    }
+    file.close();
+    return registro;
+}
+
 
 void SuperAdmin()
 {
@@ -146,7 +194,7 @@ void SuperAdmin()
     cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
     cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
     cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
-    gotoxy(13, 6);
+    // gotoxy(13, 6);
     cout << "||==================================================||" << endl;
     cout << "Bienvenido Super-Admin" << endl;
     cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
@@ -165,6 +213,7 @@ void SuperAdmin()
             logClt();
             break;
         case 3:
+            saveCSVdata(); //llama a la funcion guardar antes de cerrar la sesion
             cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
             exit(0);
             break;
@@ -355,6 +404,7 @@ void MDclient()
             scanf(" %[^\n]", currentClt.client_telf);
 
             addClt(currentClt);
+            saveCSVdata(); //llama a la funcion guardar antes de cerrar la sesion
             system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
             MDclient();
             break;
@@ -528,16 +578,12 @@ void initClt(int pos) // inicializa los datos del cliente
     clt[pos].client_id = 0;
 
     strncpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
-    clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';
 
     strncpy(clt[pos].client_lastname, "", sizeof(clt[pos].client_lastname));
-    clt[pos].client_lastname[sizeof(clt[pos].client_lastname) - 1] = '\0';
 
     strncpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
-    clt[pos].client_mail[sizeof(clt[pos].client_mail) - 1] = '\0';
 
     strncpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
-    clt[pos].client_telf[sizeof(clt[pos].client_telf) - 1] = '\0';
 }
 
 /*void initGft(int gftPos)
@@ -550,6 +596,7 @@ void initClt(int pos) // inicializa los datos del cliente
 
 void searchMclt()
 {
+    loadCSVdata();
     int options, pos;
     char enteredClt_name[20];
     char enteredClt_lstName[20];
@@ -681,7 +728,7 @@ cliente getClt(int pos)
     return clt[pos];
 }
 
-int searchCltname(char *enteredClt_name) //funcion de busqueda por caracter prueba
+int searchCltname(char *enteredClt_name) //funcion de busqueda por caracter: encuentra la primera aparicion  de un caracter especifico en una caddena de txt
 {
     int position = 0;
     for (int i = 0; i <= lastRegClt; i++)
