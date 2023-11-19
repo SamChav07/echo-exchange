@@ -2,10 +2,12 @@
 #include <cstring>
 #include <string>
 
+#include <cstdio>
+
 #include <iomanip>
 #include <unistd.h>
-#include "gotox.cpp"
-// libreria para all_of y isdigit
+
+// libreria para all_of y ::isdigit
 #include <algorithm>
 #include <functional>
 #include <cctype>
@@ -52,8 +54,10 @@ struct reg_compra
     cliente clt;
     int cmpr_id;
     cmpr_fecha fCmp;
-    float cmpr_qty; // monto de la compra
+    float cmpr_Sqty; // monto de la compra
     int cmpr_pts;
+    float cmp_iva;
+    float cmpr_Tqty;
 } cmp[MAX];
 
 struct historial
@@ -71,8 +75,6 @@ struct gift
 } gft[MAX];
 // fin de struct
 
-// void loadCSVdata();
-// void saveCSVdata();
 int cntClt();
 // LOG
 void SuperAdmin();
@@ -97,11 +99,11 @@ void initClt(int cltPos);        //--listo
 void showClt(int pos); //--listo
 void showCltRegister();
 cliente getClt(int pos);
-int searchCltname(char client_name[]);      //--listo
-int searchCltlstname(char *client_lstName); //--listo
-int searchCltId(int enteredClt_id);         // listo
-int searchCltmail(char client_mail[]);      //--listo
-int searchCltelf(char client_telf[]);       //--listo
+void searchCltname(char client_name[]);      //--listo
+void searchCltlstname(char *client_lstName); //--listo
+int searchCltId(int enteredClt_id);          // listo
+void searchCltmail(char client_mail[]);      //--listo
+void searchCltelf(char client_telf[]);       //--listo
 // uptade
 void uptdClt(cliente cliente, int i); // --listo
 // delete
@@ -124,11 +126,18 @@ void MDrewards(); // -------------pendiente
 void redeem();    // -------------pendiente
 void checkPts();  // -------------pendiente
 
+// archivos clt
+FILE *cltRegister;
+void saveClt();
+void readClt();
+int cntClt(FILE *cltRegister);
+int getLstCltID();
+
 // variables globales
 char user[50], pass[50];
 int intentos = 4;
 
-int lastRegClt = cntClt();
+int lastRegClt = 0;
 int lasTregGft = 0;
 int lastREgCmp = 0;
 int proxIDclt = 123;
@@ -142,65 +151,70 @@ int idCmp = 321;
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
 
-int main()
+void saveClt()
 {
-    // loadCSVdata();
-    SuperAdmin();
-    return 0;
+    cltRegister = fopen("clientes.txt", "w");
+    if (cltRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de clientes para escribir..." << endl;
+        return;
+    }
+    fwrite(clt, sizeof(cliente), lastRegClt, cltRegister);
+    fclose(cltRegister);
 }
 
-/*void loadCSVdata()
+void readClt()
 {
-    ifstream file("clientes.csv"); // archvo csv
-
-    if (!file.is_open())
+    cltRegister = fopen("clientes.txt", "r");
+    if (cltRegister == NULL)
     {
-        cout << "No se puedo abrir el archivo CSV..." << endl;
+        cerr << "Error al abrir el archivo de clientes para leer" << endl;
         return;
     }
-    lastRegClt = 0;
-    while (file >> clt[lastRegClt].client_id >> clt[lastRegClt].client_name >> clt[lastRegClt].client_lastname >> clt[lastRegClt].client_mail >> clt[lastRegClt].client_telf)
-    {
-        lastRegClt++;
-    }
-    file.close();
-}*/
+    lastRegClt = cntClt(cltRegister);
+    fread(clt, sizeof(cliente), MAX, cltRegister);
 
-/*void saveCSVdata()
+    fclose(cltRegister);
+}
+
+int cntClt(FILE *cltRegister) // calcula el ultimo registro
 {
-    ofstream file("clientes.csv");
+    int tam_archv, num_clts;
+    // obtiene el tamaño del archv
+    fseek(cltRegister, 0, SEEK_END);
+    tam_archv = ftell(cltRegister);
+    rewind(cltRegister);
 
-    if (!file.is_open())
-    {
-        cout << "No se pudo abrir el acrchivo CSV para guardar los datos del cliente..." << endl;
-        return;
-    }
-    for (int i = 0; i < lastRegClt; i++)
-    {
-        file << clt[i].client_id << " , " << clt[i].client_name << " , " << clt[i].client_lastname << " , " << clt[i].client_mail << " , " << clt[i].client_telf << "\n";
-    }
-    file.close();
-}*/
+    // calc el # de clts
+    num_clts = tam_archv / sizeof(cliente);
+    return num_clts;
+}
 
-int cntClt()
+int getLstCltID() 
 {
-    ifstream file("clientes.csv");
-    if (!file.is_open())
-    {
-        return 0;
-    }
-    int registro = 0;
-    string line;
-    while (getline(file, line))
-    {
-        if (!line.empty())
-        {
-            registro++;
-        }
-    }
+   cltRegister = fopen("clientes.txt", "r");
+   if (cltRegister == NULL)
+   {
+    cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
+    return proxIDclt;
+   }
 
-    file.close();
-    return registro;
+   int lastId = -1;
+   fseek(cltRegister, -sizeof(cliente), SEEK_END);
+   if (fread(&clt[0], sizeof(cliente), 1, cltRegister) == 1)
+   {
+    lastId = clt[0].client_id;
+   }
+    fclose(cltRegister);
+
+    return (lastId == -1) ? proxIDclt : (lastId + 1);
+}
+
+int main()
+{
+    readClt();
+    SuperAdmin();
+    return 0;
 }
 
 void SuperAdmin()
@@ -213,7 +227,7 @@ void SuperAdmin()
     cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
     cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
     cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
-    // gotoxy(13, 6);
+    
     cout << "||==================================================||" << endl;
     cout << "Bienvenido Super-Admin" << endl;
     cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
@@ -389,6 +403,8 @@ void MClt()
 
 void MDclient()
 {
+    readClt();
+
     cliente currentClt;
     int pos, resp;
     int enteredClt_id;
@@ -413,8 +429,16 @@ void MDclient()
         system("cls || clear");
         cout << "** Ingrese los datos a añadir **" << endl;
         system("cls || clear");
-        currentClt.client_id = proxIDclt;
-        cout << "ID: " << proxIDclt << endl;
+        currentClt.client_id = getLstCltID();
+
+        if (currentClt.client_id == -1)
+        {
+            cerr << "Error al obtener el último ID. No se pudo agregar el cliente..." << endl;
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            return;
+        }
+
+        cout << "ID: " << currentClt.client_id << endl;
 
         // Nombre del cliente
         do
@@ -425,48 +449,58 @@ void MDclient()
             if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
             {
                 cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
             }
+
         } while (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit));
 
         // Apellido del cliente
         do
         {
             cout << "Apellido del cliente: ";
-            cin.ignore(); // Ignorar el carácter de nueva línea residual
             cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
             if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
             {
                 cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
             }
+
         } while (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit));
 
         // E-mail del cliente
         do
         {
             cout << "E-mail del cliente: ";
-            cin.ignore(); // Ignorar el carácter de nueva línea residual
             cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
             if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
             {
                 cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
             }
+
         } while (strstr(currentClt.client_mail, "@gmail.com") == NULL);
 
         // Teléfono del cliente
         do
         {
             cout << "Teléfono del cliente XXXX-XXXX: ";
-            cin.ignore(); // Ignorar el carácter de nueva línea residual
             cin.getline(currentClt.client_telf, sizeof(currentClt.client_telf));
 
             // Verificar si el formato del número de teléfono es correcto
-            if (!strlen(currentClt.client_telf) == 8)
+            if (!(strlen(currentClt.client_telf) == 8))
             {
                 cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
             }
-        } while (!strlen(currentClt.client_telf) == 8);
+
+        } while (!(strlen(currentClt.client_telf) == 8));
 
         addClt(currentClt);
+        saveClt();
         // saveCSVdata(); // llama a la función guardar antes de cerrar la sesión
         system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
         MDclient();
@@ -506,6 +540,7 @@ void MDclient()
             cout << "Registro inexistente" << endl;
         }
         MDclient();
+        saveClt();
         system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
         break;
     case 4:
@@ -539,7 +574,7 @@ void MDclient()
         {
             cout << "Registro inexistente" << endl;
         }
-        // saveCSVdata();
+        saveClt();
         break;
     case 5:
         MAdm();
@@ -553,6 +588,8 @@ void MDclient()
 
 void MDcmp()
 {
+    readClt();
+
     string regreso;
     reg_compra currentCmp;
     int cmpOPt;
@@ -579,20 +616,22 @@ void MDcmp()
             cout << "ID del cliente: ";
             cin >> currentCmp.clt.client_id;
 
-            cout << "ID de compra: ";
+            cout << "N* de Recibo: ";
             cin >> currentCmp.cmpr_id;
 
             cout << "Fecha de compra: ";
-            cin >> currentCmp.fCmp.day;
-            cout << "-";
-            cin >> currentCmp.fCmp.month;
-            cout << "-";
-            cin >> currentCmp.fCmp.year;
+            cin >> currentCmp.fCmp.day; cout << "-"; cin >> currentCmp.fCmp.month; cout << "-"; cin >> currentCmp.fCmp.year;
 
-            cout << "Monto de compra: $ ";
-            cin >> currentCmp.cmpr_qty;
+            cout << "Monto de compra: C$ ";
+            cin >> currentCmp.cmpr_Sqty;
 
-            currentCmp.cmpr_pts = currentCmp.cmpr_qty / 5;
+            currentCmp.cmp_iva = currentCmp.cmpr_Sqty * 0.15;
+            cout << "Iva: " << currentCmp.cmp_iva << endl;
+            
+            currentCmp.cmpr_Tqty = currentCmp.cmpr_Sqty + currentCmp.cmp_iva;
+            cout << "Total: C$ " << currentCmp.cmpr_Tqty << endl;
+
+            currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 180;
             cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
             cout << "||=========================||" << endl;
             // cout << "¿Desea volver a registrar otra compra o salir al menu? (v/s): " << endl;
@@ -683,7 +722,7 @@ void searchMclt()
 {
     // loadCSVdata();
     int options, pos;
-    char enteredClt_name[20];
+    char enteredClt_name[50];
     char enteredClt_lstName[20];
     int enteredClt_id = 0;
     char enteredClt_mail[50];
@@ -781,9 +820,17 @@ void showClt(int pos) // muestra los datos del cliente en X posición
 {
     system("cls || clear");
     cout << "====================================" << endl;
-    cout << "   ID   ||       Nombre       ||      Apellido      ||                    E-mail                    ||   Telefono    " << endl;
-    cout << setw(8) << clt[pos].client_id << "||" << setw(50) << clt[pos].client_name << "||" << setw(50) << clt[pos].client_lastname << "||" << setw(50) << clt[pos].client_mail << "||" << setw(10) << clt[pos].client_telf << endl;
-    
+    cout << "ID: ";
+    cout << clt[pos].client_id << endl;
+    cout << "Nombre: ";
+    cout << clt[pos].client_name << endl;
+    cout << "Apellido: ";
+    cout << clt[pos].client_lastname << endl;
+    cout << "E-mail: ";
+    cout << clt[pos].client_mail << endl;
+    cout << "Telefono: ";
+    cout << clt[pos].client_telf << endl;
+
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     system("cls || clear");
 }
@@ -813,48 +860,44 @@ cliente getClt(int pos)
     return clt[pos];
 }
 
-int searchCltname(char *enteredClt_name)
+void searchCltname(char *enteredClt_name) // funcion de prueba
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (tolower(clt[i].client_name[0]) == tolower(*enteredClt_name))
+        if (strcmp(enteredClt_name, clt[i].client_name) == 0)
         {
-            cout << (position + 1) << ". ";
+            cout << "=====" << endl;
             showClt(i);
             position++;
         }
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados..." << endl;
+        }
     }
-
-    if (position == 0)
-    {
-        cout << "No se encontraron resultados" << endl;
-    }
-    return position;
 }
 
-int searchCltlstname(char *enteredClt_lstName)
+void searchCltlstname(char *enteredClt_lstName) // funcion de prueba
 {
-    int position = 0; // Inicializar en 0
+    int position = 0;
     for (int i = 0; i < lastRegClt; i++)
     {
-        // Utilizar strcmp para comparar cadenas de caracteres
-        if (strcasecmp(clt[i].client_lastname, enteredClt_lstName) == 0)
+        if (strcmp(enteredClt_lstName, clt[i].client_lastname) == 0)
         {
-            cout << (position + 1) << ". ";
+            cout << "=========================" << endl;
             showClt(i);
             position++;
         }
-    }
 
-    if (position == 0)
-    {
-        cout << "No se encontraron resultados" << endl;
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados" << endl;
+        }
     }
-    return position;
 }
 
-int searchCltId(int enteredClt_id)
+int searchCltId(int enteredClt_id) // esta funcional
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
@@ -874,44 +917,40 @@ int searchCltId(int enteredClt_id)
     return position;
 }
 
-int searchCltmail(char *enteredClt_mail) // busq por mail
+void searchCltmail(char *enteredClt_mail) // prueba
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (strchr(clt[i].client_mail, *enteredClt_mail) != nullptr)
+        if (strcmp(enteredClt_mail, clt[i].client_mail) == 0)
         {
-            cout << "=========================" << endl;
             showClt(i);
             position++;
         }
-    }
 
-    if (position == 0)
-    {
-        cout << "No se encontraron resultados" << endl;
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados" << endl;
+        }
     }
-    return position;
 }
 
-int searchCltelf(char enteredClt_telf[]) // busqueda por numero telef
+void searchCltelf(char enteredClt_telf[]) // prueba
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (enteredClt_telf == (clt[i].client_telf))
+        if (strcmp(enteredClt_telf, clt[i].client_telf) == 0)
         {
-            cout << "=========================" << endl;
             showClt(i);
             position++;
         }
-    }
 
-    if (position == 0)
-    {
-        cout << "No se encontraron resultados" << endl;
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados" << endl;
+        }
     }
-    return position;
 }
 
 void uptdClt(cliente currentClt, int pos)
@@ -931,6 +970,7 @@ void delClt(int pos)
         clt[i] = clt[i + 1];
     }
     lastRegClt--;
+    proxIDclt--;
     initClt(lastRegClt);
 }
 
@@ -970,9 +1010,11 @@ void showCmpRegister(int i) // pendiente
 void showCmp(int pos) // muestra los datos del cliente en X posición
 {
     cout << "====================================" << endl;
-    cout << "ID de compra: " << cmp[pos].cmpr_id << endl;
+    cout << "N* de Recibo: " << cmp[pos].cmpr_id << endl;
     cout << "Fecha de compra: " << cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << endl;
-    cout << "Monto de compra: $ " << cmp[pos].cmpr_qty << endl;
+    cout << "Monto de compra: C$ " << cmp[pos].cmpr_Sqty << endl;
+    cout << "Iva: C$ " << cmp[pos].cmp_iva << endl;
+    cout << "Total: C$ " << cmp[pos].cmpr_Tqty << endl;
     cout << "Puntos por compra: " << cmp[pos].cmpr_pts << " pts" << endl;
     cout << "====================================" << endl;
 }
