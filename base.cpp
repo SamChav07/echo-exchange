@@ -24,7 +24,7 @@ struct accounts
 
 struct empleado
 {
-    char nombre[20];
+    char nombre[50];
     char empU[50]; // "00016"
     char empP[50]; // "enployee123"
     string empmail;
@@ -33,11 +33,11 @@ struct empleado
 
 struct cliente
 {
-    char client_name[20];
-    char client_lastname[20];
+    char client_name[50];
+    char client_lastname[50];
     int client_id;
     char client_mail[50];
-    char client_telf[15];
+    char client_telf[10];
 } clt[MAX];
 
 struct cmpr_fecha
@@ -458,7 +458,7 @@ void MDclient()
             cout << "Teléfono del cliente XXXX-XXXX: ";
             cin.ignore(); // Ignorar el carácter de nueva línea residual
             cin.getline(currentClt.client_telf, sizeof(currentClt.client_telf));
-            
+
             // Verificar si el formato del número de teléfono es correcto
             if (!strlen(currentClt.client_telf) == 8)
             {
@@ -782,7 +782,7 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     system("cls || clear");
     cout << "====================================" << endl;
     cout << "   ID   ||       Nombre       ||      Apellido      ||                    E-mail                    ||   Telefono    " << endl;
-    cout << setw(8) << clt[pos].client_id << "||" << setw(20) << clt[pos].client_name << "||" << setw(20) << clt[pos].client_lastname << "||" << setw(50) << clt[pos].client_mail << "||" << setw(15) << clt[pos].client_telf << endl;
+    cout << setw(8) << clt[pos].client_id << "||" << setw(50) << clt[pos].client_name << "||" << setw(50) << clt[pos].client_lastname << "||" << setw(50) << clt[pos].client_mail << "||" << setw(10) << clt[pos].client_telf << endl;
     
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     system("cls || clear");
