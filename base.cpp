@@ -84,7 +84,7 @@ void logClt();
 // menus
 void MDclient(); //--listo
 void MDcmp();
-void MDgift();     // vacio
+void MDgft();      // en proceso
 void searchMclt(); // menu de busqueda de cliente   //--listo
 
 void MAdm();
@@ -99,15 +99,29 @@ void initClt(int cltPos);        //--listo
 void showClt(int pos); //--listo
 void showCltRegister();
 cliente getClt(int pos);
-void searchCltname(char client_name[]);      //--listo
-void searchCltlstname(char *client_lstName); //--listo
-int searchCltId(int enteredClt_id);          // listo
-void searchCltmail(char client_mail[]);      //--listo
-void searchCltelf(char client_telf[]);       //--listo
+void searchCltname(char *enteredClt_name);       //--listo
+void searchCltlstname(char *enteredClt_lstName); //--listo
+int searchCltId(int enteredClt_id);              // listo
+void searchCltmail(char *enteredClt_mail);       //--listo
+void searchCltelf(char enteredClt_telf[]);       //--listo
 // uptade
 void uptdClt(cliente cliente, int i); // --listo
 // delete
 void delClt(int pos); // --listo
+
+// create gft
+void addGft(gift currentGft);
+void initGft(int gftPos);
+
+void showGft(int pos);
+void showGftRegister();
+gift getGft(int pos);
+void searchGFTname(char *enteredGft_name);
+int searchGFTid(int entered_id);
+
+void uptGFT(gift gift, int i);
+
+void delGFT(int pos);
 
 // compra
 void addCmp(reg_compra currentCmp);
@@ -116,13 +130,8 @@ void showCmp(int pos);
 reg_compra getCmp(int pos);
 int searCmpFID(int entered_id);
 
-// create gft
-void addGft(gift currentGft);
-void initGft(int gftPos);
-
 // funciones
 void record();
-void MDrewards(); // -------------pendiente
 void redeem();    // -------------pendiente
 void checkPts();  // -------------pendiente
 
@@ -133,6 +142,13 @@ void readClt();
 int cntClt(FILE *cltRegister);
 int getLstCltID();
 
+// archivos GFT
+FILE *gftRegister;
+void saveGft();
+void readGft();
+int cntGft(FILE *gftRegister);
+int getLstGftID();
+
 // variables globales
 char user[50], pass[50];
 int intentos = 4;
@@ -141,7 +157,6 @@ int lastRegClt = 0;
 int lasTregGft = 0;
 int lastREgCmp = 0;
 int proxIDclt = 123;
-
 int idCmp = 321;
 
 // codigos colores ANSI
@@ -190,26 +205,85 @@ int cntClt(FILE *cltRegister) // calcula el ultimo registro
     return num_clts;
 }
 
-int getLstCltID() 
+int getLstCltID()
 {
-   cltRegister = fopen("clientes.txt", "r");
-   if (cltRegister == NULL)
-   {
-    cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
-    return proxIDclt;
-   }
+    cltRegister = fopen("clientes.txt", "r");
+    if (cltRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
+        return proxIDclt;
+    }
 
-   int lastId = -1;
-   fseek(cltRegister, -sizeof(cliente), SEEK_END);
-   if (fread(&clt[0], sizeof(cliente), 1, cltRegister) == 1)
-   {
-    lastId = clt[0].client_id;
-   }
+    int lastId = -1;
+    fseek(cltRegister, -sizeof(cliente), SEEK_END);
+    if (fread(&clt[0], sizeof(cliente), 1, cltRegister) == 1)
+    {
+        lastId = clt[0].client_id;
+    }
     fclose(cltRegister);
 
     return (lastId == -1) ? proxIDclt : (lastId + 1);
 }
+// arch GFT
+void saveGft()
+{
+    cltRegister = fopen("recompensas.txt", "w");
+    if (gftRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de RECOMPENSAS para escribir..." << endl;
+        return;
+    }
+    fwrite(gft, sizeof(gift), lasTregGft, gftRegister);
+    fclose(gftRegister);
+}
 
+void readGft()
+{
+    gftRegister = fopen("recompensas.txt", "r");
+    if (gftRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de RECOMPENSAS para leer" << endl;
+        return;
+    }
+    lasTregGft = cntGft(gftRegister);
+    fread(gft, sizeof(gift), MAX, gftRegister);
+
+    fclose(gftRegister);
+}
+
+int cntGft(FILE *gftRegister) // calcula el ultimo registro
+{
+    int tam_archv, num_gfts;
+    // obtiene el tamaño del archv
+    fseek(gftRegister, 0, SEEK_END);
+    tam_archv = ftell(gftRegister);
+    rewind(gftRegister);
+
+    // calc el # de clts
+    num_gfts = tam_archv / sizeof(gift);
+    return num_gfts;
+}
+
+int getLstGftID()
+{
+    cltRegister = fopen("recompensas.txt", "r");
+    if (cltRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de RECOMPENSAS para obtener el ultimo ID..." << endl;
+        return idCmp;
+    }
+
+    int lastId = -1;
+    fseek(gftRegister, -sizeof(gift), SEEK_END);
+    if (fread(&gft[0], sizeof(gift), 1, gftRegister) == 1)
+    {
+        lastId = gft[0].gft_id;
+    }
+    fclose(gftRegister);
+
+    return (lastId == -1) ? idCmp : (lastId + 1);
+}
+// fin de archivos
 int main()
 {
     readClt();
@@ -222,39 +296,42 @@ void SuperAdmin()
     int spOpcion;
     int intentos = 3;
 
-    cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
-    cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN NN  NN  GG       EE" << RESET << endl;
-    cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
-    cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
-    cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
-    
-    cout << "||==================================================||" << endl;
-    cout << "Bienvenido Super-Admin" << endl;
-    cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
-    cout << "1. Administrador." << endl;
-    cout << "2. Cliente." << endl;
-    cout << "3. Cerrar." << endl;
-    cout << "||==================================================||" << endl;
-    cout << "\n --> ";
-    cin >> spOpcion;
-    switch (spOpcion)
+    do
     {
-    case 1:
-        logAdm();
-        break;
-    case 2:
-        logClt();
-        break;
-    case 3:
-        // saveCSVdata(); // llama a la funcion guardar antes de cerrar la sesion
-        cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
-        exit(0);
-        break;
-    default:
-        cout << "Ingrese una opcion valida. 1 - 3..." << endl;
-        break;
-    }
-}
+        cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
+        cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN NN  NN  GG       EE" << RESET << endl;
+        cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
+        cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
+        cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
+
+        cout << "||==================================================||" << endl;
+        cout << "Bienvenido Super-Admin" << endl;
+        cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
+        cout << "1. Administrador." << endl;
+        cout << "2. Cliente." << endl;
+        cout << "3. Cerrar." << endl;
+        cout << "||==================================================||" << endl;
+        cout << "\n --> ";
+        cin >> spOpcion;
+        switch (spOpcion)
+        {
+        case 1:
+            logAdm();
+            break;
+        case 2:
+            logClt();
+            break;
+        case 3:
+            // saveCSVdata(); // llama a la funcion guardar antes de cerrar la sesion
+            cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
+            exit(0);
+            break;
+        default:
+            cout << "Ingrese una opcion valida. 1 - 3..." << endl;
+            break;
+        }
+    } while (spOpcion != 3);
+} 
 
 void logAdm()
 {
@@ -316,7 +393,7 @@ void MAdm()
             MDclient();
             break;
         case 3:
-            MDrewards();
+            MDgft();
             break;
         case 4:
             system("cls");
@@ -586,8 +663,235 @@ void MDclient()
     }
 }
 
-void MDcmp()
+void MDgft()
 {
+    readGft();
+
+    gift currentGft;
+    int gftPos, resp;
+    int enteredGft_id;
+    char enteredGft_name[50];
+
+    int optMdGft;
+    system("cls || clear");
+    cout << "RECOMPENSAS" << endl;
+    cout << "Cantidad de registros de Recompensas: " << lasTregGft << endl; // arreglar segun sus datos
+    cout << "***--Opciones--***" << endl;
+    cout << "1. Agregar recompensa." << endl;
+    cout << "2. Buscar recompensa." << endl;
+    cout << "3. Modificar recompensa." << endl;
+    cout << "4. Eliminar recompensa." << endl;
+    cout << "5. Atras..." << endl;
+    cout << "\n --> ";
+    cin >> optMdGft;
+    system("pause");
+
+    switch (optMdGft)
+    {
+    case 1:
+        system("cls || clear");
+        cout << "** Ingrese los datos a añadir **" << endl;
+        system("cls || clear");
+        currentGft.gft_id = getLstGftID();
+
+        if (currentGft.gft_id == -1)
+        {
+            cerr << "Error al obtener el último ID. No se pudo agregar la recompensa..." << endl;
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            return;
+        }
+
+        cout << "ID: " << currentGft.gft_id << endl;
+
+        // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
+        cout << "Nombre de la recompensa: ";
+        cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+
+        // Cantidad de la recomp
+        do
+        {
+            cout << "Cantidad del producto: ";
+            cin >> currentGft.gft_cant;
+            if (currentGft.gft_cant <= 3)
+            {
+                cout << "La cantidad debe tener menos de tres letras!" << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
+            }
+        } while (currentGft.gft_cant <= 3);
+
+        // pts necesarios
+        do
+        {
+            cout << "Puntos Necesarios: ";
+            cin >> currentGft.gft_pts;
+            if (currentGft.gft_pts >= 1000000000)
+            {
+                cout << "Los puntos no pueden ser mayor a 1,000,000,000" << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
+            }
+            else if (currentGft.gft_pts <= 100)
+            {
+                cout << "Los puntos no pueden ser menor a 100" << endl;
+                cin.clear();
+                cin.ignore(INT_MAX, '\n');
+            }
+
+        } while ((currentGft.gft_pts >= 1000000000) || (currentGft.gft_pts <= 100));
+
+        addGft(currentGft);
+        saveGft();
+        // llama a la función guardar antes de cerrar la sesión
+        system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+        MDgft();
+        break;
+
+    case 2:
+        int opBsqGft;
+
+        do
+        {
+            cout << "Busqueda de Recompensa:" << endl;
+            cout << "1. ID." << endl;
+            cout << "2. Nombre." << endl;
+            cout << "3. Todos los registros." << endl;
+            cout << "4. Atras..." << endl;
+            cout << "\n-->";
+            cin >> opBsqGft;
+            switch (opBsqGft)
+            {
+            case 1:
+                system("cls || clear");
+                cout << "Buscar por ID de Recompensa: " << endl;
+                cout << "ID a buscar: ";
+                cin >> enteredGft_id;
+                searchGFTid(enteredGft_id);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                system("cls || clear");
+                break;
+            case 2:
+                system("cls || clear");
+                cout << "Buscar por nombre de Recompensa: " << endl;
+                cout << "Nombre a buscar: ";
+                cin.getline(enteredGft_name, sizeof(enteredGft_name));
+                searchGFTname(reinterpret_cast<char *>(&enteredGft_name));
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                system("cls || clear");
+                break;
+            case 3:
+                system("cls || clear");
+                cout << "Visualizando todos los registros..." << endl;
+                showGftRegister();
+                system("cls || clear");
+                break;
+            case 4:
+                cout << "Saliendo..." << endl;
+                system("cls");
+                MDgft();
+                break;
+
+            default:
+                cout << "Opcion Incorrecta!. Ingrese 1 - 4..." << endl;
+                break;
+            }
+        } while (opBsqGft != 4);
+
+        break;
+    case 3:
+        system("cls || clear");
+        cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
+        cin >> enteredGft_id;
+        gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
+        if (gftPos != -1)
+        {
+            do
+            {
+                int opModfy;
+                cout << "Datos a modificar:" << endl;
+                cout << "1. Nombre." << endl;
+                cout << "2. Cantidad o Stock." << endl;
+                cout << "3. Puntos Necesarios." << endl;
+                cout << "4. Atras..." << endl;
+                cout << "\n-->";
+                cin >> opModfy;
+
+                switch (opModfy)
+                {
+                case 1:
+                    cout << "Nombre: ";
+                    cin >> currentGft.gft_name;
+                    break;
+                case 2:
+                    cout << "Cantidad o Stock: ";
+                    cin >> currentGft.gft_cant;
+                    break;
+                case 3:
+                    cout << "Puntos Necesarios: ";
+                    cin >> currentGft.gft_pts;
+                    break;
+                case 4:
+                    MDgft();
+                    break;
+
+                default:
+                    cout << "Opcion no valida, 1 - 4..." << endl;
+                    break;
+                }
+            } while (optMdGft != 4);
+        }
+        else
+        {
+            cout << "Registro inexistente" << endl;
+        }
+        MDgft();
+        saveGft();
+        system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+        break;
+    case 4:
+        system("cls || clear");
+        if (lasTregGft == 0)
+        {
+            cout << "No hay nada que eliminar\n";
+            break;
+        }
+        cout << "Escribe el ID de la recompensa: " << endl;
+        cin >> enteredGft_id;
+        gftPos = searchCltId(enteredGft_id); // busqueda de GFT
+        if (gftPos != -1)
+        {
+            currentGft = getGft(gftPos);
+            cout << "¿Realmente deseas eliminar la recompensa ?" << endl;
+            cout << "Escriba 1 para SI o 2 para NO : ";
+            cin >> resp;
+            if (resp == 1)
+            {
+                delGFT(gftPos);
+                cout << "Registro eliminado...\n";
+            }
+            else
+            {
+                cout << "Operacion cancelada...\n";
+            }
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+        }
+        else
+        {
+            cout << "Registro inexistente" << endl;
+        }
+        saveGft();
+        break;
+    case 5:
+        MAdm();
+        break;
+
+    default:
+        cout << "Ingrese una opcion valida. Del 1 - 5..." << endl;
+        break;
+    }
+}
+
+void MDcmp() {
     readClt();
 
     string regreso;
@@ -620,14 +924,18 @@ void MDcmp()
             cin >> currentCmp.cmpr_id;
 
             cout << "Fecha de compra: ";
-            cin >> currentCmp.fCmp.day; cout << "-"; cin >> currentCmp.fCmp.month; cout << "-"; cin >> currentCmp.fCmp.year;
+            cin >> currentCmp.fCmp.day;
+            cout << "-";
+            cin >> currentCmp.fCmp.month;
+            cout << "-";
+            cin >> currentCmp.fCmp.year;
 
             cout << "Monto de compra: C$ ";
             cin >> currentCmp.cmpr_Sqty;
 
             currentCmp.cmp_iva = currentCmp.cmpr_Sqty * 0.15;
             cout << "Iva: " << currentCmp.cmp_iva << endl;
-            
+
             currentCmp.cmpr_Tqty = currentCmp.cmpr_Sqty + currentCmp.cmp_iva;
             cout << "Total: C$ " << currentCmp.cmpr_Tqty << endl;
 
@@ -664,12 +972,6 @@ void record()
     system("cls || clear");
 }
 
-void MDgift()
-{
-    gift currentGft;
-    int pos, resp;
-}
-
 void addClt(cliente currentClt)
 {
     if (lastRegClt < MAX)
@@ -681,19 +983,6 @@ void addClt(cliente currentClt)
     else
     {
         cout << "Clientes esta en Maxima capacidad..." << endl;
-    }
-}
-
-void addGft(gift currentGft)
-{
-    if (lasTregGft < MAX)
-    {
-        gft[lasTregGft] = currentGft;
-        lasTregGft++;
-    }
-    else
-    {
-        cout << "Recompensas esta en Maxima capacidad..." << endl;
     }
 }
 
@@ -710,14 +999,6 @@ void initClt(int pos) // inicializa los datos del cliente
     strncpy(clt[pos].client_telf, "", sizeof(clt[pos].client_telf));
 }
 
-/*void initGft(int gftPos)
-{
-    gft[pos].gft_id = 0;
-
-    strncpy(gft[pos].client_name, "", sizeof(clt[pos].client_name));
-    clt[pos].client_name[sizeof(clt[pos].client_name) - 1] = '\0';
-}*/
-
 void searchMclt()
 {
     // loadCSVdata();
@@ -729,7 +1010,7 @@ void searchMclt()
     char enteredClt_telf[15];
 
     do
-    {
+    { // borrar los cin.ignore
         system("cls || clear");
         cout << "** Menu de busqueda **" << endl;
         cout << "1. Nombre." << endl;
@@ -749,7 +1030,6 @@ void searchMclt()
             system("cls || clear");
             cout << "Buscar por nombre de Cliente" << endl;
             cout << "Nombre a buscar: ";
-            cin.ignore(); // limpia la entrada
             cin.getline(enteredClt_name, sizeof(enteredClt_name));
             searchCltname(reinterpret_cast<char *>(&enteredClt_name));
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -759,7 +1039,6 @@ void searchMclt()
             system("cls || clear");
             cout << "Buscar por apellido de Cliente" << endl;
             cout << "Apellido a buscar: ";
-            cin.ignore();
             cin.getline(enteredClt_lstName, sizeof(enteredClt_lstName));
             searchCltlstname(&enteredClt_lstName[20]);
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -769,7 +1048,6 @@ void searchMclt()
             system("cls || clear");
             cout << "Buscar por id de Cliente" << endl;
             cout << "ID a buscar: ";
-            cin.ignore();
             cin >> enteredClt_id;
             searchCltId(enteredClt_id);
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -779,7 +1057,6 @@ void searchMclt()
             system("cls || clear");
             cout << "Buscar por e-mail de Cliente" << endl;
             cout << "E-mail a buscar: ";
-            cin.ignore();
             cin.getline(enteredClt_mail, sizeof(enteredClt_mail));
             searchCltmail(&enteredClt_mail[50]);
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -789,7 +1066,6 @@ void searchMclt()
             system("cls || clear");
             cout << "Buscar por telefono de Cliente" << endl;
             cout << "Telefono a buscar: ";
-            cin.ignore();
             cin.getline(enteredClt_telf, sizeof(enteredClt_telf));
             searchCltelf(&enteredClt_telf[15]);
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -1096,4 +1372,129 @@ void redeem() // -------------pendiente
 void checkPts() // -------------pendiente
 {
     cout << "Visualizar puntos" << endl;
+}
+
+void addGft(gift currentGft)
+{
+    if (lasTregGft < MAX)
+    {
+        gft[lasTregGft] = currentGft;
+        lasTregGft++;
+        idCmp++;
+    }
+    else
+    {
+        cout << "Recompensas esta en Maxima capacidad..." << endl;
+    }
+}
+void initGft(int gftPos)
+{
+    gft[gftPos].gft_id = 0;
+
+    strncpy(gft[gftPos].gft_name, "", sizeof(gft[gftPos].gft_name));
+
+    gft[gftPos].gft_cant = 0;
+
+    gft[gftPos].gft_pts = 0;
+}
+
+void showGft(int gftPos)
+{
+    system("cls || clear");
+    cout << "====================================" << endl;
+    cout << "ID: ";
+    cout << gft[gftPos].gft_id << endl;
+    cout << "Nombre: ";
+    cout << gft[gftPos].gft_name << endl;
+    cout << "Cantidad: ";
+    cout << gft[gftPos].gft_cant << endl;
+    cout << "Puntos Necesarios: ";
+    cout << gft[gftPos].gft_pts << endl;
+
+    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+    system("cls || clear");
+}
+
+void showGftRegister()
+{
+    system("cls || clear");
+    if (lasTregGft == 0)
+    {
+        cout << "No hay Recompenas registradas" << endl;
+        return;
+    }
+    cout << "Registro de Recompensas: " << endl;
+    cout << "====================================" << endl;
+
+    for (int i = 0; i < lasTregGft; i++)
+    {
+        cout << "Recompensa #" << i + 1 << endl;
+        showGft(i);
+    }
+    cout << "====================================" << endl;
+    cout << "Ultimo registro..." << endl;
+}
+
+gift getGft(int gftPos)
+{
+    return gft[gftPos];
+}
+
+void searchGFTname(char *enteredGft_name)
+{
+    int position = 0;
+    for (int i = 0; i < lasTregGft; i++)
+    {
+        if (strcmp(enteredGft_name, gft[i].gft_name) == 0)
+        {
+            cout << "====" << endl;
+            showGft(i);
+            position++;
+        }
+
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados..." << endl;
+        }
+    }
+}
+
+int searchGFTid(int entered_id)
+{
+    int position = 0;
+    for (int i = 0; i < lasTregGft; i++)
+    {
+        if (entered_id == (gft[i].gft_id))
+        {
+            cout << "====" << endl;
+            showGft(i);
+            position++;
+        }
+
+        if (position == 0)
+        {
+            cout << "No se encontraron resultados..." << endl;
+        }
+    }
+}
+
+void uptGFT(gift currentGft, int gftPos)
+{
+    gft[gftPos] = currentGft;
+}
+
+void delGFT(int gftPos)
+{
+    if (gftPos == lasTregGft)
+    {
+        cout << "No hay registros..." << endl;
+        return;
+    }
+    for (int i = gftPos; i < lasTregGft - 1; i++)
+    {
+        gft[i] = gft[i + 1];
+    }
+    lasTregGft--;
+    idCmp--;
+    initGft(lasTregGft);
 }
