@@ -165,6 +165,8 @@ int lastREgCmp = 0;
 int proxIDclt = 123;
 int idCmp = 321;
 
+int opPtsGft();
+
 // codigos colores ANSI
 #define RESET "\033[0m"
 #define RED "\033[31m"
@@ -290,7 +292,7 @@ int getLstGftID()
     return (lastId == -1) ? idCmp : (lastId + 1);
 }
 ////////// ARCH DE CMP
-void saveCompra() {
+void saveCMP() {
     cmpRegister = fopen("compras.txt", "w");
     if (cmpRegister == NULL) {
         cerr << "Error al abrir el archivo de compras para escribir..." << endl;
@@ -301,16 +303,29 @@ void saveCompra() {
     fclose(cmpRegister);
 }
 
-void readCompra() {
+void readCMP() {
     cmpRegister = fopen("compras.txt", "r");
     if (cmpRegister == NULL) {
         cerr << "Error al abrir el archivo de compras para leer" << endl;
         return;
     }
-    lastREgCmp = cntCompra(cmpRegister);  // Ajusta 'cntCompra()' según tus necesidades
+    lastREgCmp = cntCMP(cmpRegister);  // Ajusta 'cntCompra()' según tus necesidades
     // Suponiendo que 'compras' es un arreglo de estructuras de compras
     fread(cmp, sizeof(reg_compra), MAX, cmpRegister);
     fclose(cmpRegister);
+}
+
+int cntCMP(FILE *cmpRegister)
+{
+        int tam_archv, num_compras;
+        // obtiene el tamaño del archv
+        fseek(cmpRegister, 0, SEEK_END);
+        tam_archv = ftell(cmpRegister);
+        rewind(cmpRegister);
+
+        // calc el # de compras
+        num_compras = tam_archv / sizeof(cmp);
+        return num_compras;
 }
 // fin de archivos
 int main()
@@ -435,9 +450,17 @@ void MAdm()
     } while (op1 != 4);
 }
 
+int opPtsGft()
+{
+    cout << "va a hacer una operacion para los puntos" << endl;
+    return 0;
+}
+
 void MClt()        //////////////////// CLIENTES
 {
     readCMP();
+    readGft();
+    readClt();
     int op2;
     do
     {
