@@ -149,6 +149,12 @@ void readGft();
 int cntGft(FILE *gftRegister);
 int getLstGftID();
 
+// arch CMP
+FILE *cmpRegister;
+void saveCMP();
+void readCMP();
+int cntCMP(FILE *cmpRegister);
+
 // variables globales
 char user[50], pass[50];
 int intentos = 4;
@@ -283,6 +289,29 @@ int getLstGftID()
 
     return (lastId == -1) ? idCmp : (lastId + 1);
 }
+////////// ARCH DE CMP
+void saveCompra() {
+    cmpRegister = fopen("compras.txt", "w");
+    if (cmpRegister == NULL) {
+        cerr << "Error al abrir el archivo de compras para escribir..." << endl;
+        return;
+    }
+    // Suponiendo que 'compras' es un arreglo de estructuras de compras
+    fwrite(cmp, sizeof(reg_compra), lastREgCmp, cmpRegister);
+    fclose(cmpRegister);
+}
+
+void readCompra() {
+    cmpRegister = fopen("compras.txt", "r");
+    if (cmpRegister == NULL) {
+        cerr << "Error al abrir el archivo de compras para leer" << endl;
+        return;
+    }
+    lastREgCmp = cntCompra(cmpRegister);  // Ajusta 'cntCompra()' según tus necesidades
+    // Suponiendo que 'compras' es un arreglo de estructuras de compras
+    fread(cmp, sizeof(reg_compra), MAX, cmpRegister);
+    fclose(cmpRegister);
+}
 // fin de archivos
 int main()
 {
@@ -319,7 +348,7 @@ void SuperAdmin()
             logAdm();
             break;
         case 2:
-            logClt();
+            MClt();
             break;
         case 3:
             // saveCSVdata(); // llama a la funcion guardar antes de cerrar la sesion
@@ -406,52 +435,21 @@ void MAdm()
     } while (op1 != 4);
 }
 
-void logClt()
+void MClt()        //////////////////// CLIENTES
 {
-    do
-    {
-        empleado empleado1;
-        strcpy(empleado1.empU, "usuario1");
-        strcpy(empleado1.empP, "password123");
-
-        int intentos = 4;
-
-        cout << "---Cliente---" << endl;
-        cout << "-------------" << endl;
-
-        cout << "\nUsuario: ";
-        cin >> user;
-        cout << "\nContrasena: ";
-        cin >> pass;
-
-        // Verificaci�n de credenciales del cliente
-        if (strcmp(user, empleado1.empU) == 0 && strcmp(pass, empleado1.empP) == 0)
-        {
-            cout << "\n***Acceso concedido***\n";
-            MClt();
-        }
-        else
-        {
-            cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
-            cout << "Intentos restantes: " << intentos - 1 << endl;
-            intentos--;
-        }
-    } while (intentos > 0);
-    cout << "\n*** Intento fallido. Usuario o contrase�a incorrecta ***" << endl;
-    cout << "***Acceso bloqueado, saliendo del sistema...***";
-}
-
-void MClt()
-{
+    readCMP();
     int op2;
     do
     {
+        int i;
+        int enteredClt_id;
+        system("cls || clear");
         cout << "\nBienvenido Empleado" << endl;
         cout << "\n***--Opciones--***" << endl;
         cout << "\n1.. Canjear puntos." << endl;
         cout << "\n2. Consultar puntos." << endl;
         cout << "\n3. Historial de compra." << endl;
-        cout << "\n4. Cerrar Sesion." << endl;
+        cout << "\n4. Refrescar Rtrn." << endl;
         cout << "\n --> ";
         cin >> op2;
         system("pause");
@@ -465,11 +463,19 @@ void MClt()
             checkPts();
             break;
         case 3:
-            record();
+                cout << "ID de cliente: ";
+                cin.ignore();
+                cout << "" << endl;
+                cin >> enteredClt_id;
+                searCmpFID(enteredClt_id);
+                showCmpRegister(i);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                MClt();
+                system("cls || clear");
             break;
         case 4:
             system("cls");
-            logClt();
+            MClt();
             break;
         default:
             cout << "Ingrese opciones validas. Sean de 1-4.." << endl;
@@ -563,22 +569,21 @@ void MDclient()
         } while (strstr(currentClt.client_mail, "@gmail.com") == NULL);
 
         // Teléfono del cliente
-        do
-        {
-            cout << "Teléfono del cliente XXXX-XXXX: ";
-            cin >> currentClt.client_telf;
+            do {
+                cout << "Teléfono del cliente XXXX-XXXX: ";
+                cin >> currentClt.client_telf;
 
-            // Verificar si el formato del número de teléfono es correcto
-            if (currentClt.client_telf != 8)
-            {
-                cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
-            }
+                // Verificar si el formato del número de teléfono es correcto
+                if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999) {
+                    cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
 
-        } while (currentClt.client_telf != 8);
+            } while (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999);
 
-        addClt(currentClt);
+
+            addClt(currentClt);
         saveClt();
         // saveCSVdata(); // llama a la función guardar antes de cerrar la sesión
         system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
@@ -925,7 +930,7 @@ void MDgft()
 
 void MDcmp() {
     readClt();
-
+    readCMP();
     string regreso;
     reg_compra currentCmp;
     int cmpOPt;
@@ -977,6 +982,7 @@ void MDcmp() {
             // cout << "¿Desea volver a registrar otra compra o salir al menu? (v/s): " << endl;
 
             addCmp(currentCmp);
+            saveCMP();
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
             break;
         case 2:
@@ -1380,34 +1386,43 @@ void MDrewards() // -------------pendiente
 }
 void redeem() // -------------pendiente
 {
+    int i, pos, gftPos;
+    int enteredClt_id, enteredGft_id;
+    cout << "ID de cliente: ";
+    cin.ignore();
+    cout << "" << endl;
+    cin >> enteredClt_id;
+    pos = searchCltId(enteredClt_id);
+    if (pos != -1)
+    {
+        showClt(pos);
+    }
+    else
+    {
+        cout << "Registro Inexistente" << endl;
+    }
+    searCmpFID(enteredClt_id);
     cout << "||=========================||" << endl;
     cout << "--------Echo-Exchange--------" << endl;
     cout << "" << endl;
     cout << "\tSeleccion de recompensas" << endl;
-    cout << "______________________________" << endl;
-    cout << "------------------------------" << endl;
-    cout << "Puntos actuales:   495" << endl;
-    cout << "=======================" << endl;
-    cout << "ID:    123" << endl;
-    cout << "Cantidad:  2" << endl;
-    cout << "Descuento del 20%" << endl;
-    cout << "Puntos necesarios: 295" << endl;
-    cout << "+++++++++++++++++++++++" << endl;
-    cout << "ID:    234" << endl;
-    cout << "Cantidad:  3" << endl;
-    cout << "Producto Gratis" << endl;
-    cout << "Puntos necesarios: 500" << endl;
-    cout << "+++++++++++++++++++++++" << endl;
-    cout << "ID:    345" << endl;
-    cout << "Cantidad:  1" << endl;
-    cout << "Bonus" << endl;
-    cout << "Puntos necesarios: 700" << endl;
-    cout << "=======================" << endl;
-    cout << "Elija su recompensa: \n(escriba el ID correspondiente)" << endl;
-    cout << "ID:    123" << endl;
-    cout << "***Transaccion exitosa***" << endl;
+    showGftRegister();
     cout << "||=========================||" << endl;
-    cout << "¿Desea volver a mostrar de nuevo su historial o salir al menu? (v/s): " << endl;
+    cout << "ID de la recompensa a canjear:";
+    cin >> enteredGft_id;
+    gftPos = searchGFTid(enteredGft_id);
+    if (gftPos != -1)
+    {
+        showGft(gftPos);
+    }
+    else
+    {
+        cout << "Registro Inexistente" << endl;
+    }
+    searchGFTid(i);
+    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+    MClt();
+    system("cls || clear");
 }
 void checkPts() // -------------pendiente
 {
