@@ -165,7 +165,7 @@ int lastREgCmp = 0;
 int proxIDclt = 123;
 int idCmp = 321;
 
-int opPtsGft();
+int opPtsGft(int enteredGft_id);
 
 // codigos colores ANSI
 #define RESET "\033[0m"
@@ -450,9 +450,39 @@ void MAdm()
     } while (op1 != 4);
 }
 
-int opPtsGft()
+int opPtsGft(int enteredGft_id)
 {
-    cout << "va a hacer una operacion para los puntos" << endl;
+     int gftPos = -1;
+    
+    // Buscar el artículo por ID
+    for (int i = 0; i < lasTregGft; ++i) {
+        if (gft[gftPos].gft_id == enteredGft_id) {
+            gftPos = i;
+            break;
+        }
+    }
+    
+    if (gftPos != -1) {
+        // Mostrar la cantidad existente del artículo
+        cout << "Cantidad existente del artículo con ID " << gft[gftPos].gft_id << ": " << gft[gftPos].gft_cant << endl;
+
+        // Solicitar al usuario la cantidad que desea tomar
+        int cantidadTomar;
+        cout << "Ingrese la cantidad que desea tomar: ";
+        cin >> cantidadTomar;
+
+        // Verificar si la cantidad es válida
+        if (cantidadTomar <= gft[gftPos].gft_cant) {
+            // Realizar la operación de resta
+            gft[gftPos].gft_cant -= cantidadTomar;
+            cout << "Operación exitosa. Se tomaron " << cantidadTomar << " unidades del artículo con ID " << gft[gftPos].gft_id << endl;
+        } else {
+            cout << "La cantidad ingresada es mayor que la cantidad existente. Operación cancelada." << endl;
+        }
+    } else {
+        cout << "Registro Inexistente" << endl;
+    } 
+
     return 0;
 }
 
@@ -1409,7 +1439,7 @@ void MDrewards() // -------------pendiente
 }
 void redeem() // -------------pendiente
 {
-    int i, pos, gftPos;
+    int i, pos, gftPos, OPT;
     int enteredClt_id, enteredGft_id;
     cout << "ID de cliente: ";
     cin.ignore();
@@ -1443,6 +1473,7 @@ void redeem() // -------------pendiente
         cout << "Registro Inexistente" << endl;
     }
     searchGFTid(i);
+    
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     MClt();
     system("cls || clear");
