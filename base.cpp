@@ -1601,3 +1601,5 @@ void delGFT(int gftPos)
     idCmp--;
     initGft(lasTregGft);
 }
+
+// fin del programa
