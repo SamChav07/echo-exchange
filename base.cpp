@@ -661,6 +661,7 @@ void MDclient()
         break;
     case 3:
         system("cls || clear");
+        int opModclt;
         cout << "** Escribe el ID del cliente a modificar **" << endl;
         cin >> enteredClt_id;
         pos = searchCltId(enteredClt_id);
@@ -668,7 +669,6 @@ void MDclient()
         {
             do
             {
-                int opModclt;
                 cout << "Datos a modificar:" << endl;
                 cout << "1. Nombre." << endl;
                 cout << "2. Apellido." << endl;
@@ -729,6 +729,7 @@ void MDclient()
                 default:
                     cout << "Opción no válida. Por favor, inténtelo de nuevo" << endl;
                     break;
+                }
             } while(opModclt != 6);
             saveClt();
         }
@@ -792,248 +793,240 @@ void MDgft()
     char enteredGft_name[50];
 
     int optMdGft;
-    system("cls || clear");
-    cout << "RECOMPENSAS" << endl;
-    cout << "Cantidad de registros de Recompensas: " << lasTregGft << endl; // arreglar segun sus datos
-    cout << "***--Opciones--***" << endl;
-    cout << "1. Agregar recompensa." << endl;
-    cout << "2. Buscar recompensa." << endl;
-    cout << "3. Modificar recompensa." << endl;
-    cout << "4. Eliminar recompensa." << endl;
-    cout << "5. Atras..." << endl;
-    cout << "\n --> ";
-    cin >> optMdGft;
-
-    switch (optMdGft)
-    {
-    case 1:
+    do {
         system("cls || clear");
-        cout << "** Ingrese los datos a añadir **" << endl;
-        system("cls || clear");
-        currentGft.gft_id = getLstGftID();
-        if (currentGft.gft_id == -1)
-        {
-            cerr << "Error al obtener el último ID. No se pudo agregar la recompensa..." << endl;
-            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-            return;
-        }
-        cout << "ID: " << currentGft.gft_id << endl;
+        cout << "RECOMPENSAS" << endl;
+        cout << "Cantidad de registros de Recompensas: " << lasTregGft << endl; // arreglar segun sus datos
+        cout << "***--Opciones--***" << endl;
+        cout << "1. Agregar recompensa." << endl;
+        cout << "2. Buscar recompensa." << endl;
+        cout << "3. Modificar recompensa." << endl;
+        cout << "4. Eliminar recompensa." << endl;
+        cout << "5. Atras..." << endl;
+        cout << "\n --> ";
+        cin >> optMdGft;
 
-            // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
-        do
+        switch (optMdGft)
         {
-            cout << "Nombre de la recompensa: ";
-            cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
-
-            if (strlen(currentGft.gft_name) < 5)
+        case 1:
+            system("cls || clear");
+            cout << "** Ingrese los datos a añadir **" << endl;
+            system("cls || clear");
+            currentGft.gft_id = getLstGftID();
+            if (currentGft.gft_id == -1)
             {
-                cout << "\nEl nombre es demasiado corto! Minimo 5 caracteres." << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
+                cerr << "Error al obtener el último ID. No se pudo agregar la recompensa..." << endl;system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+                return;
             }
-            if (strlen(currentGft.gft_name) > 49)
-            {
-                cout << "El nombre es demasiado largo! Maximo 50 caracteres." << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
-            }
-        } while (strlen(currentGft.gft_name) < 5 || strlen(currentGft.gft_name) > 49);
+            cout << "ID: " << currentGft.gft_id << endl;
 
-            // Cantidad de la recomp
-        do
-        {
-            cout << "Cantidad del producto: ";
-            cin >> currentGft.gft_cant;
-            if (currentGft.gft_cant >= 1000)
-            {
-                cout << "La cantidad debe tener menos de tres digitos!" << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
-            }
-        } while (currentGft.gft_cant >= 1000);
-
-            // pts necesarios
-        do
-        {
-            cout << "Puntos Necesarios: ";
-            cin >> currentGft.gft_pts;
-            if (currentGft.gft_pts >= 1000000000)
-            {
-                cout << "Los puntos no pueden ser mayor a 1,000,000,000" << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
-            }
-            else if (currentGft.gft_pts <= 100)
-            {
-                cout << "Los puntos no pueden ser menor a 100" << endl;
-                cin.clear();
-                cin.ignore(INT_MAX, '\n');
-            }
-        } while ((currentGft.gft_pts >= 1000000000) || (currentGft.gft_pts <= 100));
-
-        addGft(currentGft);
-        saveGft();
-        // llama a la función guardar antes de cerrar la sesión
-        system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-        MDgft();
-        break;
-
-    case 2:
-        int opBsqGft;
-
-        do
-        {
-            cout << "Busqueda de Recompensa:" << endl;
-            cout << "1. ID." << endl;
-            cout << "2. Nombre." << endl;
-            cout << "3. Todos los registros." << endl;
-            cout << "4. Atras..." << endl;
-            cout << "\n-->";
-            cin >> opBsqGft;
-            switch (opBsqGft)
-            {
-            case 1:
-                system("cls || clear");
-                cout << "Buscar por ID de Recompensa: " << endl;
-                cout << "ID a buscar: ";
-                cin >> enteredGft_id;
-                gftPos = searchGFTid(enteredGft_id);
-                if (gftPos != -1)
-                {
-                    showGft(gftPos);
-                }
-                else
-                {
-                    cout << "Registro Inexistente" << endl;
-                }
-                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
-                break;
-            case 2:
-                system("cls || clear");
-                cout << "Buscar por nombre de Recompensa: " << endl;
-                cout << "Nombre a buscar: ";
-                cin.ignore();
-                cin.getline(enteredGft_name, sizeof(enteredGft_name));
-                searchGFTname(enteredGft_name);
-                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
-                break;
-            case 3:
-                system("cls || clear");
-                cout << "Visualizando todos los registros..." << endl;
-                showGftRegister();
-                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
-                break;
-            case 4:
-                system("cls || clear");
-                cout << "Saliendo..." << endl;
-                MDgft();
-                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-                break;
-
-            default:
-                cout << "Opcion Incorrecta!. Ingrese 1 - 4..." << endl;
-                break;
-        } while (opBsqGft != 4);
-
-        break;
-    case 3:
-        system("cls || clear");
-        cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
-        cin >> enteredGft_id;
-        gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
-        if (gftPos != -1)
-        {
+                // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
             do
             {
-                int opModfy;
-                cout << "Datos a modificar:" << endl;
-                cout << "1. Nombre." << endl;
-                cout << "2. Cantidad o Stock." << endl;
-                cout << "3. Puntos Necesarios." << endl;
+                cout << "Nombre de la recompensa: ";
+                cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+
+                if (strlen(currentGft.gft_name) < 5)
+                {
+                    cout << "\nEl nombre es demasiado corto! Minimo 5 caracteres." << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+                else if (strlen(currentGft.gft_name) > 49)
+                {
+                    cout << "El nombre es demasiado largo! Maximo 50 caracteres." << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+            } while (strlen(currentGft.gft_name) < 5 || strlen(currentGft.gft_name) > 49);
+
+                // Cantidad de la recomp
+            do
+            {
+                cout << "Cantidad del producto: ";
+                cin >> currentGft.gft_cant;
+                if (currentGft.gft_cant >= 1000)
+                {
+                    cout << "La cantidad debe tener menos de tres digitos!" << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+            } while (currentGft.gft_cant >= 1000);
+
+                // pts necesarios
+            do
+            {
+                cout << "Puntos Necesarios: ";
+                cin >> currentGft.gft_pts;
+                if (currentGft.gft_pts >= 1000000000)
+                {
+                    cout << "Los puntos no pueden ser mayor a 1,000,000,000" << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+                else if (currentGft.gft_pts <= 100)
+                {
+                    cout << "Los puntos no pueden ser menor a 100" << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+            } while ((currentGft.gft_pts >= 1000000000) || (currentGft.gft_pts <= 100));
+
+            addGft(currentGft);
+            saveGft();
+                // llama a la función guardar antes de cerrar la sesión
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            MDgft();
+            break;
+
+        case 2:
+            int opBsqGft;
+
+            do
+            {
+                cout << "Busqueda de Recompensa:" << endl;
+                cout << "1. ID." << endl;
+                cout << "2. Nombre." << endl;
+                cout << "3. Todos los registros." << endl;
                 cout << "4. Atras..." << endl;
                 cout << "\n-->";
-                cin >> opModfy;
+                cin >> opBsqGft;
+                switch (opBsqGft) {
+                    case 1:
+                        system("cls || clear");
+                        cout << "Buscar por ID de Recompensa: " << endl;
+                        cout << "ID a buscar: ";
+                        cin >> enteredGft_id;
+                        gftPos = searchGFTid(enteredGft_id);
+                        if (gftPos != -1) {
+                            showGft(gftPos);
+                        } else {
+                            cout << "Registro Inexistente" << endl;
+                        }
+                        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                        break;
+                    case 2:
+                        system("cls || clear");
+                        cout << "Buscar por nombre de Recompensa: " << endl;
+                        cout << "Nombre a buscar: ";
+                        cin.ignore();
+                        cin.getline(enteredGft_name, sizeof(enteredGft_name));
+                        searchGFTname(enteredGft_name);
+                        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
-                switch (opModfy)
-                {
-                case 1:
-                    cin.ignore();
-                    cout << "Nombre: ";
-                    cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
-                    break;
-                case 2:
-                    cin.ignore();
-                    cout << "Cantidad o Stock: ";
-                    cin >> currentGft.gft_cant;
-                    break;
-                case 3:
-                    cin.ignore();
-                    cout << "Puntos Necesarios: ";
-                    cin >> currentGft.gft_pts;
-                    break;
-                case 4:
-                    uptGFT(currentGft, gftPos);
-                    saveGft();
-                    MDgft();
-                    break;
+                        break;
+                    case 3:
+                        system("cls || clear");
+                        cout << "Visualizando todos los registros..." << endl;
+                        showGftRegister();
+                        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
-                default:
-                    cout << "Opcion no valida, 1 - 4..." << endl;
-                    break;
-            }while (optMdGft != 4);
-        } 
-        else
-        {
-            cout << "Registro inexistente" << endl;
-        }
-        MDgft();
-        saveGft();
-        system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-        break;
-    case 4:
-        system("cls || clear");
-        if (lasTregGft == 0)
-        {
-            cout << "No hay nada que eliminar\n";
+                        break;
+                    case 4:
+                        system("cls || clear");
+                        cout << "Saliendo..." << endl;
+                        MDgft();
+                        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                        break;
+                    default:
+                        cout << "Opcion Incorrecta!. Ingrese 1 - 4..." << endl;
+                        break;
+                    }
+            } while (opBsqGft != 4);
+
             break;
-        }
-        cout << "Escribe el ID de la recompensa: " << endl;
-        cin >> enteredGft_id;
-        gftPos = searchCltId(enteredGft_id); // busqueda de GFT
-        if (gftPos != -1)
-        {
-            currentGft = getGft(gftPos);
-            cout << "¿Realmente deseas eliminar la recompensa ?" << endl;
-            cout << "Escriba 1 para SI o 2 para NO : ";
-            cin >> resp;
-            if (resp == 1)
+        case 3:
+            int opModfy;
+            system("cls || clear");
+            cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
+            cin >> enteredGft_id;
+            gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
+            if (gftPos != -1)
             {
-                delGFT(gftPos);
-                cout << "Registro eliminado...\n";
+                do
+                {
+                    cout << "Datos a modificar:" << endl;
+                    cout << "1. Nombre." << endl;
+                    cout << "2. Cantidad o Stock." << endl;
+                    cout << "3. Puntos Necesarios." << endl;
+                    cout << "4. Atras..." << endl;
+                    cout << "\n-->";
+                    cin >> opModfy;
+
+                    switch (opModfy)
+                    {
+                    case 1:
+                        cin.ignore();cout << "Nombre: ";
+                        cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));break;
+                    case 2:cin.ignore();
+                        cout << "Cantidad o Stock: ";
+                        cin >> currentGft.gft_cant;
+                        break;
+                    case 3:
+                        cin.ignore();
+                        cout << "Puntos Necesarios: ";
+                        cin >> currentGft.gft_pts;
+                        break;
+                    case 4:
+                        uptGFT(currentGft, gftPos);
+                        saveGft();
+                        MDgft();
+                        break;
+                    default:
+                        cout << "Opcion no valida, 1 - 4..." << endl;
+                        break;
+                    }
+                }while (opModfy != 4);
             }
             else
             {
-                cout << "Operacion cancelada...\n";
+                cout << "Registro inexistente" << endl;
             }
+            MDgft();
+            saveGft();
             system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            break;
+        case 4:
+            system("cls || clear");
+            if (lasTregGft == 0)
+            {
+                cout << "No hay nada que eliminar\n";
+                break;
+            }
+            cout << "Escribe el ID de la recompensa: " << endl;
+            cin >> enteredGft_id;
+            gftPos = searchCltId(enteredGft_id); // busqueda de GFT
+            if (gftPos != -1)
+            {
+                currentGft = getGft(gftPos);
+                cout << "¿Realmente deseas eliminar la recompensa ?" << endl;
+                cout << "Escriba 1 para SI o 2 para NO : ";
+                cin >> resp;
+                if (resp == 1)
+                {
+                    delGFT(gftPos);
+                    cout << "Registro eliminado...\n";
+                }
+                else
+                {
+                    cout << "Operacion cancelada...\n";
+                }
+                system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            }
+            else
+            {
+                cout << "Registro inexistente" << endl;
+            }
+            saveGft();
+            break;
+        case 5:
+            MAdm();
+            break;
+        default:
+            cout << "Ingrese una opcion valida. Del 1 - 5..." << endl;
+            break;
         }
-        else
-        {
-            cout << "Registro inexistente" << endl;
-        }
-        saveGft();
-        break;
-    case 5:
-        MAdm();
-        break;
-
-    default:
-        cout << "Ingrese una opcion valida. Del 1 - 5..." << endl;
-        break;
-    }
+    } while (optMdGft != 5);
 }
 
 void MDcmp()
@@ -1700,3 +1693,5 @@ void delGFT(int gftPos) {
     idCmp--;
     initGft(lasTregGft);
 }
+
+    // fin de programs
