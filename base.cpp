@@ -1166,133 +1166,118 @@ void searchMclt()
 
         cin >> options;
 
-        switch (options)
-        {
-        case 1:
-            system("cls || clear");
-            cout << "Buscar por nombre de Cliente" << endl;
-            do
-            {
-                cout << "Nombre a buscar: ";
-                cin.ignore();
-                cin.getline(enteredClt_name, sizeof(enteredClt_name));
-                if (any_of(enteredClt_name, enteredClt_name + strlen(enteredClt_name), ::isdigit))
-                {
-                    cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-            } while (any_of(enteredClt_name, enteredClt_name + strlen(enteredClt_name), ::isdigit));
+        switch (options) {
+            case 1:
+                system("cls || clear");
+                cout << "Buscar por nombre de Cliente" << endl;
+                do {
+                    cout << "Nombre a buscar: ";
+                    cin.ignore();
+                    cin.getline(enteredClt_name, sizeof(enteredClt_name));
+                    if (any_of(enteredClt_name, enteredClt_name + strlen(enteredClt_name), ::isdigit)) {
+                        cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..."
+                             << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                    }
+                } while (any_of(enteredClt_name, enteredClt_name + strlen(enteredClt_name), ::isdigit));
 
-            searchCltname(enteredClt_name, true);
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                searchCltname(enteredClt_name, true);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
                 break;
-        case 2:
-            system("cls || clear");
-            cout << "Buscar por apellido de Cliente" << endl;
-            do
-            {
-                cout << "Apellido a buscar: ";
-                cin.ignore();
-                cin.getline(enteredClt_lstName, sizeof(enteredClt_lstName));
-                if (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit))
-                {
-                    cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-            } while (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit));
+            case 2:
+                system("cls || clear");
+                cout << "Buscar por apellido de Cliente" << endl;
+                do {
+                    cout << "Apellido a buscar: ";
+                    cin.ignore();
+                    cin.getline(enteredClt_lstName, sizeof(enteredClt_lstName));
+                    if (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit)) {
+                        cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..."
+                             << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                    }
+                } while (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit));
 
-            searchCltlstname(enteredClt_lstName, true);
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                searchCltlstname(enteredClt_lstName, true);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
-            break;
-        case 3:
-            system("cls || clear");
-            cout << "Buscar por id de Cliente" << endl;
-            do
-            {
-                cout << "ID a buscar: ";
-                cin >> enteredClt_id;
+                break;
+            case 3:
+                system("cls || clear");
+                cout << "Buscar por id de Cliente" << endl;
+                do {
+                    cout << "ID a buscar: ";
+                    cin >> enteredClt_id;
 
                     // Verificar si el ID ingresado contiene caracteres no numéricos
-                if (cin.fail() || cin.peek() != '\n')
-                {
-                    cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-                else
-                {
+                    if (cin.fail() || cin.peek() != '\n') {
+                        cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                    } else {
                         // Realizar la búsqueda si el ID es válido
-                    pos = searchCltId(enteredClt_id);
-                    if (pos != -1)
-                    {
-                        showClt(pos);
+                        pos = searchCltId(enteredClt_id);
+                        if (pos != -1) {
+                            showClt(pos);
+                        } else {
+                            cout << "Registro Inexistente" << endl;
+                        }
                     }
-                    else
-                    {
-                        cout << "Registro Inexistente" << endl;
+                } while (cin.fail() || cin.peek() != '\n');
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+
+                break;
+            case 4:
+                system("cls || clear");
+                cout << "Buscar por e-mail de Cliente" << endl;
+                do {
+                    cout << "E-mail a buscar: ";
+                    cin.ignore();
+                    cin.getline(enteredClt_mail, sizeof(enteredClt_mail));
+                    if (strstr(enteredClt_mail, "@gmail.com") == NULL) {
+                        cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
                     }
+                } while ((strstr(enteredClt_mail, "@gmail.com") == NULL));
+
+                searchCltmail(enteredClt_mail);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+
+                break;
+            case 5:
+                system("cls || clear");
+                cout << "Buscar por telefono de Cliente" << endl;
+                cout << "Telefono a buscar: ";
+                cin >> enteredClt_telf;
+                pos = searchCltelf(enteredClt_telf);
+                if (pos != -1) {
+                    showClt(pos);
+                } else {
+                    cout << "Registro Inexistente" << endl;
                 }
-            } while (cin.fail() || cin.peek() != '\n');
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                break;
+            case 6:
+                system("cls || clear");
+                cout << "Visualizando todos los registros..." << endl;
+                showCltRegister();
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                break;
+            case 7:
+                system("cls || clear");
+                cout << "Saliendo..." << endl;
+                MDclient();
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
-            break;
-        case 4:
-            system("cls || clear");
-            cout << "Buscar por e-mail de Cliente" << endl;
-            do
-            {
-                cout << "E-mail a buscar: ";
-                cin.ignore();
-                cin.getline(enteredClt_mail, sizeof(enteredClt_mail));
-                if (strstr(enteredClt_mail, "@gmail.com") == NULL)
-                {
-                    cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-            } while ((strstr(enteredClt_mail, "@gmail.com") == NULL));
-
-            searchCltmail(enteredClt_mail);
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
-            break;
-        case 5:
-            system("cls || clear");
-            cout << "Buscar por telefono de Cliente" << endl;
-            cout << "Telefono a buscar: ";
-            cin >> enteredClt_telf;
-            pos = searchCltelf(enteredClt_telf);
-            if (pos != -1)
-            {
-                showClt(pos);
-            }
-            else
-            {
-                cout << "Registro Inexistente" << endl;
-            }
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-            break;
-        case 6:
-            system("cls || clear");
-            cout << "Visualizando todos los registros..." << endl;
-            showCltRegister(); 
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-            break;
-        case 7:
-            system("cls || clear");
-            cout << "Saliendo..." << endl;
-            MDclient();
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
-            break;
-        default:
-            cout << "Opcion Invalida. Ingrese una opcion valida del 1 - 7" << endl;
-            break;
-
+                break;
+            default:
+                cout << "Opcion Invalida. Ingrese una opcion valida del 1 - 7" << endl;
+                break;
+        }
     } while (options != 7);
 }
 
@@ -1694,4 +1679,3 @@ void delGFT(int gftPos) {
     initGft(lasTregGft);
 }
 
-    // fin de programs
