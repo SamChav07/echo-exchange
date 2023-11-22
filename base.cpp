@@ -116,7 +116,7 @@ void initGft(int gftPos);
 void showGft(int pos);
 void showGftRegister();
 gift getGft(int pos);
-void searchGFTname(char *enteredGft_name);
+void searchGFTname(char *enteredGft_name, bool esStr);
 int searchGFTid(int entered_id);
 
 void uptGFT(gift gift, int i);
@@ -665,6 +665,7 @@ void MDclient()
         cout << "** Escribe el ID del cliente a modificar **" << endl;
         cin >> enteredClt_id;
         pos = searchCltId(enteredClt_id);
+        currentClt.client_id = enteredClt_id;
         if (pos != -1)
         {
             do
@@ -702,7 +703,7 @@ void MDclient()
                     break;
                 case 5:
                     cin.ignore();
-                    currentClt.client_id = enteredClt_id;
+                    
                     cout << "ID: " << currentClt.client_id << endl;
 
                     cout << "Nombre del cliente: ";
@@ -895,23 +896,40 @@ void MDgft()
                     case 1:
                         system("cls || clear");
                         cout << "Buscar por ID de Recompensa: " << endl;
-                        cout << "ID a buscar: ";
-                        cin >> enteredGft_id;
-                        gftPos = searchGFTid(enteredGft_id);
-                        if (gftPos != -1) {
-                            showGft(gftPos);
-                        } else {
-                            cout << "Registro Inexistente" << endl;
-                        }
+                        do {
+                            cout << "ID a buscar: ";
+                            cin >> enteredGft_id;
+
+                            if (cin.fail() || cin.peek() != '\n') {
+                                cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                                cin.clear();
+                                cin.ignore(INT_MAX, '\n');
+                            } else {
+                                gftPos = searchGFTid(enteredGft_id);
+                                if (gftPos != -1) {
+                                    showGft(gftPos);
+                                } else {
+                                    cout << "Registro Inexistente" << endl;
+                                }
+                            }
+                        } while(cin.fail() || cin.peek() != '\n');
                         system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                         break;
                     case 2:
                         system("cls || clear");
                         cout << "Buscar por nombre de Recompensa: " << endl;
-                        cout << "Nombre a buscar: ";
-                        cin.ignore();
-                        cin.getline(enteredGft_name, sizeof(enteredGft_name));
-                        searchGFTname(enteredGft_name);
+                        do {
+                            cout << "Nombre a buscar: ";
+                            cin.ignore();
+                            cin.getline(enteredGft_name, sizeof(enteredGft_name));
+                            if (any_of(enteredGft_name, enteredGft_name + strlen(enteredGft_name), ::isdigit)) {
+                                cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..." << endl;
+                                cin.clear();
+                                cin.ignore(INT_MAX, '\n');
+                            }
+                        } while (any_of(enteredGft_name, enteredGft_name + strlen(enteredGft_name), ::isdigit));
+                        
+                        searchGFTname(enteredGft_name, true);
                         system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
 
                         break;
@@ -929,7 +947,7 @@ void MDgft()
                         system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                         break;
                     default:
-                        cout << "Opcion Incorrecta!. Ingrese 1 - 4..." << endl;
+                        cout << "Opcion Invalida. Ingrese una opcion valida del 1 - 4" << endl;
                         break;
                     }
             } while (opBsqGft != 4);
@@ -938,50 +956,128 @@ void MDgft()
         case 3:
             int opModfy;
             system("cls || clear");
-            cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
-            cin >> enteredGft_id;
-            gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
-            if (gftPos != -1)
-            {
-                do
+            do {
+                cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
+                cin >> enteredGft_id;
+                gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
+                currentGft.gft_id = enteredGft_id;
+                if (gftPos != -1)
                 {
-                    cout << "Datos a modificar:" << endl;
-                    cout << "1. Nombre." << endl;
-                    cout << "2. Cantidad o Stock." << endl;
-                    cout << "3. Puntos Necesarios." << endl;
-                    cout << "4. Atras..." << endl;
-                    cout << "\n-->";
-                    cin >> opModfy;
-
-                    switch (opModfy)
+                    do
                     {
-                    case 1:
-                        cin.ignore();cout << "Nombre: ";
-                        cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));break;
-                    case 2:cin.ignore();
-                        cout << "Cantidad o Stock: ";
-                        cin >> currentGft.gft_cant;
-                        break;
-                    case 3:
-                        cin.ignore();
-                        cout << "Puntos Necesarios: ";
-                        cin >> currentGft.gft_pts;
-                        break;
-                    case 4:
-                        uptGFT(currentGft, gftPos);
-                        saveGft();
-                        MDgft();
-                        break;
-                    default:
-                        cout << "Opcion no valida, 1 - 4..." << endl;
-                        break;
-                    }
-                }while (opModfy != 4);
-            }
-            else
-            {
-                cout << "Registro inexistente" << endl;
-            }
+                        cout << "Datos a modificar:" << endl;
+                        cout << "1. Nombre." << endl;
+                        cout << "2. Cantidad o Stock." << endl;
+                        cout << "3. Puntos Necesarios." << endl;
+                        cout << "4. Modificar todos los datos." << endl;
+                        cout << "5. Atras..." << endl;
+                        cout << "\n-->";
+                        cin >> opModfy;
+
+                        switch (opModfy)
+                        {
+                        case 1:
+                            do
+                            {
+                                cin.ignore();
+                                cout << "Nuevo Nombre: ";
+                                cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+                                if (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit))
+                                {
+                                    cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intentar de nuevo..." << endl;
+                                    cin.clear();
+                                    cin.ignore(INT_MAX, '\n');
+                                }
+                            } while (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit));
+                            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                            break;
+                        case 2:
+                            do {
+                                cin.ignore();
+                                cout << "Cantidad o Stock: ";
+                                cin >> currentGft.gft_cant;
+                                if (cin.fail() || cin.peek() != '\n') {
+                                    cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                                    cin.clear();
+                                    cin.ignore(INT_MAX, '\n');
+                                }
+                            } while (cin.fail() || cin.peek() != '\n');
+                            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                            break;
+                        case 3:
+                            do {
+                                cin.ignore();
+                                cout << "Puntos Necesarios: ";
+                                cin >> currentGft.gft_pts;
+                                if (cin.fail() || cin.peek() != '\n') {
+                                    cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                                    cin.clear();
+                                    cin.ignore(INT_MAX, '\n');
+                                }
+                            } while (cin.fail() || cin.peek() != '\n');
+                            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                            break;
+                        case 4:
+                            do
+                            {
+                                cin.ignore();
+                                cout << "Nuevo Nombre: ";
+                                cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+                                if (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit))
+                                {
+                                    cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intentar de nuevo..." << endl;
+                                    cin.clear();
+                                    cin.ignore(INT_MAX, '\n');
+                                }
+                            } while (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit));
+
+                                do {
+                                    cin.ignore();
+                                    cout << "Cantidad o Stock: ";
+                                    cin >> currentGft.gft_cant;
+                                    if (cin.fail() || cin.peek() != '\n') {
+                                        cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                                        cin.clear();
+                                        cin.ignore(INT_MAX, '\n');
+                                    }
+                                } while (cin.fail() || cin.peek() != '\n');
+
+                                do {
+                                    cin.ignore();
+                                    cout << "Puntos Necesarios: ";
+                                    cin >> currentGft.gft_pts;
+                                    if (cin.fail() || cin.peek() != '\n') {
+                                        cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                                        cin.clear();
+                                        cin.ignore(INT_MAX, '\n');
+                                    }
+                                } while (cin.fail() || cin.peek() != '\n');
+                            break;
+                        case 5:
+                            uptGFT(currentGft, gftPos);
+                            saveGft();
+                            MDgft();
+                            break;
+                        default:
+                            cout << "Opcion no valida, 1 - 5..." << endl;
+                            break;
+                        }
+                    }while (opModfy != 5);
+                }
+                else
+                {
+                    cout << "Registro inexistente" << endl;
+                }
+
+                if (cin.fail() || cin.peek() != '\n')
+                {
+                    cout << "Ingrese una ID válida. Doble enter para intentar de nuevo..." << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+            } while ((cin.fail() || cin.peek() != '\n'));
+            
+            //////////////
             MDgft();
             saveGft();
             system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
@@ -1194,8 +1290,7 @@ void searchMclt()
                     cin.ignore();
                     cin.getline(enteredClt_lstName, sizeof(enteredClt_lstName));
                     if (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit)) {
-                        cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..."
-                             << endl;
+                        cout << "Ingrese un apellido válido, solo con caracteres. Doble enter para intertar de nuevo..." << endl;
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
                     }
@@ -1627,12 +1722,12 @@ gift getGft(int gftPos)
     return gft[gftPos];
 }
 
-void searchGFTname(char *enteredGft_name)
+void searchGFTname(char *enteredGft_name, bool esStr = false)
 {
     int position = 0;
     for (int i = 0; i < lasTregGft; i++)
     {
-        if (strcmp(enteredGft_name, gft[i].gft_name) == 0)
+        if ((esStr && strstr(gft[i].gft_name, enteredGft_name)) || (!esStr && strcmp(enteredGft_name, gft[i].gft_name) == 0))
         {
             cout << "====" << endl;
             showGft(i);
