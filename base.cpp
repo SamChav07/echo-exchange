@@ -342,10 +342,10 @@ int main()
 void SuperAdmin()
 {
     int spOpcion;
-    int intentos = 3;
 
     do
     {
+        system("cls || clear");
         cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
         cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN NN  NN  GG       EE" << RESET << endl;
         cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
@@ -361,24 +361,31 @@ void SuperAdmin()
         cout << "||==================================================||" << endl;
         cout << "\n --> ";
         cin >> spOpcion;
-        switch (spOpcion)
-        {
-        case 1:
-            logAdm();
-            break;
-        case 2:
-            MClt();
-            break;
-        case 3:
-            // saveCSVdata(); // llama a la funcion guardar antes de cerrar la sesion
-            cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
-            exit(0);
-            break;
-        default:
-            cout << "Ingrese una opcion valida. 1 - 3..." << endl;
-            break;
+
+        if (cin.fail() || cin.peek() != '\n') {
+            cout << "Digite una de las opciones. Doble enter para intentar de nuevo..." << endl;
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
+        } else {
+            switch (spOpcion)
+            {
+            case 1:
+                logAdm();
+                break;
+            case 2:
+                MClt();
+                break;
+            case 3:
+                cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
+                exit(0);
+                break;
+            default:
+                cout << "Ingrese una opcion valida. 1 - 3..." << endl;
+                break;
+            }
         }
-    } while (spOpcion != 3);
+
+    } while (spOpcion < 1 || spOpcion > 3);
 }
 
 void logAdm()
@@ -675,63 +682,157 @@ void MDclient()
                 cout << "2. Apellido." << endl;
                 cout << "3. Correo." << endl;
                 cout << "4. Teléfono." << endl;
-                cout << "5.Todo el registro." << endl;
+                cout << "5. Todo el registro." << endl;
                 cout << "6. Volver..." << endl;
                 cout << "Opción: ";
                 cin >> opModclt;
+                if (cin.fail()) {
+                    cout << "La opcion no puede ser caracter..." << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');  
+                }
                 switch (opModclt)
                 {
                 case 1:
-                    cin.ignore();
-                    cout << "Nuevo nombre: ";
-                    cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
+                    do {
+                        cin.ignore();
+                        cout << "Nuevo nombre: ";
+                        cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
+                        copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
+                        copy(begin(clt[pos].client_mail), end(clt[pos].client_mail), begin(currentClt.client_mail));
+                        currentClt.client_telf = clt[pos].client_telf;
+
+                        if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
+                        {
+                            cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit));
+                    uptdClt(currentClt, pos);// actualiza
+                    saveClt();//guarda
                     break;
                 case 2:
-                    cin.ignore();
-                    cout << "Nuevo apellido: ";
-                    cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
+                    do {
+                        cin.ignore();
+                        cout << "Nuevo apellido: ";
+                        cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
+                        copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
+                        copy(begin(clt[pos].client_mail), end(clt[pos].client_mail), begin(currentClt.client_mail));
+                        currentClt.client_telf = clt[pos].client_telf;
+                        if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
+                        {
+                            cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit));
+                    uptdClt(currentClt, pos);// actualiza
+                    saveClt();//guarda
                     break;
                 case 3:
-                    cin.ignore();
-                    cout << "Nuevo correo: ";
-                    cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
+                    do {
+                        cin.ignore();
+                        cout << "Nuevo correo: ";
+                        cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
+                        copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
+                        copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
+                        currentClt.client_telf = clt[pos].client_telf;
+                        if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
+                        {
+                            cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (strstr(currentClt.client_mail, "@gmail.com") == NULL);
+                    uptdClt(currentClt, pos);// actualiza
+                    saveClt();//guarda
                     break;
                 case 4:
-                    cin.ignore();
-                    cout << "Nuevo telefono: ";
-                    cin >> currentClt.client_telf;
+                    do {
+                        cin.ignore();
+                        cout << "Nuevo telefono: ";
+                        cin >> currentClt.client_telf;
+                        copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
+                        copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
+                        copy(begin(clt[pos].client_mail), end(clt[pos].client_mail), begin(currentClt.client_mail));
+
+                        if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999)
+                        {
+                            cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        }
+                    } while (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999);
+                    uptdClt(currentClt, pos);// actualiza
+                    saveClt();//guarda
                     break;
                 case 5:
-                    cin.ignore();
-                    
-                    cout << "ID: " << currentClt.client_id << endl;
+                    do
+                    {
+                        cout << "Nombre del cliente: ";
+                        cin.ignore(); // Ignorar el carácter de nueva línea residual
+                        cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
+                        if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
+                        {
+                            cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit));
 
-                    cout << "Nombre del cliente: ";
-                    cin.ignore(); // Limpiar el búfer antes de leer la cadena
-                    cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
+                    do
+                    {
+                        cout << "Apellido del cliente: ";
+                        cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
+                        if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
+                        {
+                            cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit));
 
-                    cout << "Apellido del cliente: ";
-                    cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
+                    do
+                    {
+                        cout << "E-mail del cliente: ";
+                        cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
+                        if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
+                        {
+                        cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (strstr(currentClt.client_mail, "@gmail.com") == NULL);
 
-                    cout << "E-mail del cliente: ";
-                    cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
+                    do
+                    {
+                        cout << "Teléfono del cliente XXXX-XXXX: ";
+                        cin >> currentClt.client_telf;
 
-                    cout << "Telefono del cliente: ";
-                    cin >> currentClt.client_telf;
-
-                    cout << "Registro actualizado...\n";
-
+                        // Verificar si el formato del número de teléfono es correcto
+                        if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999)
+                        {
+                            cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        }
+                    } while (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999);
+                    uptdClt(currentClt, pos);// actualiza
+                    saveClt();//guarda
+                    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                     break;
                 case 6:
                     system("cls || clear");
                     cout << "Saliendo..." << endl;
                     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                    MDclient();
                     break;
                 default:
                     cout << "Opción no válida. Por favor, inténtelo de nuevo" << endl;
                     break;
                 }
-            } while(opModclt != 6);
+            } while(opModclt != 6 || cin.fail());
             saveClt();
         }
         else
@@ -747,30 +848,32 @@ void MDclient()
             cout << "No hay nada que eliminar\n";
             break;
         }
-        cout << "Escribe el ID del cliente: " << endl;
-        cin >> enteredClt_id;
-        pos = searchCltId(enteredClt_id);
-        if (pos != -1)
-        {
-            currentClt = getClt(pos);
-            cout << "¿Realmente deseas eliminar el cliente ?" << endl;
-            cout << "Escriba 1 para SI o 2 para NO : ";
-            cin >> resp;
-            if (resp == 1)
+        do {
+            cout << "Escribe el ID del cliente: " << endl;
+            cin >> enteredClt_id;
+            pos = searchCltId(enteredClt_id);
+            if (pos != -1)
             {
-                delClt(pos);
-                cout << "Registro eliminado...\n";
-            }
+                currentClt = getClt(pos);
+                cout << "¿Realmente deseas eliminar el cliente ?" << endl;
+                cout << "Escriba 1 para SI o 2 para NO : ";
+                cin >> resp;
+                if (resp == 1)
+                {
+                    delClt(pos);
+                    cout << "Registro eliminado...\n";
+                }
             else
             {
                 cout << "Operacion cancelada...\n";
             }
-            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-        }
-        else
-        {
-            cout << "Registro inexistente" << endl;
-        }
+            
+            }
+            else
+            {
+                cout << "Registro inexistente" << endl;
+            }
+        } while(resp !=1 && resp !=2);
         saveClt();
         MDclient();
         break;
@@ -821,7 +924,7 @@ void MDgft()
             }
             cout << "ID: " << currentGft.gft_id << endl;
 
-                // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
+            // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
             do
             {
                 cout << "Nombre de la recompensa: ";
@@ -841,7 +944,7 @@ void MDgft()
                 }
             } while (strlen(currentGft.gft_name) < 5 || strlen(currentGft.gft_name) > 49);
 
-                // Cantidad de la recomp
+            // Cantidad de la recomp
             do
             {
                 cout << "Cantidad del producto: ";
@@ -854,7 +957,7 @@ void MDgft()
                 }
             } while (currentGft.gft_cant >= 1000);
 
-                // pts necesarios
+            // pts necesarios
             do
             {
                 cout << "Puntos Necesarios: ";
@@ -875,7 +978,7 @@ void MDgft()
 
             addGft(currentGft);
             saveGft();
-                // llama a la función guardar antes de cerrar la sesión
+            // llama a la función guardar antes de cerrar la sesión
             system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
             MDgft();
             break;
@@ -955,8 +1058,9 @@ void MDgft()
             break;
         case 3:
             int opModfy;
-            system("cls || clear");
+            
             do {
+                system("cls || clear");
                 cout << "** Escribe el ID de la Recompensa a modificar **" << endl;
                 cin >> enteredGft_id;
                 gftPos = searchGFTid(enteredGft_id); // la funcion de busqueda se debe adaptar a GIFT
@@ -982,13 +1086,15 @@ void MDgft()
                                 cin.ignore();
                                 cout << "Nuevo Nombre: ";
                                 cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
-                                if (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit))
+                                currentGft.gft_cant = gft[gftPos].gft_cant;
+                                currentGft.gft_pts = gft[gftPos].gft_pts;
+                                if (strlen(currentGft.gft_name) == 0)
                                 {
-                                    cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intentar de nuevo..." << endl;
+                                    cout << "Ingrese un nombre válido, el nombre no puede quedar vacio. Doble enter para intentar de nuevo..." << endl;
                                     cin.clear();
                                     cin.ignore(INT_MAX, '\n');
                                 }
-                            } while (any_of(currentGft.gft_name, currentGft.gft_name + strlen(currentGft.gft_name), ::isdigit));
+                            } while (strlen(currentGft.gft_name) == 0);
                             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                             break;
                         case 2:
@@ -996,6 +1102,8 @@ void MDgft()
                                 cin.ignore();
                                 cout << "Cantidad o Stock: ";
                                 cin >> currentGft.gft_cant;
+                                copy(begin(gft[gftPos].gft_name), end(gft[gftPos].gft_name), begin(currentGft.gft_name));
+                                currentGft.gft_pts = gft[gftPos].gft_pts;
                                 if (cin.fail() || cin.peek() != '\n') {
                                     cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
                                     cin.clear();
@@ -1009,6 +1117,8 @@ void MDgft()
                                 cin.ignore();
                                 cout << "Puntos Necesarios: ";
                                 cin >> currentGft.gft_pts;
+                                copy(begin(gft[gftPos].gft_name), end(gft[gftPos].gft_name), begin(currentGft.gft_name));
+                                currentGft.gft_cant = gft[gftPos].gft_cant;
                                 if (cin.fail() || cin.peek() != '\n') {
                                     cout << "Ingrese una cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
                                     cin.clear();
