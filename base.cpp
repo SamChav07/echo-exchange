@@ -125,10 +125,10 @@ void delGFT(int pos);
 
 // compra
 void addCmp(reg_compra currentCmp);
-void showCmpRegister(int i);
+void showCmpRegister(int enteredCltid, int pos);
 void showCmp(int pos);
 reg_compra getCmp(int pos);
-int searCmpFID(int entered_id);
+int searCmpFID(int enteredCltid);
 
 // funciones
 void record();
@@ -510,50 +510,60 @@ void MClt() //////////////////// CLIENTES
     readCMP();
     readGft();
     readClt();
-    int op2;
-    do
-    {
-        int i;
-        int enteredClt_id;
-        system("cls || clear");
-        cout << "\nBienvenido Empleado" << endl;
-        cout << "\n***--Opciones--***" << endl;
-        cout << "\n1.. Canjear puntos." << endl;
-        cout << "\n2. Consultar puntos." << endl;
-        cout << "\n3. Historial de compra." << endl;
-        cout << "\n4. Refrescar Rtrn." << endl;
-        cout << "\n --> ";
-        cin >> op2;
-        system("pause");
-
-        switch (op2)
+    int op2, pos;
+    int i;
+    int enteredClt_id;
+    system("cls || clear");
+    cout << "\nBienvenido Cliente" << endl;
+    cout << "Ingrese su Id: ";
+    cin >> enteredClt_id;
+    pos = searchCltId(enteredClt_id);
+    if (pos != -1) {
+        do
         {
-        case 1:
-            redeem();
-            break;
-        case 2:
-            checkPts();
-            break;
-        case 3:
-            cout << "ID de cliente: ";
-            cin.ignore();
-            cout << "" << endl;
-            cin >> enteredClt_id;
-            searCmpFID(enteredClt_id);
-            showCmpRegister(i);
-            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-            MClt();
-            system("cls || clear");
-            break;
-        case 4:
-            system("cls");
-            MClt();
-            break;
-        default:
-            cout << "Ingrese opciones validas. Sean de 1-4.." << endl;
-            break;
-        }
-    } while (op2 != 4);
+            cout << "\n***--Opciones--***" << endl;
+            cout << "\n1.. Canjear puntos." << endl;
+            cout << "\n2. Consultar puntos." << endl;
+            cout << "\n3. Historial de compra." << endl;
+            cout << "\n4. Refrescar Rtrn." << endl;
+            cout << "\n --> ";
+            cin >> op2;
+            system("pause");
+
+            switch (op2)
+            {
+            case 1:
+                redeem();
+                break;
+            case 2:
+                checkPts();
+                break;
+            case 3: // historial detenido
+                /*cout << "ID de cliente: ";
+                cin.ignore();
+                cout << "" << endl;
+                cin >> enteredClt_id;
+                searCmpFID(enteredClt_id);
+                showCmpRegister(i);
+                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                MClt();
+                system("cls || clear");*/
+                break;
+            case 4:
+                system("cls");
+                MClt();
+                break;
+            default:
+                cout << "Ingrese opciones validas. Sean de 1-4.." << endl;
+                break;
+            }
+        } while (op2 != 4);
+        
+    } else {
+        cout << "Registro inexistente" << endl;
+    }
+    system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+    MDclient();
 }
 
 void MDclient()
@@ -1081,20 +1091,15 @@ void MDgft()
                         switch (opModfy)
                         {
                         case 1:
-                            do
-                            {
-                                cin.ignore();
-                                cout << "Nuevo Nombre: ";
-                                cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
-                                currentGft.gft_cant = gft[gftPos].gft_cant;
-                                currentGft.gft_pts = gft[gftPos].gft_pts;
-                                if (strlen(currentGft.gft_name) == 0)
-                                {
-                                    cout << "Ingrese un nombre válido, el nombre no puede quedar vacio. Doble enter para intentar de nuevo..." << endl;
-                                    cin.clear();
-                                    cin.ignore(INT_MAX, '\n');
-                                }
-                            } while (strlen(currentGft.gft_name) == 0);
+                        
+                            cin.ignore();
+                            cout << "Nuevo Nombre: ";
+                            cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+                            currentGft.gft_cant = gft[gftPos].gft_cant;
+                            currentGft.gft_pts = gft[gftPos].gft_pts;
+
+                            uptGFT(currentGft, gftPos);
+                            saveGft();
                             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                             break;
                         case 2:
@@ -1110,6 +1115,8 @@ void MDgft()
                                     cin.ignore(INT_MAX, '\n');
                                 }
                             } while (cin.fail() || cin.peek() != '\n');
+                            uptGFT(currentGft, gftPos);
+                            saveGft();
                             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                             break;
                         case 3:
@@ -1125,6 +1132,8 @@ void MDgft()
                                     cin.ignore(INT_MAX, '\n');
                                 }
                             } while (cin.fail() || cin.peek() != '\n');
+                            uptGFT(currentGft, gftPos);
+                            saveGft();
                             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                             break;
                         case 4:
@@ -1161,12 +1170,15 @@ void MDgft()
                                         cin.clear();
                                         cin.ignore(INT_MAX, '\n');
                                     }
+                                    uptGFT(currentGft, gftPos);
+                                    saveGft();
                                 } while (cin.fail() || cin.peek() != '\n');
                             break;
                         case 5:
-                            uptGFT(currentGft, gftPos);
-                            saveGft();
+                            system("cls || clear");
+                            cout << "Saliendo..." << endl;
                             MDgft();
+                            system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                             break;
                         default:
                             cout << "Opcion no valida, 1 - 5..." << endl;
@@ -1305,17 +1317,31 @@ void MDcmp()
 
 void record()
 {
-    readCMP();
-    readClt();
-    int i;
-    int enteredClt_id;
-    cout << "ID de cliente: ";
-    cin.ignore();
-    cout << "" << endl;
-    cin >> enteredClt_id;
-    searCmpFID(enteredClt_id);
-    showCmpRegister(i);
-    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+    
+    int pos, enteredCltid;
+    do {
+        cout << "ID de cliente: " << endl;
+        cin >> enteredCltid;
+
+        if (cin.fail() || cin.peek() != '\n') {
+            cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
+        } 
+        else
+        { 
+            pos = searchCltId(enteredCltid);
+
+            if (pos != -1) {
+                showCmpRegister(enteredCltid, pos);
+            }
+            else
+            {
+                cout << "Cliente no encontrado" << endl;
+            }
+        }
+    } while (cin.fail() || cin.peek() != '\n');
+    cin.get();
     MDcmp();
     system("cls || clear");
 }
@@ -1645,28 +1671,34 @@ void addCmp(reg_compra currentCmp)
     }
 }
 
-void showCmpRegister(int i) // pendiente
-{
-    system("cls || clear");
-    if (lastREgCmp == 0)
-    {
+
+void showCmpRegister(int enteredCltid, int pos) {
+    readCMP();
+    if (lastREgCmp == 0) {
         cout << "No hay registros" << endl;
         return;
     }
-    cout << "Registro de de compras: " << endl;
+    bool found = false;
+    cout << "Registro de compras para el cliente con ID " << enteredCltid << ":\n";
     cout << "====================================" << endl;
 
-    for (int i = 0; i < lastREgCmp; i++)
-    {
-        cout << "Compra #" << i + 1 << endl;
-        showCmp(i);
+    for (int i = 0; i < lastREgCmp; i++) {
+        if (cmp[i].clt.client_id == enteredCltid) {
+            showCmp(i);
+            found = true;
+        }
     }
     cout << "====================================" << endl;
     cout << "Ultimo registro..." << endl;
+    if (!found) {
+        cout << "No hay registros para este cliente." << endl;
+    }
 }
+
 
 void showCmp(int pos) // muestra los datos del cliente en X posición
 {
+    readCMP();
     cout << "====================================" << endl;
     cout << "N* de Recibo: " << cmp[pos].cmpr_id << endl;
     cout << "Fecha de compra: " << cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << endl;
@@ -1682,21 +1714,16 @@ reg_compra getCmp(int pos)
     return cmp[pos];
 }
 
-int searCmpFID(int entered_id)
+int searCmpFID(int enteredCltid)
 {
-    int position = -1;
+    int position;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (entered_id == (clt[i].client_id))
+        if (enteredCltid == cmp[i].clt.client_id)
         {
-            cout << "=========================" << endl;
-            showCmpRegister(i);
-            position++;
+            position = i;
+            break;
         }
-    }
-    if (position == -1)
-    {
-        cout << "No se encontraron resultados" << endl;
     }
     return position;
 }
@@ -1755,7 +1782,6 @@ void redeem() // -------------pendiente
     {
         cout << "Registro Inexistente" << endl;
     }
-    searchGFTid(i);
 
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     MClt();
@@ -1763,7 +1789,12 @@ void redeem() // -------------pendiente
 }
 void checkPts() // -------------pendiente
 {
-    cout << "Visualizar puntos" << endl;
+    for (int i = 0; i < lastREgCmp; i++) 
+    {
+        int cltId = cmp[i].clt.client_id;
+        int ptsEarn = cmp[i].cmpr_pts;
+        //hst.cmpr_ptsTot[cltId] += ptsEarn;
+    }
 }
 
 void addGft(gift currentGft)
