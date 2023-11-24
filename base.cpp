@@ -54,6 +54,7 @@ struct reg_compra
     cliente clt;
     int cmpr_id;
     cmpr_fecha fCmp;
+    string prodCmpr[10];
     float cmpr_Sqty; // monto de la compra
     int cmpr_pts;
     float cmp_iva;
@@ -1286,6 +1287,11 @@ void MDcmp()
             cin >> currentCmp.fCmp.month;
             cout << "-";
             cin >> currentCmp.fCmp.year;
+
+            cout << "Productos facturados: ";
+                for (int i = 0; i < 10; ++i) {
+                cin >> currentCmp.prodCmpr[i];
+                }
 
             cout << "Monto de compra: C$ ";
             cin >> currentCmp.cmpr_Sqty;
