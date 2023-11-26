@@ -1,9 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <string>
-
 #include <cstdio>
-
 #include <iomanip>
 #include <unistd.h>
 
@@ -47,25 +45,26 @@ void checkPts(); // -------------pendiente
 char user[50], pass[50];
 int intentos = 4;
 
-
-
-
-
-
-
 int opPtsGft(int enteredGft_id);
 
 // codigos colores ANSI
 #define RESET "\033[0m"
+#define BLACK "\033[30m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN "\033[36m"
+#define WHITE "\033[37m"
+#define BOLD "\033[1m"
+#define UNDERLINE "\033[4m"
 
 int main()
 {
     readClt();
     SuperAdmin();
+    //searchMclt();
     return 0;
 }
 
@@ -75,25 +74,25 @@ void SuperAdmin()
 
     do
     {
-        system("cls || clear");
-        cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
-        cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN NN  NN  GG       EE" << RESET << endl;
-        cout << GREEN << "EEEE  CC    HHHHHH  OO  OO === EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
-        cout << GREEN << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
-        cout << GREEN << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
+        cout << BOLD << BLUE << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
+        cout << BOLD << BLUE << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN NN  NN  GG       EE" << RESET << endl;
+        cout << BOLD << BLUE << "EEEE  CC    HHHHHH  OO  OO" << BOLD << CYAN << " === " << RESET << BOLD << BLUE << "EEEE    XXXX    CC    HHHHHH  AAAAAA  NN  NN NN  GG  GGG  EEEE" << RESET << endl;
+        cout << BOLD << BLUE << "EE    CC    HH  HH  OO  OO     EE     XX  XX   CC    HH  HH  AA  AA  NN   NNNN  GG  GG   EE" << RESET << endl;
+        cout << BOLD << BLUE << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AA  AA  NN    NNN  GGGGGG   EEEE" << RESET << endl;
 
-        cout << "||==================================================||" << endl;
-        cout << "Bienvenido Super-Admin" << endl;
-        cout << "Que cuenta desea fijar en el dispositivo ?" << endl;
-        cout << "1. Administrador." << endl;
-        cout << "2. Cliente." << endl;
-        cout << "3. Cerrar." << endl;
-        cout << "||==================================================||" << endl;
-        cout << "\n --> ";
-        cin >> spOpcion;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "            ||" << RESET << BOLD << WHITE << "                      BIENVENIDO SUPER-ADMIN                  " << RESET << BLUE << "||" << RESET << endl;
+        cout << BLUE << "            ||" << RESET << "          ¿Qué cuenta desea fijar en el dispositivo?          " << RESET << BLUE <<  "||" << RESET << endl;
+        cout << BLUE << "            ||" << RESET << CYAN << "                         1."<<RESET<<WHITE<<" Administrador.                    " << RESET << BLUE <<  "||" << RESET << endl;
+        cout << BLUE << "            ||" << RESET << CYAN << "                           2."<<RESET<<WHITE<<" Cliente.                        " << RESET << BLUE <<  "||" << RESET << endl;
+        cout << BLUE << "            ||" << RESET << CYAN << "                           3."<<RESET<<WHITE<<" Cerrar.                         " << RESET << BLUE <<  "||" << RESET << endl;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "\n                  [OPCION] --> " << RESET;
+        cin >> spOpcion; 
 
         if (cin.fail() || cin.peek() != '\n') {
-            cout << "Digite una de las opciones. Doble enter para intentar de nuevo..." << endl;
+            system("cls || clear");
+            cout << YELLOW << "                   Digite una de las opciones disponibles, no ingrese caracteres. Intente de nuevo..." << RESET << endl;
             cin.clear();
             cin.ignore(INT_MAX, '\n');
         } else {
@@ -106,11 +105,11 @@ void SuperAdmin()
                 MClt();
                 break;
             case 3:
-                cout << "--Gracias, por usar el sistema Echo-Exchange--" << endl;
+                cout << CYAN << "                    **-- Gracias, por usar el sistema Echo-Exchange --**" << RESET << endl;
                 exit(0);
                 break;
             default:
-                cout << "Ingrese una opcion valida. 1 - 3..." << endl;
+                cout << YELLOW << "                   Ingrese una opcion valida. 1 - 3..." << RESET << endl;
                 break;
             }
         }
@@ -126,30 +125,34 @@ void logAdm()
         strcpy(administrador1.adminU, "."); // admin1
         strcpy(administrador1.admP, ".");   // password123
 
-        cout << "\n---Administrador---" << endl;
-        cout << "-------------" << endl;
-        cout << "Usuario: ";
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||                     " << RESET << BOLD << "Acceso de Administrador                  "<< RESET << BLUE <<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+        cout << BLUE << "            ||           " << RESET << CYAN <<"|| " << RESET << WHITE << "Usuario: " << RESET;
         cin >> user;
-        cout << "\nContrasena: ";
+        cout << BLUE << "            ||           " << RESET << CYAN <<"|| " << RESET << WHITE << "Contraseña: " << RESET;
         cin >> pass;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << RESET << endl;
 
         // Verificaci�n de credenciales del administrador
         if (strcmp(user, administrador1.adminU) == 0 && strcmp(pass, administrador1.admP) == 0)
         {
-            cout << "\n***Acceso concedido***\n";
+            cout << GREEN << BOLD << "                                 ***--Acceso concedido--***" << RESET << endl;
             MAdm();
         }
         else
         {
-            cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-            cout << "Intentos restantes: \n"
-                 << intentos - 1 << endl;
+            cout << RED << "                ***--Intento fallido.  Usuario o contrasena incorrecta--***" << RESET << endl;
+            cout << BOLD << RED << "                                  Intentos restantes: " << intentos - 1 << RESET << endl;
 
             intentos--;
         }
     } while (intentos > 0);
-    cout << "*** Intento fallido. Usuario o contrasena incorrecta ***" << endl;
-    cout << "***Acceso bloqueado, saliendo del sistema...***";
+    cout << RED << "                ***--Intento fallido.  Usuario o contrasena incorrecta--***" << RESET << endl;
+    cout << "                     " << BOLD << UNDERLINE << RED << "*** Acceso bloqueado, saliendo del sistema ***" << RESET << endl;
 }
 
 void MAdm()
@@ -158,14 +161,19 @@ void MAdm()
     do
     {
         system("cls || clear");
-        cout << "Bienvenido Administrador" << endl;
-
-        cout << "***--Opciones--***" << endl;
-        cout << "1. Gestionar compras." << endl;
-        cout << "2. Gestionar clientes." << endl;
-        cout << "3. Gestionar recompensas." << endl;
-        cout << "4. Cerrar Sesion" << endl;
-        cout << "\n --> ";
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||"<<RESET<<BOLD<<"                   BIENVENIDO ADMINISTRADOR                   "<<RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+        cout << BOLD << "            ||                "<<RESET<<CYAN<<"||***||"<<RESET<<" MENU PRINCIPAL "<<CYAN"||***||"<<CYAN<<BLUE"                ||" << RESET << endl;
+        cout << BLUE << "            ||                    " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Gestionar compras.                     "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                    " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Gestionar clientes.                    "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                    " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Gestionar recompensas.                 "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                    " << RESET <<CYAN<<"4. "<<RESET << WHITE << "Cerrar Sesion...                       "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "\n                  [OPCION] --> " << RESET;
         cin >> op1;
         system("pause");
 
@@ -185,7 +193,7 @@ void MAdm()
             logAdm();
             break;
         default:
-            cout << "Ingrese opciones validas. Sean de 1-4..." << endl;
+            cout << YELLOW << "                   Ingrese una opcion valida. 1 - 4..." << RESET << endl;
             break;
         }
     } while (op1 != 4);
@@ -307,15 +315,21 @@ void MDclient()
     int optMdclt;
     cin.clear();
     system("cls || clear");
-    cout << "Clientes" << endl;
-    cout << "Cantidad de registros de clientes: " << lastRegClt << endl;
-    cout << "***--Opciones--***" << endl;
-    cout << "1. Agregar cliente." << endl;
-    cout << "2. Buscar cliente." << endl;
-    cout << "3. Modificar cliente." << endl;
-    cout << "4. Eliminar cliente." << endl;
-    cout << "5. Atras..." << endl;
-    cout << "\n --> ";
+    cout << BLUE << "            ||==============================================================||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+    cout << BLUE << "            ||                                                              ||" << RESET << endl;
+    cout << BLUE << "            ||"<<RESET<<BOLD<<"                   GESTION DE CLIENTES                        "<<RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+    cout << BLUE << "            ||               Cantidad de registros de Clientes: " << lastRegClt<<"           ||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+    cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
+    cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Agregar cliente.                        "<< RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||                   " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Buscar cliente.                         "<< RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||                   " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Modificar cliente.                      "<< RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||                   " << RESET <<CYAN<<"4. "<<RESET << WHITE << "Eliminar cliente.                       "<< RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||                   " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Volver...                               "<< RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||==============================================================||" << RESET << endl;
+    cout << BLUE << "\n                  [OPCION] --> " << RESET;
     cin.ignore();
     cin >> optMdclt;
     system("pause");
@@ -324,28 +338,33 @@ void MDclient()
     {
     case 1:
         system("cls || clear");
-        cout << "** Ingrese los datos a añadir **" << endl;
-        system("cls || clear");
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||"<<RESET<<BOLD<<"                     AGREGAR CLIENTE                          "<<RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BOLD << "            ||             "<<RESET<<CYAN<<"||*||"<<RESET<<" Ingrese los datos a añadir"<<CYAN"||*||"<<CYAN<<BLUE"            ||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
         currentClt.client_id = getLstCltID();
 
         if (currentClt.client_id == -1)
         {
-            cerr << "Error al obtener el último ID. No se pudo agregar el cliente..." << endl;
+            cerr <<YELLOW<< "Error al obtener el último ID. No se pudo agregar el cliente..." <<RESET<< endl;
             system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
             return;
         }
+        cout << BLUE << "            ||             " << RESET <<CYAN<<"ID: "<<RESET << currentClt.client_id << RESET<<BLUE<<"                                          ||" << RESET << endl;
 
-        cout << "ID: " << currentClt.client_id << endl;
 
         // Nombre del cliente
         do
         {
-            cout << "Nombre del cliente: ";
+            cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Nombre del cliente: "<<RESET;
             cin.ignore(); // Ignorar el carácter de nueva línea residual
             cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
             if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
             {
-                cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                cout <<YELLOW<<"Ingrese un nombre válido, solo con caracteres." <<RESET<<endl;
                 cin.clear();
                 cin.ignore(INT_MAX, '\n');
             }
@@ -355,11 +374,11 @@ void MDclient()
         // Apellido del cliente
         do
         {
-            cout << "Apellido del cliente: ";
+            cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Apellido del cliente: "<<RESET;
             cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
             if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
             {
-                cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                cout <<YELLOW<< "Ingrese un apellido válido, solo con caracteres." <<RESET<<endl;
                 cin.clear();
                 cin.ignore(INT_MAX, '\n');
             }
@@ -369,11 +388,11 @@ void MDclient()
         // E-mail del cliente
         do
         {
-            cout << "E-mail del cliente: ";
+            cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Email del cliente: "<<RESET;
             cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
             if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
             {
-                cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                cout <<YELLOW<< "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." <<RESET<< endl;
                 cin.clear();
                 cin.ignore(INT_MAX, '\n');
             }
@@ -383,18 +402,19 @@ void MDclient()
         // Teléfono del cliente
         do
         {
-            cout << "Teléfono del cliente XXXX-XXXX: ";
+            cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Teléfono del cliente XXXX-XXXX: "<<RESET;
             cin >> currentClt.client_telf;
 
             // Verificar si el formato del número de teléfono es correcto
             if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999)
             {
-                cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                cout <<YELLOW<< "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." <<RESET<< endl;
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
 
         } while (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999);
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
 
         addClt(currentClt);
         saveClt();
@@ -409,7 +429,7 @@ void MDclient()
     case 3:
         system("cls || clear");
         int opModclt;
-        cout << "** Escribe el ID del cliente a modificar **" << endl;
+        cout << BLUE << "\n                [ID a Modificar] --> " << RESET;
         cin >> enteredClt_id;
         pos = searchCltId(enteredClt_id);
         currentClt.client_id = enteredClt_id;
@@ -417,17 +437,24 @@ void MDclient()
         {
             do
             {
-                cout << "Datos a modificar:" << endl;
-                cout << "1. Nombre." << endl;
-                cout << "2. Apellido." << endl;
-                cout << "3. Correo." << endl;
-                cout << "4. Teléfono." << endl;
-                cout << "5. Todo el registro." << endl;
-                cout << "6. Volver..." << endl;
-                cout << "Opción: ";
+                cout << BLUE << "            ||==============================================================||" << RESET << endl;
+                cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+                cout << BLUE << "            ||                                                              ||" << RESET << endl;
+                cout << BLUE << "            ||"<<RESET<<BOLD<<"                   DATOS A MODIFICAR                        "<<RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+                cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+                cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Nombre.                         "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Apellido.                          "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Correo.                       "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"4. "<<RESET << WHITE << "Telefono.                        "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Todo el registro.                                "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||                   " << RESET <<CYAN<<"6. "<<RESET << WHITE << "Volver...                                "<< RESET<<BLUE<<"||" << RESET << endl;
+                cout << BLUE << "            ||==============================================================||" << RESET << endl;
+                cout << BLUE << "\n                  [OPCION] --> " << RESET;
                 cin >> opModclt;
                 if (cin.fail()) {
-                    cout << "La opcion no puede ser caracter..." << endl;
+                    cout <<YELLOW<< "La opcion no puede ser caracter..." <<RESET<<endl;
                     cin.clear();
                     cin.ignore(INT_MAX, '\n');  
                 }
@@ -436,7 +463,7 @@ void MDclient()
                 case 1:
                     do {
                         cin.ignore();
-                        cout << "Nuevo nombre: ";
+                        cout << BLUE << "\n                [ Nuevo Nombre ] --> " << RESET;
                         cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
                         copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
                         copy(begin(clt[pos].client_mail), end(clt[pos].client_mail), begin(currentClt.client_mail));
@@ -444,7 +471,7 @@ void MDclient()
 
                         if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
                         {
-                            cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                            cout <<YELLOW<<"Ingrese un nombre válido, solo con caracteres."<< RESET << endl;
                             cin.clear();
                             cin.ignore(INT_MAX, '\n');
                         }
@@ -455,14 +482,14 @@ void MDclient()
                 case 2:
                     do {
                         cin.ignore();
-                        cout << "Nuevo apellido: ";
+                        cout << BLUE << "\n                [ Nuevo Apellido ] --> " << RESET;
                         cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
                         copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
                         copy(begin(clt[pos].client_mail), end(clt[pos].client_mail), begin(currentClt.client_mail));
                         currentClt.client_telf = clt[pos].client_telf;
                         if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
                         {
-                            cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                            cout <<YELLOW<< "Ingrese un apellido válido, solo con caracteres." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(INT_MAX, '\n');
                         }
@@ -473,14 +500,14 @@ void MDclient()
                 case 3:
                     do {
                         cin.ignore();
-                        cout << "Nuevo correo: ";
+                        cout << BLUE << "\n                [ Nuevo Correo ] --> " << RESET;
                         cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
                         copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
                         copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
                         currentClt.client_telf = clt[pos].client_telf;
                         if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
                         {
-                            cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                            cout <<YELLOW<< "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(INT_MAX, '\n');
                         }
@@ -491,7 +518,7 @@ void MDclient()
                 case 4:
                     do {
                         cin.ignore();
-                        cout << "Nuevo telefono: ";
+                        cout << BLUE << "\n                [ Nuevo Telefono ] --> " << RESET;
                         cin >> currentClt.client_telf;
                         copy(begin(clt[pos].client_name), end(clt[pos].client_name), begin(currentClt.client_name));
                         copy(begin(clt[pos].client_lastname), end(clt[pos].client_lastname), begin(currentClt.client_lastname));
@@ -499,7 +526,7 @@ void MDclient()
 
                         if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999)
                         {
-                            cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                            cout <<YELLOW<< "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         }
@@ -508,14 +535,21 @@ void MDclient()
                     saveClt();//guarda
                     break;
                 case 5:
+                    cout << BLUE << "            ||==============================================================||" << RESET << endl;
+                    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+                    cout << BLUE << "            ||                                                              ||" << RESET << endl;
+                    cout << BLUE << "            ||"<<RESET<<BOLD<<"                     MODIFICAR CLIENTE                          "<<RESET<<BLUE<<"||" << RESET << endl;
+                    cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+                    cout << BOLD << "            ||             "<<RESET<<CYAN<<"||*||"<<RESET<<"Ingrese los datos a modificar del CLIENTE con el ID:"<<currentClt.client_id<<CYAN"||*||"<<CYAN<<BLUE"            ||" << RESET << endl;
+                    cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
                     do
                     {
-                        cout << "Nombre del cliente: ";
+                        cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Nombre del cliente: "<<RESET;
                         cin.ignore(); // Ignorar el carácter de nueva línea residual
                         cin.getline(currentClt.client_name, sizeof(currentClt.client_name));
                         if (any_of(currentClt.client_name, currentClt.client_name + strlen(currentClt.client_name), ::isdigit))
                         {
-                            cout << "Ingrese un nombre válido, solo con caracteres." << endl;
+                            cout <<YELLOW<< "Ingrese un nombre válido, solo con caracteres." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(INT_MAX, '\n');
                         }
@@ -523,11 +557,11 @@ void MDclient()
 
                     do
                     {
-                        cout << "Apellido del cliente: ";
+                        cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Apellido del cliente: "<<RESET;
                         cin.getline(currentClt.client_lastname, sizeof(currentClt.client_lastname));
                         if (any_of(currentClt.client_lastname, currentClt.client_lastname + strlen(currentClt.client_lastname), ::isdigit))
                         {
-                            cout << "Ingrese un apellido válido, solo con caracteres." << endl;
+                            cout <<YELLOW<< "Ingrese un apellido válido, solo con caracteres." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(INT_MAX, '\n');
                         }
@@ -535,11 +569,11 @@ void MDclient()
 
                     do
                     {
-                        cout << "E-mail del cliente: ";
+                        cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Email del cliente: "<<RESET;
                         cin.getline(currentClt.client_mail, sizeof(currentClt.client_mail));
                         if (strstr(currentClt.client_mail, "@gmail.com") == NULL)
                         {
-                        cout << "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." << endl;
+                        cout <<YELLOW<< "El correo debe terminar en @gmail.com. Inténtelo de nuevo..." <<RESET<< endl;
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
                         }
@@ -547,13 +581,13 @@ void MDclient()
 
                     do
                     {
-                        cout << "Teléfono del cliente XXXX-XXXX: ";
+                        cout <<BLUE<<"            ||             "<< RESET <<CYAN<<"Teléfono del cliente XXXX-XXXX: "<<RESET;
                         cin >> currentClt.client_telf;
 
                         // Verificar si el formato del número de teléfono es correcto
                         if (currentClt.client_telf < 10000000 || currentClt.client_telf > 99999999)
                         {
-                            cout << "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." << endl;
+                            cout <<YELLOW<< "Ingrese un número telefónico válido. Use el formato XXXX-XXXX y solo incluya dígitos." <<RESET<< endl;
                             cin.clear();
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         }
@@ -569,7 +603,7 @@ void MDclient()
                     MDclient();
                     break;
                 default:
-                    cout << "Opción no válida. Por favor, inténtelo de nuevo" << endl;
+                    cout <<YELLOW<< "Opción no válida. Por favor, inténtelo de nuevo" <<RESET<< endl;
                     break;
                 }
             } while(opModclt != 6 || cin.fail());
@@ -577,7 +611,7 @@ void MDclient()
         }
         else
         {
-            cout << "Registro inexistente" << endl;
+            cout <<RED<< "Registro inexistente" <<RESET<< endl;
         }
         system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
         break;
@@ -585,33 +619,34 @@ void MDclient()
         system("cls || clear");
         if (lastRegClt == 0)
         {
-            cout << "No hay nada que eliminar\n";
+            cout <<YELLOW<< "No hay nada que eliminar\n"<<RESET;
             break;
         }
         do {
-            cout << "Escribe el ID del cliente: " << endl;
+            cout << BLUE << "\n                [ID del Cliente] --> " << RESET;
             cin >> enteredClt_id;
             pos = searchCltId(enteredClt_id);
             if (pos != -1)
             {
                 currentClt = getClt(pos);
-                cout << "¿Realmente deseas eliminar el cliente ?" << endl;
-                cout << "Escriba 1 para SI o 2 para NO : ";
+                cout << "¿Realmente deseas "<<RED<<UNDERLINE<<"ELIMINAR"<<RESET" el cliente ?" << endl;
+                cout << "Escriba "<<RED<<"1 para SI"<<RESET<<" o "<<GREEN<<"2 para NO"<<RESET<< endl;
+                cout << BLUE << "\n                  [OPCION] --> " << RESET;
                 cin >> resp;
                 if (resp == 1)
                 {
                     delClt(pos);
-                    cout << "Registro eliminado...\n";
+                    cout <<GREEN<<UNDERLINE<< "Registro eliminado...\n"<<RESET;
                 }
             else
             {
-                cout << "Operacion cancelada...\n";
+                cout <<RED<< "Operacion cancelada...\n"<<RESET;
             }
             
             }
             else
             {
-                cout << "Registro inexistente" << endl;
+                cout <<YELLOW<< "Registro inexistente" <<RESET<< endl;
             }
         } while(resp !=1 && resp !=2);
         saveClt();
@@ -622,7 +657,7 @@ void MDclient()
         break;
 
     default:
-        cout << "Ingrese una opcion valida. Del 1 - 5..." << endl;
+        cout <<YELLOW<< "Ingrese una opcion valida. Del 1 - 5..." <<RESET<< endl;
         break;
     }
 }
@@ -639,15 +674,21 @@ void MDgft()
     int optMdGft;
     do {
         system("cls || clear");
-        cout << "RECOMPENSAS" << endl;
-        cout << "Cantidad de registros de Recompensas: " << lasTregGft << endl; // arreglar segun sus datos
-        cout << "***--Opciones--***" << endl;
-        cout << "1. Agregar recompensa." << endl;
-        cout << "2. Buscar recompensa." << endl;
-        cout << "3. Modificar recompensa." << endl;
-        cout << "4. Eliminar recompensa." << endl;
-        cout << "5. Atras..." << endl;
-        cout << "\n --> ";
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||"<<RESET<<BOLD<<"                   Gestion de Recompensas                     "<<RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BLUE << "            ||               Cantidad de registros de Recompensas: " << lasTregGft<<"        ||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+        cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Agregar recompensa.                     "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Buscar recompensa.                      "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Modificar recompensa.                   "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"4. "<<RESET << WHITE << "Eliminar recompensa.                    "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Volver...                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "\n                  [OPCION] --> " << RESET;
         cin >> optMdGft;
 
         switch (optMdGft)
@@ -987,12 +1028,18 @@ void MDcmp()
     do
     {
         system("cls || clear");
-        cout << "Modulo Compra" << endl;
-        cout << "**OPCIONES**" << endl;
-        cout << "1. Registro de compra." << endl;
-        cout << "2. Historial de compras." << endl;
-        cout << "3. Atras..." << endl;
-        cout << "\n --> ";
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||                      " << RESET << BOLD << "Gestion de Compras                      "<< RESET << BLUE <<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+        cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Registro de compra.                     "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Historial de compras.                   "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                   " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Volver...                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "\n                  [OPCION] --> " << RESET;
         cin >> cmpOPt;
 
         switch (cmpOPt)
@@ -1094,29 +1141,34 @@ void searchMclt()
     do
     { // borrar los cin.ignore
         system("cls || clear");
-        cout << "** Menu de busqueda **" << endl;
-        cout << "1. Nombre." << endl;
-        cout << "2. Apellido." << endl;
-        cout << "3. Id." << endl;
-        cout << "4. E-mail." << endl;
-        cout << "5. Telefono." << endl;
-        cout << "6. Mostrar todos los registros." << endl;
-        cout << "7. Atras..." << endl;
-        cout << "\n --> ";
-
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+        cout << BLUE << "            ||                                                              ||" << RESET << endl;
+        cout << BLUE << "            ||"<<RESET<<BOLD<<"                       MENU DE BUSQUEDA                       "<<RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+        cout << BOLD << "            ||                "<<RESET<<CYAN<<"||*||"<<RESET<<"                    "<<CYAN"||*||"<<CYAN<<BLUE"                ||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Nombre.                                 "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Apellido.                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"3. "<<RESET << WHITE << "ID.                                     "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"4. "<<RESET << WHITE << "E-mail.                                 "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Telefono.                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"6. "<<RESET << WHITE << "Mostrar todos los registros.            "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"7. "<<RESET << WHITE << "Volver...                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||==============================================================||" << RESET << endl;
+        cout << BLUE << "\n                  [OPCION] --> " << RESET;
         cin >> options;
 
         switch (options) {
             case 1:
                 system("cls || clear");
-                cout << "Buscar por nombre de Cliente" << endl;
+                cout << CYAN <<"                  ||*||"<<RESET<<BOLD<< "BUSCAR POR NOMBRE DEL CLIENTE"<<RESET<<CYAN<<"||*||"<<RESET<< endl;
                 do {
-                    cout << "Nombre a buscar: ";
+                    cout << BLUE << "\n                [ NOMBRE A BUSCAR ] --> " << RESET;
                     cin.ignore();
                     cin.getline(enteredClt_name, sizeof(enteredClt_name));
                     if (any_of(enteredClt_name, enteredClt_name + strlen(enteredClt_name), ::isdigit)) {
-                        cout << "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..."
-                             << endl;
+                        cout <<YELLOW<< "Ingrese un nombre válido, solo con caracteres. Doble enter para intertar de nuevo..."<<RESET<< endl;
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
                     }
@@ -1128,13 +1180,13 @@ void searchMclt()
                 break;
             case 2:
                 system("cls || clear");
-                cout << "Buscar por apellido de Cliente" << endl;
+                cout << CYAN <<"                  ||*||"<<RESET<<BOLD<< "BUSCAR POR APELLIDO DEL CLIENTE"<<RESET<<CYAN<<"||*||"<<RESET<< endl;
                 do {
-                    cout << "Apellido a buscar: ";
+                    cout << BLUE << "\n                [ APELLIDO A BUSCAR ] --> " << RESET;
                     cin.ignore();
                     cin.getline(enteredClt_lstName, sizeof(enteredClt_lstName));
                     if (any_of(enteredClt_lstName, enteredClt_lstName + strlen(enteredClt_lstName), ::isdigit)) {
-                        cout << "Ingrese un apellido válido, solo con caracteres. Doble enter para intertar de nuevo..." << endl;
+                        cout <<YELLOW<< "Ingrese un apellido válido, solo con caracteres. Doble enter para intertar de nuevo..." <<RESET<< endl;
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
                     }
@@ -1146,14 +1198,14 @@ void searchMclt()
                 break;
             case 3:
                 system("cls || clear");
-                cout << "Buscar por id de Cliente" << endl;
+                cout << CYAN <<"                  ||*||"<<RESET<<BOLD<< "BUSCAR POR ID DEL CLIENTE"<<RESET<<CYAN<<"||*||"<<RESET<< endl;
                 do {
-                    cout << "ID a buscar: ";
+                    cout << BLUE << "\n                [ ID A BUSCAR ] --> " << RESET;
                     cin >> enteredClt_id;
 
                     // Verificar si el ID ingresado contiene caracteres no numéricos
                     if (cin.fail() || cin.peek() != '\n') {
-                        cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                        cout <<YELLOW<< "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." <<RESET<< endl;
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
                     } else {
@@ -1162,7 +1214,7 @@ void searchMclt()
                         if (pos != -1) {
                             showClt(pos);
                         } else {
-                            cout << "Registro Inexistente" << endl;
+                            cout <<YELLOW<< "Registro Inexistente" <<RESET<< endl;
                         }
                     }
                 } while (cin.fail() || cin.peek() != '\n');
@@ -1171,9 +1223,9 @@ void searchMclt()
                 break;
             case 4:
                 system("cls || clear");
-                cout << "Buscar por e-mail de Cliente" << endl;
+                cout << CYAN <<"                  ||*||"<<RESET<<BOLD<< "BUSCAR POR EL E-MAIL DEL CLIENTE"<<RESET<<CYAN<<"||*||"<<RESET<< endl;
                 do {
-                    cout << "E-mail a buscar: ";
+                    cout << BLUE << "\n                [ E-MAIL A BUSCAR ] --> " << RESET;
                     cin.ignore();
                     cin.getline(enteredClt_mail, sizeof(enteredClt_mail));
                     if (strstr(enteredClt_mail, "@gmail.com") == NULL) {
@@ -1189,8 +1241,8 @@ void searchMclt()
                 break;
             case 5:
                 system("cls || clear");
-                cout << "Buscar por telefono de Cliente" << endl;
-                cout << "Telefono a buscar: ";
+                cout << CYAN <<"                  ||*||"<<RESET<<BOLD<< "BUSCAR POR TELEFONO DEL CLIENTE"<<RESET<<CYAN<<"||*||"<<RESET<< endl;
+                cout << BLUE << "\n                [ TELEFONO A BUSCAR ] --> " << RESET;
                 cin >> enteredClt_telf;
                 pos = searchCltelf(enteredClt_telf);
                 if (pos != -1) {
@@ -1202,7 +1254,7 @@ void searchMclt()
                 break;
             case 6:
                 system("cls || clear");
-                cout << "Visualizando todos los registros..." << endl;
+                cout <<GREEN<< "Visualizando todos los registros..." <<RESET<< endl;
                 showCltRegister();
                 system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
                 break;

@@ -37,7 +37,7 @@ int cntCMP(FILE *cmpRegister);
 
 void saveClt()
 {
-    cltRegister = fopen("clientes.txt", "w");
+    cltRegister = fopen("ARCHIVOS/clientes.txt", "w");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de clientes para escribir..." << endl;
@@ -49,7 +49,7 @@ void saveClt()
 
 void readClt()
 {
-    cltRegister = fopen("clientes.txt", "r");
+    cltRegister = fopen("ARCHIVOS/clientes.txt", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de clientes para leer" << endl;
@@ -76,7 +76,7 @@ int cntClt(FILE *cltRegister) // calcula el ultimo registro
 
 int getLstCltID()
 {
-    cltRegister = fopen("clientes.txt", "r");
+    cltRegister = fopen("ARCHIVOS/clientes.txt", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
@@ -96,7 +96,7 @@ int getLstCltID()
 // arch GFT
 void saveGft()
 {
-    cltRegister = fopen("recompensas.txt", "w");
+    gftRegister = fopen("ARCHIVOS/recompensas.txt", "w");
     if (gftRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para escribir..." << endl;
@@ -108,7 +108,7 @@ void saveGft()
 
 void readGft()
 {
-    gftRegister = fopen("recompensas.txt", "r");
+    gftRegister = fopen("ARCHIVOS/recompensas.txt", "r");
     if (gftRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para leer" << endl;
@@ -135,7 +135,7 @@ int cntGft(FILE *gftRegister) // calcula el ultimo registro
 
 int getLstGftID()
 {
-    cltRegister = fopen("recompensas.txt", "r");
+    cltRegister = fopen("ARCHIVOS/recompensas.txt", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para obtener el ultimo ID..." << endl;
@@ -155,7 +155,7 @@ int getLstGftID()
 ////////// ARCH DE CMP
 void saveCMP()
 {
-    cmpRegister = fopen("compras.txt", "w");
+    cmpRegister = fopen("ARCHIVOS/compras.txt", "w");
     if (cmpRegister == NULL)
     {
         cerr << "Error al abrir el archivo de compras para escribir..." << endl;
@@ -168,7 +168,7 @@ void saveCMP()
 
 void readCMP()
 {
-    cmpRegister = fopen("compras.txt", "r");
+    cmpRegister = fopen("ARCHIVOS/compras.txt", "r");
     if (cmpRegister == NULL)
     {
         cerr << "Error al abrir el archivo de compras para leer" << endl;
