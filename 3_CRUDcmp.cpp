@@ -6,7 +6,7 @@
 using namespace std;
 
 int lastREgCmp = 0;
-int idCmp = 321;
+int idCmp = 0;
 
 void addCmp(reg_compra currentCmp);
 void showCmpRegister(int enteredCltid, int pos);

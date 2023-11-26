@@ -63,8 +63,8 @@ int opPtsGft(int enteredGft_id);
 int main()
 {
     readClt();
-    SuperAdmin();
-    //searchMclt();
+    //SuperAdmin();
+    MClt();
     return 0;
 }
 
@@ -250,21 +250,26 @@ void MClt() //////////////////// CLIENTES
     readClt();
     int op2, pos;
     int i;
-    int enteredClt_id;
+    int enteredCltid;
     system("cls || clear");
-    cout << "\nBienvenido Cliente" << endl;
-    cout << "Ingrese su Id: ";
-    cin >> enteredClt_id;
-    pos = searchCltId(enteredClt_id);
+    cout << BLUE << "            ||==============================================================||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+    cout << BLUE << "            ||                                                              ||" << RESET << endl;
+    cout << BLUE << "            ||"<<RESET<<BOLD<<"                      BIENVENIDO CLIENTE                      "<<RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+    cout << BLUE << "            ||          [ID DE CLIENTE ] --> " << RESET; cin >> enteredCltid;
+    cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+    pos = searchCltId(enteredCltid);
     if (pos != -1) {
         do
         {
-            cout << "\n***--Opciones--***" << endl;
-            cout << "\n1.. Canjear puntos." << endl;
-            cout << "\n2. Consultar puntos." << endl;
-            cout << "\n3. Historial de compra." << endl;
-            cout << "\n4. Refrescar Rtrn." << endl;
-            cout << "\n --> ";
+            cout << BOLD << "            ||                "<<RESET<<CYAN<<"||***||"<<RESET<<" MENU PRINCIPAL "<<CYAN"||***||"<<CYAN<<BLUE"                ||" << RESET << endl;
+            cout << BLUE << "            ||                    " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Canjear Puntos.                        "<< RESET<<BLUE<<"||" << RESET << endl;
+            cout << BLUE << "            ||                    " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Consultar Puntos.                      "<< RESET<<BLUE<<"||" << RESET << endl;
+            cout << BLUE << "            ||                    " << RESET <<CYAN<<"3. "<<RESET << WHITE << "Historial de compras.                  "<< RESET<<BLUE<<"||" << RESET << endl;
+            cout << BLUE << "            ||                    " << RESET <<CYAN<<"4. "<<RESET << WHITE << "Cerrar Sesion...                       "<< RESET<<BLUE<<"||" << RESET << endl;
+            cout << BLUE << "            ||==============================================================||" << RESET << endl;
+            cout << BLUE << "\n                  [OPCION] --> " << RESET;
             cin >> op2;
             system("pause");
 
@@ -277,15 +282,27 @@ void MClt() //////////////////// CLIENTES
                 checkPts();
                 break;
             case 3: // historial detenido
-                /*cout << "ID de cliente: ";
-                cin.ignore();
-                cout << "" << endl;
-                cin >> enteredClt_id;
-                searCmpFID(enteredClt_id);
-                showCmpRegister(i);
-                system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-                MClt();
-                system("cls || clear");*/
+                int i, pos;
+                do {
+                        cout << "ID de cliente: " <<enteredCltid<< endl;
+
+                        if (cin.fail() || cin.peek() != '\n') {
+                            cout << "            Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                        else
+                        {
+                            pos = searchCltId(enteredCltid);
+
+                            if (pos != -1) {
+                                showCmp(pos);
+                            }
+                        }
+                    } while (cin.fail() || cin.peek() != '\n');
+                    cin.get();
+                    MClt();
+                    system("cls || clear");
                 break;
             case 4:
                 system("cls");
@@ -298,10 +315,10 @@ void MClt() //////////////////// CLIENTES
         } while (op2 != 4);
         
     } else {
-        cout << "Registro inexistente" << endl;
+        cout <<YELLOW<< "            Cliente no encontrado..." <<RESET<< endl;
     }
     system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-    MDclient();
+    MClt();
 }
 
 void MDclient()
@@ -1031,8 +1048,9 @@ void MDcmp()
         cout << BLUE << "            ||==============================================================||" << RESET << endl;
         cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
         cout << BLUE << "            ||                                                              ||" << RESET << endl;
-        cout << BLUE << "            ||                      " << RESET << BOLD << "Gestion de Compras                      "<< RESET << BLUE <<"||" << RESET << endl;
+        cout << BLUE << "            ||                      " << RESET << BOLD << "GESTION DE COMPRAS                      "<< RESET << BLUE <<"||" << RESET << endl;
         cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+        cout <<BLUE << BOLD << "            ||               Cantidad de registros de compras: "<<lastREgCmp<<"            ||" <<RESET<< endl;
         cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
         cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
         cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Registro de compra.                     "<< RESET<<BLUE<<"||" << RESET << endl;
@@ -1081,7 +1099,6 @@ void MDcmp()
             currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 180;
             cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
             cout << "||=========================||" << endl;
-                // cout << "¿Desea volver a registrar otra compra o salir al menu? (v/s): " << endl;
 
             addCmp(currentCmp);
             saveCMP();
@@ -1099,8 +1116,7 @@ void MDcmp()
 
 void record()
 {
-    
-    int pos, enteredCltid;
+    int i, pos, enteredCltid;
     do {
         cout << "ID de cliente: " << endl;
         cin >> enteredCltid;
@@ -1115,7 +1131,7 @@ void record()
             pos = searchCltId(enteredCltid);
 
             if (pos != -1) {
-                showCmpRegister(enteredCltid, pos);
+                showCmp(pos);
             }
             else
             {

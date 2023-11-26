@@ -11,8 +11,9 @@ using namespace std;
 extern int lastRegClt;
 extern int lasTregGft;
 extern int lastREgCmp;
-extern int idCmp;
+extern int idGft;
 extern int proxIDclt;
+extern int idCmp;
 
 FILE *cltRegister;
 FILE *gftRegister;
@@ -34,6 +35,7 @@ int getLstGftID();
 void saveCMP();
 void readCMP();
 int cntCMP(FILE *cmpRegister);
+int getLstCMPID();
 
 void saveClt()
 {
@@ -139,7 +141,7 @@ int getLstGftID()
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para obtener el ultimo ID..." << endl;
-        return idCmp;
+        return idGft;
     }
 
     int lastId = -1;
@@ -150,7 +152,7 @@ int getLstGftID()
     }
     fclose(gftRegister);
 
-    return (lastId == -1) ? idCmp : (lastId + 1);
+    return (lastId == -1) ? idGft : (lastId + 1);
 }
 ////////// ARCH DE CMP
 void saveCMP()
@@ -191,6 +193,26 @@ int cntCMP(FILE *cmpRegister)
     // calc el # de compras
     num_compras = tam_archv / sizeof(cmp);
     return num_compras;
+}
+
+int getLstCMPID()
+{
+    cmpRegister = fopen("ARCHIVOS/compras.txt", "r");
+    if (cmpRegister == NULL)
+    {
+        cerr << "Error al abrir el archivo de COMPRAS para obtener el ultimo ID..." << endl;
+        return idCmp;
+    }
+
+    int lastId = -1;
+    fseek(cmpRegister, -sizeof(reg_compra), SEEK_END);
+    if (fread(&cmp[0], sizeof(reg_compra), 1, cmpRegister) == 1)
+    {
+        lastId = cmp[0].cmpr_id;
+    }
+    fclose(cmpRegister);
+
+    return (lastId == -1) ? idCmp : (lastId + 1);
 }
 // fin de archivos
 

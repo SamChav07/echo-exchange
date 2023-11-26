@@ -5,9 +5,8 @@
 
 using namespace std;
 
-extern int idCmp;
-
 int lasTregGft = 0;
+int idGft = 321;
 
 void addGft(gift currentGft);
 void initGft(int gftPos);
@@ -25,7 +24,7 @@ void addGft(gift currentGft)
     {
         gft[lasTregGft] = currentGft;
         lasTregGft++;
-        idCmp++;
+        idGft++;
     }
     else
     {
@@ -96,7 +95,7 @@ void delGFT(int gftPos) {
         gft[i] = gft[i + 1];
     }
     lasTregGft--;
-    idCmp--;
+    idGft--;
     initGft(lasTregGft);
 }
 
