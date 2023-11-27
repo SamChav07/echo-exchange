@@ -195,31 +195,32 @@ void showALLclt(int pos)
     // Imprimir datos de cada cliente en la tabla
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << BLUE << "            ||" << setfill('+') << setw(220) << "||" << endl;
-        cout << "            ||" << setw(50) << clt[i].client_id <<"||"<< setw(100) << clt[i].client_name << " " << clt[i].client_lastname << "||" << setw(50) << clt[i].client_mail << "||" << setw(20) << clt[i].client_telf << "||" << endl;
+        cout << BLUE << " ||" <<setw(8)<< clt[i].client_id << setw(36) << clt[i].client_name << clt[i].client_lastname << setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<"||"<< endl;
+        cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
+
     }
 }
 
-void showCltRegister()
-{
+void showCltRegister() {
     system("cls || clear");
     if (lastRegClt == 0)
     {
         cout << YELLOW << "No hay registros" << RESET << endl;
         return;
     }
-
     // Encabezado del registro de clientes
-    cout << "Registro de Clientes: " << endl;
-    cout << BLUE << "            ||" << setw(50) << " ID "<< "||" << setw(100) << " NOMBRE "<< "||" << setw(50) << " E-MAIL "<< "||" << setw(20) << " TELEFONO "<< "||" << endl;
-    cout << BLUE << "            ||==============================================================||" << RESET << endl;
+    cout << " Registro de Clientes: " << endl;
+    cout << BLUE << " ||   ID   ||                 NOMBRE                 ||             E-MAIL             ||           TELEFONO           ||" << endl;
+    cout << BLUE << " ||========||========================================||================================||==============================||" << RESET << endl;
+    cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
+
 
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << "Cliente #" << i + 1 << endl;
         showALLclt(i);
     }
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
     cout << GREEN << "Ultimo registro..." << RESET << endl;
+    system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
 }

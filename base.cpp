@@ -63,8 +63,8 @@ int opPtsGft(int enteredGft_id);
 int main()
 {
     readClt();
-    //SuperAdmin();
-    MClt();
+    SuperAdmin();
+    //MClt();
     return 0;
 }
 
@@ -271,7 +271,7 @@ void MClt() //////////////////// CLIENTES
             cout << BLUE << "            ||==============================================================||" << RESET << endl;
             cout << BLUE << "\n                  [OPCION] --> " << RESET;
             cin >> op2;
-            system("pause");
+            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
 
             switch (op2)
             {
@@ -1235,7 +1235,6 @@ void searchMclt()
                     }
                 } while (cin.fail() || cin.peek() != '\n');
                 system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-
                 break;
             case 4:
                 system("cls || clear");

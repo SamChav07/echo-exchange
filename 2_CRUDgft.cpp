@@ -10,13 +10,13 @@ int idGft = 321;
 
 void addGft(gift currentGft);
 void initGft(int gftPos);
-void showGft(int pos);
+void showGft(int gftPos);
 void showGftRegister();
-gift getGft(int pos);
+gift getGft(int gftPos);
 void searchGFTname(char *enteredGft_name, bool esStr);
 int searchGFTid(int entered_id);
 void uptGFT(gift currentGft, int i);
-void delGFT(int pos);
+void delGFT(int gftPos);
 
 void addGft(gift currentGft)
 {
@@ -116,8 +116,7 @@ void showGft(int gftPos)
     system("cls || clear");
 }
 
-void showGftRegister()
-{
+void showGftRegister() {
     system("cls || clear");
     if (lasTregGft == 0)
     {

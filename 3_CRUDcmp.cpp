@@ -54,14 +54,20 @@ void showCmpRegister(int enteredCltid, int pos) {
 void showCmp(int pos) // muestra los datos del cliente en X posición
 {
     readCMP();
-    cout << "====================================" << endl;
-    cout << "N* de Recibo: " << cmp[pos].cmpr_id << endl;
-    cout << "Fecha de compra: " << cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << endl;
-    cout << "Monto de compra: C$ " << cmp[pos].cmpr_Sqty << endl;
-    cout << "Iva: C$ " << cmp[pos].cmp_iva << endl;
-    cout << "Total: C$ " << cmp[pos].cmpr_Tqty << endl;
-    cout << "Puntos por compra: " << cmp[pos].cmpr_pts << " pts" << endl;
-    cout << "====================================" << endl;
+    system("cls || clear");
+    cout << BLUE << BOLD << "            ||==============================================================||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+    cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
+    cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
+    cout << BOLD << "            ||                "<<RESET<<CYAN<<"||*||"<<RESET<<"                    "<<CYAN"||*||"<<CYAN<<BLUE"                ||" << RESET << endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"N* de Recibo:           "<<RESET<< cmp[pos].cmpr_id << BLUE << BOLD << "                ||"<<RESET<<endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"Fecha de compra:        "<<RESET<< cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << BLUE << BOLD << "        ||"<<RESET<< endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"Monto de compra:     C$ "<< RESET << cmp[pos].cmpr_Sqty << BLUE << BOLD << "               ||"<<RESET<< endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"Iva:                 C$ "<< RESET << cmp[pos].cmp_iva << BLUE << BOLD << "             ||"<<RESET<< endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"Total:               C$ "<<RESET<< cmp[pos].cmpr_Tqty << BLUE << BOLD << "             ||"<<RESET<< endl;
+    cout << BLUE << BOLD << "            ||"<<RESET<<"                  "<<CYAN<<"Puntos por compra:      "<< RESET << cmp[pos].cmpr_pts << " pts" << BLUE << BOLD << "             ||"<<RESET<< endl;
+    cout << BLUE << BOLD << "            ||==============================================================||" << RESET << endl;
+    system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
 }
 
 reg_compra getCmp(int pos)

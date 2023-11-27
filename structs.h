@@ -54,7 +54,7 @@ struct historial
 {
     reg_compra r_cmpr;
     int cmpr_ptsTot;
-}hst;
+}hst[MAX];
 
 struct gift
 {
