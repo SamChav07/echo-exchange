@@ -29,6 +29,7 @@ struct cliente
     int client_id;
     char client_mail[50];
     int client_telf;
+    int puntos;
 }clt[MAX];
 
 struct cmpr_fecha

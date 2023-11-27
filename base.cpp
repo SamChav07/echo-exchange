@@ -1113,10 +1113,12 @@ void MDcmp()
             cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
             cout << "||=========================||" << endl;
 
+            currentCmp.cmpr_pts += clt[currentCmp.clt.client_id].puntos;
+
             addCmp(currentCmp);
             saveCMP();
-            
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+            MDcmp();
             break;
         case 2:
             record();
@@ -1131,7 +1133,7 @@ void MDcmp()
 void record()
 {
     readClt();
-    readClt();
+    readCMP();
     int i, pos, enteredCltid;
     do {
         cout << "ID de cliente: " << endl;
@@ -1357,6 +1359,8 @@ void redeem() // -------------pendiente
     {
         cout << "Registro Inexistente" << endl;
     }
+
+
 
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     MClt();

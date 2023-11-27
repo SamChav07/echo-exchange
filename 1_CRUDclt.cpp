@@ -62,6 +62,7 @@ void initClt(int pos) // inicializa los datos del cliente
     strncpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
 
     clt[pos].client_telf = 0;
+    clt[pos].puntos = 0;
 }
 
 cliente getClt(int pos)
@@ -181,9 +182,10 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
     cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"ID: "<<RESET<< clt[pos].client_id <<"                                          ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"NOMBRE: "<<RESET<< clt[pos].client_name <<" "<< clt[pos].client_lastname <<"              ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail << clt[pos].client_lastname <<"              ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf << clt[pos].client_lastname <<"                ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"NOMBRE: "<<RESET<< clt[pos].client_name <<" "<< clt[pos].client_lastname <<"   ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail << clt[pos].client_lastname <<"        ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf << clt[pos].client_lastname <<"      ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"PUNTOS: "<<RESET<< clt[pos].puntos <<"                                         ||" << endl;
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
 
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
@@ -197,16 +199,16 @@ void showCltRegister() {
         cout << YELLOW << "            No hay registros" << RESET << endl;
         return;
     }
-    // Encabezado del registro de clientes
+   // Encabezado del registro de clientes
     cout << "  Registro de Clientes: " << endl;
-    cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
-    cout << BLUE << " ||   ID   ||                       NOMBRE                     ||             E-MAIL               ||         TELEFONO         ||" << endl;
-    cout << BLUE << " ||========||==================================================||==================================||==========================||" << RESET << endl;
+    cout << BLUE << " ||==============================================================================================================================================||" << RESET << endl;
+    cout << BLUE << " ||   ID   ||                       NOMBRE                     ||             E-MAIL               ||         TELEFONO         ||     PUNTOS     ||" << endl;
+    cout << BLUE << " ||========||==================================================||==================================||==========================||================||" << RESET << endl;
 
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf << endl;
+        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< clt[i].puntos<<endl;
         cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
     }
     cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
