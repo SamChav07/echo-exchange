@@ -12,7 +12,6 @@ int proxIDclt = 123;
 void addClt(cliente currentClt);
 void initClt(int cltPos);
 void showClt(int pos);
-void showALLclt(int pos);
 void showCltRegister();
 cliente getClt(int pos);
 void searchCltname(char *enteredClt_name, bool esStr);
@@ -22,6 +21,8 @@ void searchCltmail(char *enteredClt_mail);
 int searchCltelf(int enteredClt_telf);
 void uptdClt(cliente currentClt, int i);
 void delClt(int pos);
+
+extern void searchMclt();
 
 // codigos colores ANSI
 #define RESET "\033[0m"
@@ -189,38 +190,27 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     system("cls || clear");
 }
 
-void showALLclt(int pos)
-{
-
-    // Imprimir datos de cada cliente en la tabla
-    for (int i = 0; i < lastRegClt; i++)
-    {
-        cout << BLUE << " ||" <<setw(8)<< clt[i].client_id << setw(36) << clt[i].client_name << clt[i].client_lastname << setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<"||"<< endl;
-        cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
-
-    }
-}
-
 void showCltRegister() {
     system("cls || clear");
     if (lastRegClt == 0)
     {
-        cout << YELLOW << "No hay registros" << RESET << endl;
+        cout << YELLOW << "            No hay registros" << RESET << endl;
         return;
     }
     // Encabezado del registro de clientes
-    cout << " Registro de Clientes: " << endl;
-    cout << BLUE << " ||   ID   ||                 NOMBRE                 ||             E-MAIL             ||           TELEFONO           ||" << endl;
-    cout << BLUE << " ||========||========================================||================================||==============================||" << RESET << endl;
-    cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
-
+    cout << "  Registro de Clientes: " << endl;
+    cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
+    cout << BLUE << " ||   ID   ||                       NOMBRE                     ||             E-MAIL               ||         TELEFONO         ||" << endl;
+    cout << BLUE << " ||========||==================================================||==================================||==========================||" << RESET << endl;
 
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        showALLclt(i);
+        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf << endl;
+        cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
     }
-    cout << BLUE << "            ||==============================================================||" << RESET << endl;
-    cout << GREEN << "Ultimo registro..." << RESET << endl;
+    cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
+    cout << GREEN << "  Ultimo registro..." << RESET << endl;
     system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+    searchMclt();
 }

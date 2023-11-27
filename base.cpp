@@ -37,8 +37,7 @@ void MClt();
 void record();
 void redeem();   // -------------pendiente
 void checkPts(); // -------------pendiente
-
-
+int consultarPtsCliente(int enteredCltid);
 
 
 // variables globales
@@ -46,6 +45,8 @@ char user[50], pass[50];
 int intentos = 4;
 
 int opPtsGft(int enteredGft_id);
+
+extern int enteredCltid;
 
 // codigos colores ANSI
 #define RESET "\033[0m"
@@ -62,16 +63,13 @@ int opPtsGft(int enteredGft_id);
 
 int main()
 {
-    readClt();
     SuperAdmin();
-    //MClt();
     return 0;
 }
 
 void SuperAdmin()
 {
     int spOpcion;
-
     do
     {
         cout << BOLD << BLUE << "EEEE  CCCC  HH  HH  OOOOOO     EEEE  XX    XX  CCCC  HH  HH  AAAAAA  NN     NN  GGGGGG   EEEE" << RESET << endl;
@@ -157,6 +155,9 @@ void logAdm()
 
 void MAdm()
 {
+    readClt();
+    readCMP();
+    readGft();
     int op1;
     do
     {
@@ -248,8 +249,9 @@ void MClt() //////////////////// CLIENTES
     readCMP();
     readGft();
     readClt();
+    readCMP();
     int op2, pos;
-    int i;
+    int i, puntosCliente;
     int enteredCltid;
     system("cls || clear");
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
@@ -263,6 +265,7 @@ void MClt() //////////////////// CLIENTES
     if (pos != -1) {
         do
         {
+            cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
             cout << BOLD << "            ||                "<<RESET<<CYAN<<"||***||"<<RESET<<" MENU PRINCIPAL "<<CYAN"||***||"<<CYAN<<BLUE"                ||" << RESET << endl;
             cout << BLUE << "            ||                    " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Canjear Puntos.                        "<< RESET<<BLUE<<"||" << RESET << endl;
             cout << BLUE << "            ||                    " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Consultar Puntos.                      "<< RESET<<BLUE<<"||" << RESET << endl;
@@ -271,7 +274,6 @@ void MClt() //////////////////// CLIENTES
             cout << BLUE << "            ||==============================================================||" << RESET << endl;
             cout << BLUE << "\n                  [OPCION] --> " << RESET;
             cin >> op2;
-            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
 
             switch (op2)
             {
@@ -279,34 +281,50 @@ void MClt() //////////////////// CLIENTES
                 redeem();
                 break;
             case 2:
+                readClt();
+                readCMP();
+                system("cls || clear");
+                checkPts();
+
+                cout << "ID del cliente a consultar sus puntos: " << enteredCltid << endl;
+
+                puntosCliente = consultarPtsCliente(enteredCltid);
+
+                if (puntosCliente != -1)
+                {
+                    cout << "Puntos acumulados del cliente " << enteredCltid << ": " << puntosCliente << " pts" << endl;
+                }
+                else
+                {
+                    cout << "Puntos no encontrados." << endl;
+                }
+
                 checkPts();
                 break;
-            case 3: // historial detenido
-                int i, pos;
+            case 3:
                 do {
-                        cout << "ID de cliente: " <<enteredCltid<< endl;
+                    cout << "ID de cliente: " <<enteredCltid<< endl;
 
-                        if (cin.fail() || cin.peek() != '\n') {
-                            cout << "            Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
-                            cin.clear();
-                            cin.ignore(INT_MAX, '\n');
-                        }
-                        else
-                        {
-                            pos = searchCltId(enteredCltid);
+                    if (cin.fail() || cin.peek() != '\n') {
+                        cout << "            Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                    }
+                    else
+                    {
+                        pos = searchCltId(enteredCltid);
 
-                            if (pos != -1) {
-                                showCmp(pos);
-                            }
+                        if (pos != -1) {
+                            showCmp(pos);
                         }
-                    } while (cin.fail() || cin.peek() != '\n');
-                    cin.get();
-                    MClt();
-                    system("cls || clear");
+                    }
+                } while (cin.fail() || cin.peek() != '\n');
+                cin.get();
+                system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+                
                 break;
             case 4:
-                system("cls");
-                MClt();
+                system("cls || clear");
                 break;
             default:
                 cout << "Ingrese opciones validas. Sean de 1-4.." << endl;
@@ -323,8 +341,6 @@ void MClt() //////////////////// CLIENTES
 
 void MDclient()
 {
-    readClt();
-
     cliente currentClt;
     int pos, resp;
     int enteredClt_id;
@@ -681,8 +697,6 @@ void MDclient()
 
 void MDgft()
 {
-    readGft();
-
     gift currentGft;
     int gftPos, resp;
     int enteredGft_id;
@@ -1037,11 +1051,9 @@ void MDgft()
 
 void MDcmp()
 {
-    readClt();
-    readCMP();
     string regreso;
     reg_compra currentCmp;
-    int cmpOPt;
+    int cmpOPt, cantPrd;
     do
     {
         system("cls || clear");
@@ -1083,9 +1095,10 @@ void MDcmp()
             cin >> currentCmp.fCmp.year;
 
             cout << "Productos facturados: ";
-                for (int i = 0; i < 10; ++i) {
+            cin >> cantPrd;
+            for (int i = 0; i < cantPrd; ++i) {
                 cin >> currentCmp.prodCmpr[i];
-                }
+            }
 
             cout << "Monto de compra: C$ ";
             cin >> currentCmp.cmpr_Sqty;
@@ -1102,6 +1115,7 @@ void MDcmp()
 
             addCmp(currentCmp);
             saveCMP();
+            
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
             break;
         case 2:
@@ -1116,6 +1130,8 @@ void MDcmp()
 
 void record()
 {
+    readClt();
+    readClt();
     int i, pos, enteredCltid;
     do {
         cout << "ID de cliente: " << endl;
@@ -1131,7 +1147,7 @@ void record()
             pos = searchCltId(enteredCltid);
 
             if (pos != -1) {
-                showCmp(pos);
+                showCmpRegister(i);
             }
             else
             {
@@ -1164,13 +1180,13 @@ void searchMclt()
         cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
         cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
         cout << BOLD << "            ||                "<<RESET<<CYAN<<"||*||"<<RESET<<"                    "<<CYAN"||*||"<<CYAN<<BLUE"                ||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Nombre.                                 "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Apellido.                               "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"3. "<<RESET << WHITE << "ID.                                     "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"4. "<<RESET << WHITE << "E-mail.                                 "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Telefono.                               "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"6. "<<RESET << WHITE << "Mostrar todos los registros.            "<< RESET<<BLUE<<"||" << RESET << endl;
-        cout << BLUE << "            ||                  " << RESET <<CYAN<<"7. "<<RESET << WHITE << "Volver...                               "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Nombre.                                  "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"2. "<<RESET << WHITE << "Apellido.                                "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"3. "<<RESET << WHITE << "ID.                                      "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"4. "<<RESET << WHITE << "E-mail.                                  "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"5. "<<RESET << WHITE << "Telefono.                                "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"6. "<<RESET << WHITE << "Mostrar todos los registros.             "<< RESET<<BLUE<<"||" << RESET << endl;
+        cout << BLUE << "            ||                  " << RESET <<CYAN<<"7. "<<RESET << WHITE << "Volver...                                "<< RESET<<BLUE<<"||" << RESET << endl;
         cout << BLUE << "            ||==============================================================||" << RESET << endl;
         cout << BLUE << "\n                  [OPCION] --> " << RESET;
         cin >> options;
@@ -1348,10 +1364,32 @@ void redeem() // -------------pendiente
 }
 void checkPts() // -------------pendiente
 {
-    for (int i = 0; i < lastREgCmp; i++) 
+    for (int i = 0; i <lastRegClt; i++)
+    {
+        hst[i].cmpr_ptsTot = 0;
+    }
+
+    for (int i = 0; i < lastREgCmp; i++)
     {
         int cltId = cmp[i].clt.client_id;
         int ptsEarn = cmp[i].cmpr_pts;
-        //hst.cmpr_ptsTot[cltId] += ptsEarn;
+
+        if (cltId >= 0 && cltId < lastRegClt)
+        {
+            hst[cltId].cmpr_ptsTot += ptsEarn;
+        }
     }
+}
+
+int consultarPtsCliente(int enteredCltid) {
+    for (int i = 0; i < lastRegClt; i++)
+    {
+        if (hst[i].cmp.clt.client_id == enteredCltid)
+        {
+            // Devuelve los puntos acumulados para el cliente encontrado
+            return hst[i].cmpr_ptsTot;
+        }
+    }
+    // Si no se encuentra el cliente, devuelve -1 o algún valor que indique que no se encontró
+    return -1;
 }

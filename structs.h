@@ -52,7 +52,7 @@ struct reg_compra
 
 struct historial
 {
-    reg_compra r_cmpr;
+    reg_compra cmp;
     int cmpr_ptsTot;
 }hst[MAX];
 
