@@ -1,15 +1,10 @@
 #include <iostream>
-#include <cstring>
-#include <string>
-#include <cstdio>
-#include <iomanip>
-#include <unistd.h>
-
-// libreria para all_of y ::isdigit
-#include <algorithm>
+#include <cstring> //strcpy, strlen
+#include <iomanip> //setw, setfill
+#include <unistd.h> //system()
+//#include <algorithm>
 #include <functional>
-#include <cctype>
-
+#include <cctype> // libreria para all_of y ::isdigit
 #include <fstream>
 
 #include "structs.h"
@@ -259,7 +254,7 @@ void MClt() //////////////////// CLIENTES
     cout << BLUE << "            ||                                                              ||" << RESET << endl;
     cout << BLUE << "            ||"<<RESET<<BOLD<<"                      BIENVENIDO CLIENTE                      "<<RESET<<BLUE<<"||" << RESET << endl;
     cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
-    cout << BLUE << "            ||          [ID DE CLIENTE ] --> " << RESET; cin >> enteredCltid;
+    cout << BLUE << "            ||          [ ID DE CLIENTE ] --> " << RESET; cin >> enteredCltid;
     cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
     pos = searchCltId(enteredCltid);
     if (pos != -1) {
