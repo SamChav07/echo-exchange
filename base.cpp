@@ -2,7 +2,8 @@
 #include <cstring> //strcpy, strlen
 #include <iomanip> //setw, setfill
 #include <unistd.h> //system()
-//#include <algorithm>
+
+#include <algorithm>
 #include <functional>
 #include <cctype> // libreria para all_of y ::isdigit
 #include <fstream>
