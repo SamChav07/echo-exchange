@@ -6,7 +6,6 @@
 using namespace std;
 
 int lastREgCmp = 0;
-int idCmp = 0;
 
 void addCmp(reg_compra currentCmp);
 void showCmpRegister(int enteredCltid);
@@ -16,15 +15,15 @@ int searCmpFID(int enteredCltid);
 
 void addCmp(reg_compra currentCmp)
 {
-    if (lastREgCmp < MAX)
-    {
-        cmp[lastREgCmp] = currentCmp;
-        lastREgCmp++;
-    }
-    else
-    {
-        cout << "El Registro de compras esta en Maxima capacidad..." << endl;
-    }
+  if (lastREgCmp < MAX)
+  {
+    cmp[lastREgCmp] = currentCmp;
+    lastREgCmp++;
+  }
+  else
+  {
+    cout << "El Registro de compras esta en Maxima capacidad..." << endl;
+  }
 }
 
 void showCmpRegister(int enteredCltid) {
@@ -46,7 +45,6 @@ void showCmpRegister(int enteredCltid) {
   }
 
   cout << "====================================" << endl;
-  cout << "Ultimo registro..." << endl;
 
   if (!found) {
     cout << "No hay registros para este cliente." << endl;
@@ -62,13 +60,13 @@ void showCmp(int pos) { // muestra los datos del cliente en X posición
   cout << BLUE << BOLD << " ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET << endl;
   cout << BLUE << BOLD << " ||______________________________________________________________||" << endl;
   cout << BLUE << BOLD << " ||--------------------------------------------------------------||" << endl;
-  cout << BOLD << " || "<<RESET<<CYAN<<"||*||"<<RESET<<" "<<CYAN"||*||"<<CYAN<<BLUE" ||" << RESET << endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"N* de Recibo: "<<RESET<< cmp[pos].cmpr_id << BLUE << BOLD << " ||"<<RESET<<endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"Fecha de compra: "<<RESET<< cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << BLUE << BOLD << " ||"<<RESET<< endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"Monto de compra: C$ "<< RESET << cmp[pos].cmpr_Sqty << BLUE << BOLD << " ||"<<RESET<< endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"Iva: C$ "<< RESET << cmp[pos].cmp_iva << BLUE << BOLD << " ||"<<RESET<< endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"Total: C$ "<<RESET<< cmp[pos].cmpr_Tqty << BLUE << BOLD << " ||"<<RESET<< endl;
-  cout << BLUE << BOLD << " ||"<<RESET<<" "<<CYAN<<"Puntos por compra: "<< RESET << cmp[pos].cmpr_pts << " pts" << BLUE << BOLD << " ||"<<RESET<< endl;
+  cout << BOLD << " || " << RESET << CYAN << "||*||" << RESET << " " << CYAN << "||*||" << CYAN << BLUE " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "N* de Recibo: " << RESET << cmp[pos].cmpr_id << BLUE << BOLD << " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "Fecha de compra: " << RESET << cmp[pos].fCmp.day << " - " << cmp[pos].fCmp.month << " - " << cmp[pos].fCmp.year << BLUE << BOLD << " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "Monto de compra: C$ " << RESET << cmp[pos].cmpr_Sqty << BLUE << BOLD << " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "Iva: C$ " << RESET << cmp[pos].cmp_iva << BLUE << BOLD << " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "Total: C$ " << RESET << cmp[pos].cmpr_Tqty << BLUE << BOLD << " ||" << RESET << endl;
+  cout << BLUE << BOLD << " || " << RESET << " " << CYAN << "Puntos por compra: " << RESET << cmp[pos].cmpr_pts << " pts" << BLUE << BOLD << " ||" << RESET << endl;
   cout << BLUE << BOLD << " ||==============================================================||" << RESET << endl;
 
   system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
@@ -77,19 +75,19 @@ void showCmp(int pos) { // muestra los datos del cliente en X posición
 
 reg_compra getCmp(int pos)
 {
-    return cmp[pos];
+  return cmp[pos];
 }
 
-int searCmpFID(int enteredCltid)
+int searCmpFID(int enteredCltid) // funcion sin proposito AUN
 {
-    int position;
-    for (int i = 0; i < lastRegClt; i++)
+  int position;
+  for (int i = 0; i < lastRegClt; i++)
+  {
+    if (enteredCltid == cmp[i].clt.client_id)
     {
-        if (enteredCltid == cmp[i].clt.client_id)
-        {
-            position = i;
-            break;
-        }
+      position = i;
+      break;
     }
-    return position;
+  }
+  return position;
 }

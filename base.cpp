@@ -721,74 +721,51 @@ void MDgft()
         switch (optMdGft)
         {
         case 1:
+            cin.ignore(); // Limpiar el buffer de entrada antes de getline
+
             system("cls || clear");
-            cout << "** Ingrese los datos a añadir **" << endl;
+            cout << "** Ingrese los datos a añadir **" << std::endl;
             system("cls || clear");
             currentGft.gft_id = getLstGftID();
-            if (currentGft.gft_id == -1)
-            {
-                cerr << "Error al obtener el último ID. No se pudo agregar la recompensa..." << endl;system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
+            if (currentGft.gft_id == -1) {
+                cerr << "Error al obtener el último ID. No se pudo agregar la recompensa..." << endl;
+                system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
                 return;
             }
             cout << "ID: " << currentGft.gft_id << endl;
 
-            // Nombre del cliente    este no lleva restricciones porque el nombre puede ser un modelo MXi98S2
-            do
-            {
-                cout << "Nombre de la recompensa: ";
-                cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
+            // Nombre del cliente
+            do {
+            cout << "Nombre de la recompensa: ";
+            cin.getline(currentGft.gft_name, sizeof(currentGft.gft_name));
 
-                if (strlen(currentGft.gft_name) < 5)
-                {
-                    cout << "\nEl nombre es demasiado corto! Minimo 5 caracteres." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-                else if (strlen(currentGft.gft_name) > 49)
-                {
-                    cout << "El nombre es demasiado largo! Maximo 50 caracteres." << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
+            if (strlen(currentGft.gft_name) < 5 || strlen(currentGft.gft_name) > 49) {
+                cout << "El nombre debe tener entre 5 y 49 caracteres." << endl;
+            }
             } while (strlen(currentGft.gft_name) < 5 || strlen(currentGft.gft_name) > 49);
 
             // Cantidad de la recomp
-            do
-            {
+            do {
                 cout << "Cantidad del producto: ";
                 cin >> currentGft.gft_cant;
-                if (currentGft.gft_cant >= 1000)
-                {
-                    cout << "La cantidad debe tener menos de tres digitos!" << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
+                if (currentGft.gft_cant >= 1000) {
+                    cout << "La cantidad debe tener menos de tres digitos." << endl;
                 }
             } while (currentGft.gft_cant >= 1000);
 
-            // pts necesarios
-            do
-            {
-                cout << "Puntos Necesarios: ";
-                cin >> currentGft.gft_pts;
-                if (currentGft.gft_pts >= 1000000000)
-                {
-                    cout << "Los puntos no pueden ser mayor a 1,000,000,000" << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-                else if (currentGft.gft_pts <= 100)
-                {
-                    cout << "Los puntos no pueden ser menor a 100" << endl;
-                    cin.clear();
-                    cin.ignore(INT_MAX, '\n');
-                }
-            } while ((currentGft.gft_pts >= 1000000000) || (currentGft.gft_pts <= 100));
+            // Puntos necesarios
+            do {
+            cout << "Puntos Necesarios: ";
+            cin >> currentGft.gft_pts;
+            if (currentGft.gft_pts >= 1000000000 || currentGft.gft_pts <= 100) {
+                cout << "Los puntos deben estar entre 100 y 1,000,000,000." << endl;
+            }
+            } while (currentGft.gft_pts >= 1000000000 || currentGft.gft_pts <= 100);
 
             addGft(currentGft);
             saveGft();
             // llama a la función guardar antes de cerrar la sesión
-            system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-            MDgft();
+            
             break;
 
         case 2:
@@ -1047,6 +1024,7 @@ void MDgft()
 
 void MDcmp()
 {
+    readCMP();
     string regreso;
     reg_compra currentCmp;
     int cmpOPt, cantPrd;
@@ -1071,12 +1049,14 @@ void MDcmp()
         switch (cmpOPt)
         {
         case 1:
-            system("cls || clear");
+            {
+                system("cls || clear");
             cout << "\tRegistro de Compras" << endl;
             cout << "______________________________" << endl;
             cout << "** Ingrese los datos a añadir **" << endl;
             cout << "------------------------------" << endl;
             system("cls || clear");
+
             cout << "ID del cliente: ";
             cin >> currentCmp.clt.client_id;
 
@@ -1092,8 +1072,12 @@ void MDcmp()
 
             cout << "Productos facturados: ";
             cin >> cantPrd;
+
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
             for (int i = 0; i < cantPrd; ++i) {
-                cin >> currentCmp.prodCmpr[i];
+                cout << "Producto "<< i + 1 << ": "; 
+                getline(cin, currentCmp.prodCmpr[i]);
             }
 
             cout << "Monto de compra: C$ ";
@@ -1105,22 +1089,30 @@ void MDcmp()
             currentCmp.cmpr_Tqty = currentCmp.cmpr_Sqty + currentCmp.cmp_iva;
             cout << "Total: C$ " << currentCmp.cmpr_Tqty << endl;
 
-            currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 180;
+            currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 100;
             cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
             cout << "||=========================||" << endl;
 
-            currentCmp.cmpr_pts += clt[currentCmp.clt.client_id].puntos;
+            // Actualizar puntos directamente al agregar la compra
+            int cltId = currentCmp.clt.client_id;
+            if (cltId >= 0 && cltId < lastRegClt) {
+                clt[cltId].puntos += static_cast<int>(currentCmp.cmpr_pts);
+            }
 
             addCmp(currentCmp);
             saveCMP();
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
             MDcmp();
+            }
             break;
         case 2:
             record();
             break;
         case 3:
             MAdm();
+            break;
+        default:
+            cout << "Ingrese una opcion valida. 1 - 3..." << endl;
             break;
         }
     } while (cmpOPt != 3);
@@ -1130,7 +1122,8 @@ void record()
 {
     readClt();
     readCMP();
-    int i, pos, enteredCltid;
+    int pos, enteredCltid;
+
     do {
         cout << "ID de cliente: " << endl;
         cin >> enteredCltid;
@@ -1139,16 +1132,12 @@ void record()
             cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
             cin.clear();
             cin.ignore(INT_MAX, '\n');
-        } 
-        else
-        { 
+        } else {
             pos = searchCltId(enteredCltid);
 
             if (pos != -1) {
-                showCmpRegister(i);
-            }
-            else
-            {
+                showCmpRegister(enteredCltid);
+            } else {
                 cout << "Cliente no encontrado" << endl;
             }
         }
@@ -1320,76 +1309,88 @@ void MDrewards() // -------------pendiente
     cout << "||=========================||" << endl;
     cout << "¿Desea volver al CRUD o salir al menu? (v/s): " << endl;
 }
+
 void redeem() // -------------pendiente
 {
-    int i, pos, gftPos, OPT;
-    int enteredClt_id, enteredGft_id;
+int enteredClt_id, enteredGft_id, pos, gftPos;
+    int qtyToRedeem;
+
+    // Ingresar ID de cliente
     cout << "ID de cliente: ";
-    cin.ignore();
-    cout << "" << endl;
     cin >> enteredClt_id;
+
+    // Buscar y mostrar información del cliente
     pos = searchCltId(enteredClt_id);
-    if (pos != -1)
-    {
+    if (pos != -1) {
         showClt(pos);
-    }
-    else
-    {
+    } else {
         cout << "Registro Inexistente" << endl;
+        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+        MClt();
+        system("cls || clear");
+        return;
     }
-    searCmpFID(enteredClt_id);
+
+    // Mostrar recompensas disponibles
     cout << "||=========================||" << endl;
     cout << "--------Echo-Exchange--------" << endl;
-    cout << "" << endl;
     cout << "\tSeleccion de recompensas" << endl;
     showGftRegister();
     cout << "||=========================||" << endl;
-    cout << "ID de la recompensa a canjear:";
+
+    // Ingresar ID de la recompensa a canjear
+    cout << "ID de la recompensa a canjear: ";
     cin >> enteredGft_id;
+
+    // Buscar y mostrar información de la recompensa seleccionada
     gftPos = searchGFTid(enteredGft_id);
-    if (gftPos != -1)
-    {
+    if (gftPos != -1) {
         showGft(gftPos);
-    }
-    else
-    {
+    } else {
         cout << "Registro Inexistente" << endl;
+        system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+        MClt();
+        system("cls || clear");
+        return;
     }
 
+    // Ingresar cantidad de recompensas a canjear
+    cout << "Cantidad de recompensas a canjear: ";
+    cin >> qtyToRedeem;
 
+    // Verificar si el cliente tiene suficientes puntos
+    if (clt[pos].puntos >= qtyToRedeem * gft[gftPos].gft_pts) {
+        // Restar puntos del cliente
+        clt[pos].puntos -= qtyToRedeem * gft[gftPos].gft_pts;
+
+        // Restar cantidad de recompensas del inventario
+        gft[gftPos].gft_cant -= qtyToRedeem;
+
+        cout << "Canje realizado exitosamente." << endl;
+    } else {
+        cout << "El cliente no tiene suficientes puntos para canjear estas recompensas." << endl;
+    }
 
     system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
     MClt();
     system("cls || clear");
 }
+
 void checkPts() // -------------pendiente
 {
-    for (int i = 0; i <lastRegClt; i++)
+    for (int i = 0; i <lastRegClt; i++) //va a sumar los pts acum direct desde la strct cliente
     {
-        hst[i].cmpr_ptsTot = 0;
-    }
-
-    for (int i = 0; i < lastREgCmp; i++)
-    {
-        int cltId = cmp[i].clt.client_id;
-        int ptsEarn = cmp[i].cmpr_pts;
-
-        if (cltId >= 0 && cltId < lastRegClt)
-        {
-            hst[cltId].cmpr_ptsTot += ptsEarn;
-        }
+        hst[i].cmpr_ptsTot = clt[i].puntos;
     }
 }
 
 int consultarPtsCliente(int enteredCltid) {
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (hst[i].cmp.clt.client_id == enteredCltid)
+        if (clt[i].client_id == enteredCltid) 
         {
-            // Devuelve los puntos acumulados para el cliente encontrado
-            return hst[i].cmpr_ptsTot;
+            return clt[i].puntos;
         }
     }
-    // Si no se encuentra el cliente, devuelve -1 o algún valor que indique que no se encontró
-    return -1;
+    return 0;
 }

@@ -183,7 +183,7 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"ID: "<<RESET<< clt[pos].client_id <<"                                          ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"NOMBRE: "<<RESET<< clt[pos].client_name <<" "<< clt[pos].client_lastname <<"   ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail << clt[pos].client_lastname <<"        ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail <<"        ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf << clt[pos].client_lastname <<"      ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"PUNTOS: "<<RESET<< clt[pos].puntos <<"                                         ||" << endl;
     cout << BLUE << "            ||==============================================================||" << RESET << endl;

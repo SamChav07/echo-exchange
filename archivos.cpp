@@ -13,7 +13,6 @@ extern int lasTregGft;
 extern int lastREgCmp;
 extern int idGft;
 extern int proxIDclt;
-extern int idCmp;
 
 FILE *cltRegister;
 FILE *gftRegister;
@@ -39,7 +38,7 @@ int getLstCMPID();
 
 void saveClt()
 {
-    FILE *cltRegister = fopen("clientes.txt", "w");
+    FILE *cltRegister = fopen("clientes.dat", "w");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de clientes para escribir..." << endl;
@@ -51,7 +50,7 @@ void saveClt()
 
 void readClt()
 {
-    FILE *cltRegister = fopen("clientes.txt", "r");
+    FILE *cltRegister = fopen("clientes.dat", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de clientes para leer" << endl;
@@ -78,7 +77,7 @@ int cntClt(FILE *cltRegister) // calcula el ultimo registro
 
 int getLstCltID()
 {
-    cltRegister = fopen("clientes.txt", "r");
+    cltRegister = fopen("clientes.dat", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
@@ -98,7 +97,7 @@ int getLstCltID()
 // arch GFT
 void saveGft()
 {
-    FILE *gftRegister = fopen("recompensas.txt", "w");
+    FILE *gftRegister = fopen("recompensas.dat", "w");
     if (gftRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para escribir..." << endl;
@@ -110,7 +109,7 @@ void saveGft()
 
 void readGft()
 {
-    FILE *gftRegister = fopen("recompensas.txt", "r");
+    FILE *gftRegister = fopen("recompensas.dat", "r");
     if (gftRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para leer" << endl;
@@ -137,7 +136,7 @@ int cntGft(FILE *gftRegister) // calcula el ultimo registro
 
 int getLstGftID()
 {
-    cltRegister = fopen("recompensas.txt", "r");
+    cltRegister = fopen("recompensas.dat", "r");
     if (cltRegister == NULL)
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para obtener el ultimo ID..." << endl;
@@ -157,7 +156,7 @@ int getLstGftID()
 ////////// ARCH DE CMP
 void saveCMP()
 {
-    FILE *cmpRegister = fopen("compras.txt", "w");
+    FILE *cmpRegister = fopen("compras.dat", "w");
     if (cmpRegister == NULL)
     {
         cerr << "Error al abrir el archivo de compras para escribir..." << endl;
@@ -170,7 +169,7 @@ void saveCMP()
 
 void readCMP()
 {
-    FILE *cmpRegister = fopen("compras.txt", "r");
+    FILE *cmpRegister = fopen("compras.dat", "r");
     if (cmpRegister == NULL)
     {
         cerr << "Error al abrir el archivo de compras para leer" << endl;
@@ -192,27 +191,13 @@ int cntCMP(FILE *cmpRegister)
 
     // calc el # de compras
     num_compras = tam_archv / sizeof(cmp);
+
+    if (tam_archv % sizeof(cmp) != 0)
+    {
+        num_compras++;
+    }
+
     return num_compras;
-}
-
-int getLstCMPID(int idCmp)
-{
-    cmpRegister = fopen("compras.txt", "r");
-    if (cmpRegister == NULL)
-    {
-        cerr << "Error al abrir el archivo de COMPRAS para obtener el ultimo ID..." << endl;
-        return idCmp;
-    }
-
-    int lastId = -1;
-    fseek(cmpRegister, -sizeof(reg_compra), SEEK_END);
-    if (fread(&cmp[0], sizeof(reg_compra), 1, cmpRegister) == 1)
-    {
-        lastId = cmp[0].cmpr_id;
-    }
-    fclose(cmpRegister);
-
-    return (lastId == -1) ? idCmp : (lastId + 1);
 }
 // fin de archivos
 
