@@ -8,14 +8,17 @@ using namespace std;
 int lastREgCmp = 0;
 int lastRHST = 0;
 reg_compra currentCmp;
+historial currentHst;
 
 void addCmp(reg_compra currentCmp);
 void initCMP(int pos);
-void initHst(int pos);
 void showCmpRegister(int enteredCltid);
 void showCmp(int pos);
 reg_compra getCmp(int pos);
 int searCmpFID(int enteredCltid);
+
+void addHst(historial currentHst);
+void initHst(int pos);
 
 void addCmp(reg_compra currentCmp)
 {
@@ -27,6 +30,19 @@ void addCmp(reg_compra currentCmp)
   else
   {
     cout << "El Registro de compras esta en Maxima capacidad..." << endl;
+  }
+}
+
+void addHst(historial currentHst)
+{
+  if(lastRHST < MAX)
+  {
+    hst[lastRHST] = currentHst;
+    lastRHST++;
+  }
+  else
+  {
+    cout << "El registro de Historial esta en Maxima capacidad..." << endl;
   }
 }
 
@@ -117,4 +133,4 @@ int searCmpFID(int enteredCltid) // funcion sin proposito AUN
     }
   }
   return position;
-} // fin
+}

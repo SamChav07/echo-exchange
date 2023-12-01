@@ -185,7 +185,7 @@ void showClt(int pos) // muestra los datos del cliente en X posición
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"ID: "<<RESET<< clt[pos].client_id <<"                                          ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"NOMBRE: "<<RESET<< clt[pos].client_name <<" "<< clt[pos].client_lastname <<"   ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail <<"        ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf << clt[pos].client_lastname <<"      ||" << endl;
+    cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf <<"      ||" << endl;
     cout << BLUE << "            ||             "<<RESET<<CYAN<<"PUNTOS: "<<RESET<< clt[pos].puntos <<"                                         ||" << endl;
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
 
@@ -210,7 +210,7 @@ void showCltRegister() {
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< hst[i].cmpr_ptsTot <<endl;
+        cout << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< hst[i].cmpr_ptsTot <<endl;
         cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
     }
     cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
