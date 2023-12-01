@@ -6,8 +6,12 @@
 using namespace std;
 
 int lastREgCmp = 0;
+int lastRHST = 0;
+reg_compra currentCmp;
 
 void addCmp(reg_compra currentCmp);
+void initCMP(int pos);
+void initHst(int pos);
 void showCmpRegister(int enteredCltid);
 void showCmp(int pos);
 reg_compra getCmp(int pos);
@@ -24,6 +28,29 @@ void addCmp(reg_compra currentCmp)
   {
     cout << "El Registro de compras esta en Maxima capacidad..." << endl;
   }
+}
+
+void initCMP(int pos) // inicializa los datos de compra
+{
+  cmp[pos].clt.client_id = 0;
+
+  cmp[pos].cmpr_id = 0;
+
+  cmp[pos].fCmp.day = 0;
+  cmp[pos].fCmp.month = 0;
+  cmp[pos].fCmp.year = 0;
+
+  cmp[pos].cmpr_Sqty = 0;
+  cmp[pos].cmpr_pts = 0;
+  cmp[pos].cmp_iva = 0;
+  cmp[pos].cmpr_Tqty = 0;
+  
+}
+
+void initHst(int pos)
+{
+  hst[pos].cmp.clt.client_id = 0;
+  hst[pos].cmpr_ptsTot = 0;
 }
 
 void showCmpRegister(int enteredCltid) {
@@ -90,4 +117,4 @@ int searCmpFID(int enteredCltid) // funcion sin proposito AUN
     }
   }
   return position;
-}
+} // fin

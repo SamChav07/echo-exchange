@@ -2,6 +2,7 @@
 #include <cstring>
 #include <string>
 #include <iomanip>
+#include "archivos.cpp"
 #include "structs.h"
 
 using namespace std;
@@ -193,6 +194,7 @@ void showClt(int pos) // muestra los datos del cliente en X posición
 }
 
 void showCltRegister() {
+    readHst();
     system("cls || clear");
     if (lastRegClt == 0)
     {
@@ -208,7 +210,7 @@ void showCltRegister() {
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< clt[i].puntos<<endl;
+        cout << BLUE << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< hst[i].cmpr_ptsTot <<endl;
         cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
     }
     cout << BLUE << " ||============================================================================================================================||" << RESET << endl;

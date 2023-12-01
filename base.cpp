@@ -13,7 +13,7 @@
 #include "2_CRUDgft.cpp"
 #include "3_CRUDcmp.cpp"
 #include "archivos.cpp"
-using namespace std;
+using namespace std; // talvez
 
 // LOG
 void SuperAdmin();
@@ -22,7 +22,7 @@ void logClt();
 
 // menus
 void MDclient(); //--listo
-void MDcmp();
+void MDcmp(int enteredCltid);
 void MDgft();      // en proceso
 void searchMclt(); // menu de busqueda de cliente   //--listo
 
@@ -32,7 +32,7 @@ void MClt();
 // funciones
 void record();
 void redeem();   // -------------pendiente
-void checkPts(); // -------------pendiente
+void checkPts(reg_compra *currentCmp); // -------------pendiente
 int consultarPtsCliente(int enteredCltid);
 
 
@@ -40,9 +40,10 @@ int consultarPtsCliente(int enteredCltid);
 char user[50], pass[50];
 int intentos = 4;
 
-int opPtsGft(int enteredGft_id);
-
 extern int enteredCltid;
+extern int lastREgCmp;
+extern int lastRegClt;
+extern int proxIDclt;
 
 // codigos colores ANSI
 #define RESET "\033[0m"
@@ -154,7 +155,7 @@ void MAdm()
     readClt();
     readCMP();
     readGft();
-    int op1;
+    int op1, enteredCltid;
     do
     {
         system("cls || clear");
@@ -177,7 +178,7 @@ void MAdm()
         switch (op1)
         {
         case 1:
-            MDcmp();
+            MDcmp(enteredCltid);
             break;
         case 2:
             MDclient();
@@ -194,50 +195,6 @@ void MAdm()
             break;
         }
     } while (op1 != 4);
-}
-
-int opPtsGft(int enteredGft_id)
-{
-    int gftPos = -1;
-
-    // Buscar el artículo por ID
-    for (int i = 0; i < lasTregGft; ++i)
-    {
-        if (gft[gftPos].gft_id == enteredGft_id)
-        {
-            gftPos = i;
-            break;
-        }
-    }
-
-    if (gftPos != -1)
-    {
-        // Mostrar la cantidad existente del artículo
-        cout << "Cantidad existente del artículo con ID " << gft[gftPos].gft_id << ": " << gft[gftPos].gft_cant << endl;
-
-        // Solicitar al usuario la cantidad que desea tomar
-        int cantidadTomar;
-        cout << "Ingrese la cantidad que desea tomar: ";
-        cin >> cantidadTomar;
-
-        // Verificar si la cantidad es válida
-        if (cantidadTomar <= gft[gftPos].gft_cant)
-        {
-            // Realizar la operación de resta
-            gft[gftPos].gft_cant -= cantidadTomar;
-            cout << "Operación exitosa. Se tomaron " << cantidadTomar << " unidades del artículo con ID " << gft[gftPos].gft_id << endl;
-        }
-        else
-        {
-            cout << "La cantidad ingresada es mayor que la cantidad existente. Operación cancelada." << endl;
-        }
-    }
-    else
-    {
-        cout << "Registro Inexistente" << endl;
-    }
-
-    return 0;
 }
 
 void MClt() //////////////////// CLIENTES
@@ -258,6 +215,7 @@ void MClt() //////////////////// CLIENTES
     cout << BLUE << "            ||          [ ID DE CLIENTE ] --> " << RESET; cin >> enteredCltid;
     cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
     pos = searchCltId(enteredCltid);
+    cout << BLUE << "       Hola " << clt[pos].client_name <<" "<< clt[pos].client_lastname << endl;
     if (pos != -1) {
         do
         {
@@ -279,23 +237,24 @@ void MClt() //////////////////// CLIENTES
             case 2:
                 readClt();
                 readCMP();
+                readHst();
                 system("cls || clear");
-                checkPts();
-
-                cout << "ID del cliente a consultar sus puntos: " << enteredCltid << endl;
-
-                puntosCliente = consultarPtsCliente(enteredCltid);
-
-                if (puntosCliente != -1)
+                checkPts(&currentCmp);
                 {
-                    cout << "Puntos acumulados del cliente " << enteredCltid << ": " << puntosCliente << " pts" << endl;
-                }
-                else
-                {
-                    cout << "Puntos no encontrados." << endl;
+                    cout << "ID del cliente a consultar sus puntos: " << enteredCltid << endl;
+
+                    int puntosCliente = consultarPtsCliente(enteredCltid);
+
+                    if (puntosCliente != -1)
+                    {
+                        cout << "Puntos acumulados del cliente " << enteredCltid << ": " << puntosCliente << " pts" << endl;
+                    }
+                    else
+                    {
+                        cout << "Puntos no encontrados." << endl;
+                    }
                 }
 
-                checkPts();
                 break;
             case 3:
                 do {
@@ -1022,12 +981,13 @@ void MDgft()
     } while (optMdGft != 5);
 }
 
-void MDcmp()
+void MDcmp(int enteredCltid)
 {
     readCMP();
+    readHst();
     string regreso;
     reg_compra currentCmp;
-    int cmpOPt, cantPrd;
+    int cmpOPt, cantPrd, pos;
     do
     {
         system("cls || clear");
@@ -1036,7 +996,7 @@ void MDcmp()
         cout << BLUE << "            ||                                                              ||" << RESET << endl;
         cout << BLUE << "            ||                      " << RESET << BOLD << "GESTION DE COMPRAS                      "<< RESET << BLUE <<"||" << RESET << endl;
         cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
-        cout <<BLUE << BOLD << "            ||               Cantidad de registros de compras: "<<lastREgCmp<<"            ||" <<RESET<< endl;
+        cout <<BLUE << BOLD << "            ||               Cantidad de registros de compras: "<< lastREgCmp << "            ||" <<RESET<< endl;
         cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
         cout << BOLD << "            ||                "<<RESET<<CYAN<<"||**||"<<RESET<<"                  "<<CYAN"||**||"<<CYAN<<BLUE"                ||" << RESET << endl;
         cout << BLUE << "            ||                   " << RESET <<CYAN<<"1. "<<RESET << WHITE << "Registro de compra.                     "<< RESET<<BLUE<<"||" << RESET << endl;
@@ -1050,59 +1010,114 @@ void MDcmp()
         {
         case 1:
             {
-                system("cls || clear");
+            system("cls || clear");
             cout << "\tRegistro de Compras" << endl;
             cout << "______________________________" << endl;
             cout << "** Ingrese los datos a añadir **" << endl;
             cout << "------------------------------" << endl;
             system("cls || clear");
 
-            cout << "ID del cliente: ";
-            cin >> currentCmp.clt.client_id;
+            do
+            {
+                cin.clear();
+                cout << "ID del cliente: ";
+                cin >> enteredCltid;
+                pos = searchCltId(enteredCltid);
+                if (cin.fail() || cin.peek() != '\n')
+                {
+                    cerr << "Ingrese un ID valido, solo con digitos. Presione enter para intentar de nuevo" << endl;
+                    cin.clear();
+                    cin.ignore(INT_MAX, '\n');
+                }
+                else if (pos != -1)
+                {
+                    currentCmp.clt.client_id = enteredCltid;
+                    do {
+                        cout << "N* de Recibo: ";
+                        cin >> currentCmp.cmpr_id;
+                        if (cin.fail() || cin.peek() != '\n') {
+                            cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (cin.fail() || cin.peek() != '\n');
 
-            cout << "N* de Recibo: ";
-            cin >> currentCmp.cmpr_id;
+                    do {
+                        cout << "Fecha de compra: ";
+                        cin >> currentCmp.fCmp.day;
+                        cout << "-";
+                        cin >> currentCmp.fCmp.month;
+                        cout << "-";
+                        cin >> currentCmp.fCmp.year;
+                        if (cin.fail() || cin.peek() != '\n') {
+                            cout << "Ingrese una Fecha válida, solo con dígitos. Doble enter para intentar de nuevo..."<< endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while (cin.fail() || cin.peek() != '\n');
 
-            cout << "Fecha de compra: ";
-            cin >> currentCmp.fCmp.day;
-            cout << "-";
-            cin >> currentCmp.fCmp.month;
-            cout << "-";
-            cin >> currentCmp.fCmp.year;
+                    do {
+                        cout << "Productos facturados: ";
+                        cin >> cantPrd;
+                        if (cin.fail() || cin.peek() != '\n') {
+                            cout << "Ingrese un ID válido, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        } else {
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            cout << "Productos facturados: ";
-            cin >> cantPrd;
+                            for (int i = 0; i < cantPrd; ++i) {
+                                cout << "Producto " << i + 1 << ": ";
+                                getline(cin, currentCmp.prodCmpr[i]);
+                            }
+                        }
+                    } while (cin.fail() || cin.peek() != '\n');
 
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    do
+                    {
+                        cout << "Monto de compra: C$ ";
+                        cin >> currentCmp.cmpr_Sqty;
+                        if (cin.fail() || cin.peek() != '\n')
+                        {
+                            cout << "Ingrese una Cantidad válida, solo con dígitos. Doble enter para intentar de nuevo..." << endl;
+                            cin.clear();
+                            cin.ignore(INT_MAX, '\n');
+                        }
+                    } while(cin.fail() || cin.peek() != '\n');
 
-            for (int i = 0; i < cantPrd; ++i) {
-                cout << "Producto "<< i + 1 << ": "; 
-                getline(cin, currentCmp.prodCmpr[i]);
-            }
+                    currentCmp.cmp_iva = currentCmp.cmpr_Sqty * 0.15;
+                    cout << "Iva: " << currentCmp.cmp_iva << endl;
 
-            cout << "Monto de compra: C$ ";
-            cin >> currentCmp.cmpr_Sqty;
+                    currentCmp.cmpr_Tqty = currentCmp.cmpr_Sqty + currentCmp.cmp_iva;
+                    cout << "Total: C$ " << currentCmp.cmpr_Tqty << endl;
 
-            currentCmp.cmp_iva = currentCmp.cmpr_Sqty * 0.15;
-            cout << "Iva: " << currentCmp.cmp_iva << endl;
+                    currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 100;
+                    cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
+                    cout << "||=========================||" << endl;
 
-            currentCmp.cmpr_Tqty = currentCmp.cmpr_Sqty + currentCmp.cmp_iva;
-            cout << "Total: C$ " << currentCmp.cmpr_Tqty << endl;
+                    // Actualizar puntos directamente al agregar la compra
+                    int cltId = currentCmp.clt.client_id;
+                    if (cltId >= 0 && cltId < lastRegClt) {
+                        // Verificar desbordamiento antes de la suma
+                        if (INT_MAX - clt[cltId].puntos >= currentCmp.cmpr_pts) {
+                            clt[cltId].puntos += currentCmp.cmpr_pts;
+                        } else {
+                            cerr << "Advertencia: La suma causaría un desbordamiento de enteros. No se realizó la operación." << endl;
+                        }
+                    }
+                        
+                    addCmp(currentCmp);
+                    saveCMP();
+                    saveHst();
+                    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
+                } else if (pos == -1){
+                    cout << "Cliente no encontrado. Intente de nuevo..." << endl;
+                }
 
-            currentCmp.cmpr_pts = currentCmp.cmpr_Tqty / 100;
-            cout << "Puntos por compra: " << currentCmp.cmpr_pts << " pts" << endl;
-            cout << "||=========================||" << endl;
+            } while((cin.fail() || cin.peek() != '\n') || (pos == -1));
 
-            // Actualizar puntos directamente al agregar la compra
-            int cltId = currentCmp.clt.client_id;
-            if (cltId >= 0 && cltId < lastRegClt) {
-                clt[cltId].puntos += static_cast<int>(currentCmp.cmpr_pts);
-            }
-
-            addCmp(currentCmp);
-            saveCMP();
             system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-            MDcmp();
+            MDcmp(enteredCltid);
             }
             break;
         case 2:
@@ -1143,7 +1158,7 @@ void record()
         }
     } while (cin.fail() || cin.peek() != '\n');
     cin.get();
-    MDcmp();
+    MDcmp(enteredCltid);
     system("cls || clear");
 }
 
@@ -1290,26 +1305,6 @@ void searchMclt()
     } while (options != 7);
 }
 
-void MDrewards() // -------------pendiente
-{
-    cout << "||=========================||" << endl;
-    cout << "--------Echo-Exchange--------" << endl;
-    cout << "" << endl;
-    cout << "\tCRUD rewards" << endl;
-    cout << "______________________________" << endl;
-    cout << "------------------------------" << endl;
-    cout << " Agregar - Editar - Eliminar " << endl;
-    cout << "¿Desea volver Agregar, Editar, Eliminar recompensas? (a/ e/ d): " << endl;
-    cout << "a" << endl;
-    cout << "=============================" << endl;
-    cout << "ID-gft:    00190" << endl;
-    cout << "Nombre de la recompensa:    MX log S2" << endl;
-    cout << "Cantidad:    02" << endl;
-    cout << "Puntos necesarios:  320 pts" << endl;
-    cout << "||=========================||" << endl;
-    cout << "¿Desea volver al CRUD o salir al menu? (v/s): " << endl;
-}
-
 void redeem() // -------------pendiente
 {
 int enteredClt_id, enteredGft_id, pos, gftPos;
@@ -1376,15 +1371,17 @@ int enteredClt_id, enteredGft_id, pos, gftPos;
     system("cls || clear");
 }
 
-void checkPts() // -------------pendiente
+void checkPts(reg_compra *currentCmp) // -------------pendiente
 {
     for (int i = 0; i <lastRegClt; i++) //va a sumar los pts acum direct desde la strct cliente
     {
         hst[i].cmpr_ptsTot = clt[i].puntos;
     }
+    saveHst();
 }
 
 int consultarPtsCliente(int enteredCltid) {
+    readHst();
     for (int i = 0; i < lastRegClt; i++)
     {
         if (clt[i].client_id == enteredCltid) 
@@ -1392,5 +1389,5 @@ int consultarPtsCliente(int enteredCltid) {
             return clt[i].puntos;
         }
     }
-    return 0;
+    return -1;
 }

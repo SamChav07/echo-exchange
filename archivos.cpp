@@ -13,10 +13,12 @@ extern int lasTregGft;
 extern int lastREgCmp;
 extern int idGft;
 extern int proxIDclt;
+extern int lastRHST;
 
 FILE *cltRegister;
 FILE *gftRegister;
 FILE *cmpRegister;
+FILE *hstReg;
 
 // FILES
 void saveClt();
@@ -35,6 +37,10 @@ void saveCMP();
 void readCMP();
 int cntCMP(FILE *cmpRegister);
 int getLstCMPID();
+// hst
+void saveHst();
+void readHst();
+int cntHST(FILE *hstReg);
 
 void saveClt()
 {
@@ -199,6 +205,46 @@ int cntCMP(FILE *cmpRegister)
 
     return num_compras;
 }
+//hst
+void saveHst()
+{
+    FILE *hstReg = fopen("historial.dat", "w");
+    if (hstReg == NULL)
+    {
+        cerr << "Error al abrir el archivo de HISTORIAL para escribir..." << endl;
+        return;
+    }
+    fwrite(hst, sizeof(historial), lastRHST, hstReg);
+    fclose(hstReg);
+}
+
+void readHst()
+{
+    FILE *hstReg = fopen("historial.dat", "r");
+    if (hstReg == NULL)
+    {
+        cerr << "Error al abrir el archivo de HISTORIAL para leer..." << endl;
+        return;
+    }
+    lastRHST = cntHST(hstReg);
+    fread(hst, sizeof(historial), MAX, hstReg);
+
+    fclose(hstReg);
+}
+
+int cntHST(FILE *hstReg)
+{
+    int tam_archv, num_hst;
+    // obtiene el tamaño del archv
+    fseek(hstReg, 0, SEEK_END);
+    tam_archv = ftell(hstReg);
+    rewind(hstReg);
+
+    // calc el # de clts
+    num_hst = tam_archv / sizeof(historial);
+    return num_hst;
+}
+
 // fin de archivos
 
 #endif
