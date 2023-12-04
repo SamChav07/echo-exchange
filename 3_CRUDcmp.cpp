@@ -8,7 +8,6 @@ using namespace std;
 int lastREgCmp = 0;
 int lastRHST = 0;
 reg_compra currentCmp;
-historial currentHst;
 
 void addCmp(reg_compra currentCmp);
 void initCMP(int pos);
@@ -16,9 +15,6 @@ void showCmpRegister(int enteredCltid);
 void showCmp(int pos);
 reg_compra getCmp(int pos);
 int searCmpFID(int enteredCltid);
-
-void addHst(historial currentHst);
-void initHst(int pos);
 
 void addCmp(reg_compra currentCmp)
 {
@@ -29,24 +25,11 @@ void addCmp(reg_compra currentCmp)
   }
   else
   {
-    cout << "El Registro de compras esta en Maxima capacidad..." << endl;
+    cout << "El Registro de compras está en máxima capacidad..." << endl;
   }
 }
 
-void addHst(historial currentHst)
-{
-  if(lastRHST < MAX)
-  {
-    hst[lastRHST] = currentHst;
-    lastRHST++;
-  }
-  else
-  {
-    cout << "El registro de Historial esta en Maxima capacidad..." << endl;
-  }
-}
-
-void initCMP(int pos) // inicializa los datos de compra
+void initCMP(int pos)
 {
   cmp[pos].clt.client_id = 0;
 
@@ -60,18 +43,13 @@ void initCMP(int pos) // inicializa los datos de compra
   cmp[pos].cmpr_pts = 0;
   cmp[pos].cmp_iva = 0;
   cmp[pos].cmpr_Tqty = 0;
-  
 }
 
-void initHst(int pos)
+void showCmpRegister(int enteredCltid)
 {
-  hst[pos].cmp.clt.client_id = 0;
-  hst[pos].cmpr_ptsTot = 0;
-}
-
-void showCmpRegister(int enteredCltid) {
   readCMP();
-  if (lastREgCmp == 0) {
+  if (lastREgCmp == 0)
+  {
     cout << "No hay registros" << endl;
     return;
   }
@@ -80,8 +58,10 @@ void showCmpRegister(int enteredCltid) {
   cout << "Registro de compras para el cliente con ID " << enteredCltid << ":\n";
   cout << "====================================" << endl;
 
-  for (int i = 0; i < lastREgCmp; i++) {
-    if (cmp[i].clt.client_id == enteredCltid) {
+  for (int i = 0; i < lastREgCmp; i++)
+  {
+    if (cmp[i].clt.client_id == enteredCltid)
+    {
       showCmp(i);
       found = true;
     }
@@ -89,12 +69,14 @@ void showCmpRegister(int enteredCltid) {
 
   cout << "====================================" << endl;
 
-  if (!found) {
+  if (!found)
+  {
     cout << "No hay registros para este cliente." << endl;
   }
 }
 
-void showCmp(int pos) { // muestra los datos del cliente en X posición
+void showCmp(int pos)
+{
   readClt();
   readCMP();
 
@@ -115,16 +97,15 @@ void showCmp(int pos) { // muestra los datos del cliente en X posición
   system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
 }
 
-
 reg_compra getCmp(int pos)
 {
-  return cmp[pos];
+    return cmp[pos];
 }
 
-int searCmpFID(int enteredCltid) // funcion sin proposito AUN
+int searCmpFID(int enteredCltid)
 {
-  int position;
-  for (int i = 0; i < lastRegClt; i++)
+  int position = -1;
+  for (int i = 0; i < lastREgCmp; i++)
   {
     if (enteredCltid == cmp[i].clt.client_id)
     {

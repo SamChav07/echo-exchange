@@ -13,33 +13,33 @@ void initGft(int gftPos);
 void showGft(int gftPos);
 void showGftRegister();
 gift getGft(int gftPos);
-void searchGFTname(char *enteredGft_name, bool esStr);
+void searchGFTname(const char *enteredGft_name, bool esStr);
 int searchGFTid(int entered_id);
-void uptGFT(gift currentGft, int i);
+void uptGFT(gift currentGft, int gftPos);
 void delGFT(int gftPos);
 
 void addGft(gift currentGft)
 {
     if (lasTregGft < MAX)
     {
+        currentGft.gft_id = idGft;
         gft[lasTregGft] = currentGft;
         lasTregGft++;
         idGft++;
     }
     else
     {
-        cout << "Recompensas esta en Maxima capacidad..." << endl;
+        cout << "Recompensas alcanzó su capacidad máxima..." << endl;
     }
 }
+
 void initGft(int gftPos)
 {
     gft[gftPos].gft_id = 0;
-
-    strncpy(gft[gftPos].gft_name, "", sizeof(gft[gftPos].gft_name));
-
+    strcpy(gft[gftPos].gft_name, "");
     gft[gftPos].gft_cant = 0;
-
     gft[gftPos].gft_pts = 0;
+    gft[gftPos].gft_Mney = 0;
 }
 
 gift getGft(int gftPos)
@@ -47,7 +47,7 @@ gift getGft(int gftPos)
     return gft[gftPos];
 }
 
-void searchGFTname(char *enteredGft_name, bool esStr = false)
+void searchGFTname(const char *enteredGft_name, bool esStr = false)
 {
     int position = 0;
     for (int i = 0; i < lasTregGft; i++)
@@ -70,7 +70,7 @@ int searchGFTid(int entered_id)
     int position = -1;
     for (int i = 0; i < lasTregGft; i++)
     {
-        if (entered_id == (gft[i].gft_id))
+        if (entered_id == gft[i].gft_id)
         {
             position = i;
             break;
@@ -84,7 +84,8 @@ void uptGFT(gift currentGft, int gftPos)
     gft[gftPos] = currentGft;
 }
 
-void delGFT(int gftPos) {
+void delGFT(int gftPos)
+{
     if (gftPos == lasTregGft)
     {
         cout << "No hay registros..." << endl;
@@ -101,28 +102,22 @@ void delGFT(int gftPos) {
 
 void showGft(int gftPos)
 {
-    system("cls || clear");
-    cout << "====================================" << endl;
-    cout << "ID: ";
-    cout << gft[gftPos].gft_id << endl;
-   cout << "Nombre: ";
-    cout << gft[gftPos].gft_name << endl;
-    cout << "Cantidad: ";
-    cout << gft[gftPos].gft_cant << endl;
-    cout << "Puntos Necesarios: ";
-    cout << gft[gftPos].gft_pts << endl;
-
-    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-    system("cls || clear");
+    cout << "ID: " << gft[gftPos].gft_id << endl;
+    cout << "Nombre: " << gft[gftPos].gft_name << endl;
+    cout << "Cantidad: " << gft[gftPos].gft_cant << endl;
+    cout << "Puntos Necesarios: " << gft[gftPos].gft_pts << endl;
+    cout << "Precio: C$ " << gft[gftPos].gft_Mney << endl;
 }
 
-void showGftRegister() {
+void showGftRegister()
+{
     system("cls || clear");
     if (lasTregGft == 0)
     {
-        cout << "No hay Recompenas registradas" << endl;
+        cout << "No hay Recompensas registradas" << endl;
         return;
     }
+
     cout << "Registro de Recompensas: " << endl;
     cout << "====================================" << endl;
 
@@ -131,6 +126,7 @@ void showGftRegister() {
         cout << "Recompensa #" << i + 1 << endl;
         showGft(i);
     }
+
     cout << "====================================" << endl;
-    cout << "Ultimo registro..." << endl;
+    cout << "Último registro..." << endl;
 }

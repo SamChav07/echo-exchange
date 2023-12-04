@@ -9,23 +9,9 @@ using namespace std;
 
 int lastRegClt = 0;
 int proxIDclt = 123;
+extern void MDclient();
 
-void addClt(cliente currentClt);
-void initClt(int cltPos);
-void showClt(int pos);
-void showCltRegister();
-cliente getClt(int pos);
-void searchCltname(char *enteredClt_name, bool esStr);
-void searchCltlstname(char *enteredClt_lstName, bool esStr);
-int searchCltId(int enteredClt_id);
-void searchCltmail(char *enteredClt_mail);
-int searchCltelf(int enteredClt_telf);
-void uptdClt(cliente currentClt, int i);
-void delClt(int pos);
-
-extern void searchMclt();
-
-// codigos colores ANSI
+// Colores ANSI
 #define RESET "\033[0m"
 #define BLACK "\033[30m"
 #define RED "\033[31m"
@@ -38,30 +24,42 @@ extern void searchMclt();
 #define BOLD "\033[1m"
 #define UNDERLINE "\033[4m"
 
+void addClt(cliente currentClt);
+void initClt(int cltPos);
+void showClt(int pos);
+void showCltRegister();
+cliente getClt(int pos);
+void searchCltname(const char *enteredClt_name, bool esStr);
+void searchCltlstname(const char *enteredClt_lstName, bool esStr);
+int searchCltId(int enteredClt_id);
+void searchCltmail(const char *enteredClt_mail);
+int searchCltelf(int enteredClt_telf);
+void uptdClt(cliente currentClt, int pos);
+void delClt(int pos);
+
+extern void searchMclt();
+
 void addClt(cliente currentClt)
 {
     if (lastRegClt < MAX)
     {
+        currentClt.client_id = proxIDclt;
         clt[lastRegClt] = currentClt;
         lastRegClt++;
         proxIDclt++;
     }
     else
     {
-        cout << "Clientes esta en Maxima capacidad..." << endl;
+        cout << "Clientes ha alcanzado su capacidad máxima..." << endl;
     }
 }
 
-void initClt(int pos) // inicializa los datos del cliente
+void initClt(int pos)
 {
     clt[pos].client_id = 0;
-
     strncpy(clt[pos].client_name, "", sizeof(clt[pos].client_name));
-
     strncpy(clt[pos].client_lastname, "", sizeof(clt[pos].client_lastname));
-
     strncpy(clt[pos].client_mail, "", sizeof(clt[pos].client_mail));
-
     clt[pos].client_telf = 0;
     clt[pos].puntos = 0;
 }
@@ -71,7 +69,7 @@ cliente getClt(int pos)
     return clt[pos];
 }
 
-void searchCltname(char *enteredClt_name, bool esStr = false) // funcion de prueba
+void searchCltname(const char *enteredClt_name, bool esStr)
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
@@ -85,11 +83,11 @@ void searchCltname(char *enteredClt_name, bool esStr = false) // funcion de prue
     }
     if (position == 0)
     {
-        cout <<YELLOW<< "No se encontraron resultados..." <<RESET<< endl;
+        cout << YELLOW << "No se encontraron resultados..." << RESET << endl;
     }
 }
 
-void searchCltlstname(char *enteredClt_lstName, bool esStr = false) // funcion de prueba
+void searchCltlstname(const char *enteredClt_lstName, bool esStr)
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
@@ -103,16 +101,16 @@ void searchCltlstname(char *enteredClt_lstName, bool esStr = false) // funcion d
     }
     if (position == 0)
     {
-        cout <<YELLOW<< "No se encontraron resultados..." <<RESET<< endl;
+        cout << YELLOW << "No se encontraron resultados..." << RESET << endl;
     }
 }
 
-int searchCltId(int enteredClt_id) // esta funcional
+int searchCltId(int enteredClt_id)
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (enteredClt_id == (clt[i].client_id))
+        if (enteredClt_id == clt[i].client_id)
         {
             position = i;
             break;
@@ -121,7 +119,7 @@ int searchCltId(int enteredClt_id) // esta funcional
     return position;
 }
 
-void searchCltmail(char *enteredClt_mail) // prueba
+void searchCltmail(const char *enteredClt_mail)
 {
     int position = 0;
     for (int i = 0; i < lastRegClt; i++)
@@ -134,16 +132,16 @@ void searchCltmail(char *enteredClt_mail) // prueba
     }
     if (position == 0)
     {
-        cout <<YELLOW<< "No se encontraron resultados..." <<RESET<< endl;
+        cout << YELLOW << "No se encontraron resultados..." << RESET << endl;
     }
 }
 
-int searchCltelf(int enteredClt_telf) // prueba
+int searchCltelf(int enteredClt_telf)
 {
     int position = -1;
     for (int i = 0; i < lastRegClt; i++)
     {
-        if (enteredClt_telf == (clt[i].client_telf))
+        if (enteredClt_telf == clt[i].client_telf)
         {
             position = i;
             break;
@@ -161,7 +159,7 @@ void delClt(int pos)
 {
     if (pos == lastRegClt)
     {
-        cout <<YELLOW<< "No hay registros " <<RESET<< endl;
+        cout << YELLOW << "No hay registros" << RESET << endl;
         return;
     }
     for (int i = pos; i < lastRegClt - 1; i++)
@@ -173,48 +171,47 @@ void delClt(int pos)
     initClt(lastRegClt);
 }
 
-void showClt(int pos) // muestra los datos del cliente en X posición
+void showClt(int pos)
 {
     system("cls || clear");
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
-    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET <<endl;
+    cout << BLUE << BOLD << "            ||-------------------------" << RESET << BOLD << "Echo-Exchange" << RESET << BLUE << BOLD << "------------------------||" << RESET << endl;
     cout << BLUE << "            ||                                                              ||" << RESET << endl;
-    cout << BLUE << "            ||"<<RESET<<BOLD<<"                       DATOS DE CLIENTE                       "<<RESET<<BLUE<<"||" << RESET << endl;
+    cout << BLUE << "            ||" << RESET << BOLD << "                       DATOS DE CLIENTE                       " << RESET << BLUE << "||" << RESET << endl;
     cout << BLUE << BOLD << "            ||______________________________________________________________||" << endl;
     cout << BLUE << BOLD << "            ||--------------------------------------------------------------||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"ID: "<<RESET<< clt[pos].client_id <<"                                          ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"NOMBRE: "<<RESET<< clt[pos].client_name <<" "<< clt[pos].client_lastname <<"   ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"E-MAIL: "<<RESET<< clt[pos].client_mail <<"        ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"TELEFONO: "<<RESET<< clt[pos].client_telf <<"      ||" << endl;
-    cout << BLUE << "            ||             "<<RESET<<CYAN<<"PUNTOS: "<<RESET<< clt[pos].puntos <<"                                         ||" << endl;
+    cout << BLUE << "            ||             " << RESET << CYAN << "ID: " << RESET << clt[pos].client_id << "                                          ||" << endl;
+    cout << BLUE << "            ||             " << RESET << CYAN << "NOMBRE: " << RESET << clt[pos].client_name << " " << clt[pos].client_lastname << "   ||" << endl;
+    cout << BLUE << "            ||             " << RESET << CYAN << "E-MAIL: " << RESET << clt[pos].client_mail << "        ||" << endl;
+    cout << BLUE << "            ||             " << RESET << CYAN << "TELEFONO: " << RESET << clt[pos].client_telf << "      ||" << endl;
+    cout << BLUE << "            ||             " << RESET << CYAN << "PUNTOS: " << RESET << clt[pos].puntos << "                                         ||" << endl;
     cout << BLUE << "            ||==============================================================||" << RESET << endl;
-
-    system("pause || read -p 'Presiona enter para continuar...' -n 1 -s");
-    system("cls || clear");
 }
 
-void showCltRegister() {
-    readHst();
+void showCltRegister()
+{
+    readClt();
     system("cls || clear");
     if (lastRegClt == 0)
     {
-        cout << YELLOW << "            No hay registros" << RESET << endl;
+        cout << YELLOW << "No hay registros" << RESET << endl;
         return;
     }
-   // Encabezado del registro de clientes
+
+    // Encabezado del registro de clientes
     cout << "  Registro de Clientes: " << endl;
-    cout << BLUE << " ||==============================================================================================================================================||" << RESET << endl;
-    cout << BLUE << " ||   ID   ||                       NOMBRE                     ||             E-MAIL               ||         TELEFONO         ||     PUNTOS     ||" << endl;
-    cout << BLUE << " ||========||==================================================||==================================||==========================||================||" << RESET << endl;
+    cout << BLUE << " ||========================================================================================================||" << RESET << endl;
+    cout << BLUE << " ||   ID   ||                NOMBRE               ||             E-MAIL               ||  TELEFONO  ||  PUNTOS  ||" << endl;
+    cout << BLUE << " ||========||====================================||==================================||============||==========||" << RESET << endl;
 
     // Imprimir datos de cada cliente en el registro
     for (int i = 0; i < lastRegClt; i++)
     {
-        cout << "    " <<setw(5)<< clt[i].client_id << setw(30) << clt[i].client_name << clt[i].client_lastname <<" "<< setw(30) << clt[i].client_mail << setw(30) << clt[i].client_telf <<setw(16)<< hst[i].cmpr_ptsTot <<endl;
-        cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||"<<endl;
+        cout << "    " << setw(5) << clt[i].client_id << setw(30) << clt[i].client_name << " " << clt[i].client_lastname << setw(30) << clt[i].client_mail << setw(12) << clt[i].client_telf << setw(10) << clt[i].puntos << endl;
+        cout << BLUE << " ||++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++||" << RESET << endl;
     }
-    cout << BLUE << " ||============================================================================================================================||" << RESET << endl;
+    cout << BLUE << " ||========================================================================================================||" << RESET << endl;
     cout << GREEN << "  Ultimo registro..." << RESET << endl;
     system("pause || read -p 'Presiona Enter para continuar...' -n 1 -s");
-    searchMclt();
+    MDclient();
 }

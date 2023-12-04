@@ -14,237 +14,185 @@ extern int lastREgCmp;
 extern int idGft;
 extern int proxIDclt;
 extern int lastRHST;
+#define YELLOW "\033[33m"
+#define RESET "\033[0m"
 
-FILE *cltRegister;
-FILE *gftRegister;
-FILE *cmpRegister;
-FILE *hstReg;
 
 // FILES
 void saveClt();
 void readClt();
-int cntClt(FILE *cltRegister);
+int cntClt(ifstream& cltRegister);
 int getLstCltID(int idCmp);
 
 // Funciones para archivos de recompensas
 void saveGft();
 void readGft();
-int cntGft(FILE *gftRegister);
+int cntGft(ifstream& gftRegister);
 int getLstGftID();
 
 // Funciones para archivos de compras
 void saveCMP();
 void readCMP();
-int cntCMP(FILE *cmpRegister);
-int getLstCMPID();
-// hst
-void saveHst();
-void readHst();
-int cntHST(FILE *hstReg);
+int cntCMP(ifstream& cmpRegister);
 
 void saveClt()
 {
-    FILE *cltRegister = fopen("clientes.dat", "w");
-    if (cltRegister == NULL)
+    ofstream cltRegister("clientes.dat", ios::binary);
+
+    if (!cltRegister.is_open())
     {
-        cerr << "Error al abrir el archivo de clientes para escribir..." << endl;
+        cerr << YELLOW << "Error al abrir el archivo de CLIENTES para escribir..." << RESET << endl;
         return;
     }
-    fwrite(clt, sizeof(cliente), lastRegClt, cltRegister);
-    fclose(cltRegister);
+
+    cltRegister.write(reinterpret_cast<char*>(&clt), sizeof(cliente) * lastRegClt);
+    cltRegister.close();
 }
 
 void readClt()
 {
-    FILE *cltRegister = fopen("clientes.dat", "r");
-    if (cltRegister == NULL)
+    ifstream cltRegister("clientes.dat", ios::binary);
+    if (!cltRegister.is_open())
     {
         cerr << "Error al abrir el archivo de clientes para leer" << endl;
         return;
     }
     lastRegClt = cntClt(cltRegister);
-    fread(clt, sizeof(cliente), MAX, cltRegister);
+    cltRegister.read(reinterpret_cast<char*>(clt), sizeof(cliente) * MAX);
 
-    fclose(cltRegister);
+    cltRegister.close();
 }
 
-int cntClt(FILE *cltRegister) // calcula el ultimo registro
+int cntClt(ifstream& cltRegister) // calcula el ultimo registro
 {
-    int tam_archv, num_clts;
-    // obtiene el tamaño del archv
-    fseek(cltRegister, 0, SEEK_END);
-    tam_archv = ftell(cltRegister);
-    rewind(cltRegister);
+    cltRegister.seekg(0, cltRegister.end);
+    int tam_archv = cltRegister.tellg();
+    cltRegister.seekg(0, cltRegister.beg);
 
-    // calc el # de clts
-    num_clts = tam_archv / sizeof(cliente);
+    int num_clts = tam_archv / sizeof(cliente);
     return num_clts;
 }
 
 int getLstCltID()
 {
-    cltRegister = fopen("clientes.dat", "r");
-    if (cltRegister == NULL)
+    ifstream cltRegister("clientes.dat", ios::binary);
+    if (!cltRegister.is_open())
     {
         cerr << "Error al abrir el archivo de CLIENTES para obtener el ultimo ID..." << endl;
         return proxIDclt;
     }
 
     int lastId = -1;
-    fseek(cltRegister, -sizeof(cliente), SEEK_END);
-    if (fread(&clt[0], sizeof(cliente), 1, cltRegister) == 1)
+    cltRegister.seekg(-sizeof(cliente), cltRegister.end);
+    if (cltRegister.read(reinterpret_cast<char*>(&clt[0]), sizeof(cliente)))
     {
         lastId = clt[0].client_id;
     }
-    fclose(cltRegister);
+    cltRegister.close();
 
     return (lastId == -1) ? proxIDclt : (lastId + 1);
 }
+
 // arch GFT
 void saveGft()
 {
-    FILE *gftRegister = fopen("recompensas.dat", "w");
-    if (gftRegister == NULL)
+    ofstream gftRegister("recompensas.dat", ios::binary);
+    if (!gftRegister.is_open())
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para escribir..." << endl;
         return;
     }
-    fwrite(gft, sizeof(gift), lasTregGft, gftRegister);
-    fclose(gftRegister);
+    gftRegister.write(reinterpret_cast<char*>(&gft), sizeof(gift) * lasTregGft);
+    gftRegister.close();
 }
 
 void readGft()
 {
-    FILE *gftRegister = fopen("recompensas.dat", "r");
-    if (gftRegister == NULL)
+    ifstream gftRegister("recompensas.dat", ios::binary);
+    if (!gftRegister.is_open())
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para leer" << endl;
         return;
     }
     lasTregGft = cntGft(gftRegister);
-    fread(gft, sizeof(gift), MAX, gftRegister);
+    gftRegister.read(reinterpret_cast<char*>(gft), sizeof(gift) * MAX);
 
-    fclose(gftRegister);
+    gftRegister.close();
 }
 
-int cntGft(FILE *gftRegister) // calcula el ultimo registro
+int cntGft(ifstream& gftRegister) // calcula el ultimo registro
 {
-    int tam_archv, num_gfts;
-    // obtiene el tamaño del archv
-    fseek(gftRegister, 0, SEEK_END);
-    tam_archv = ftell(gftRegister);
-    rewind(gftRegister);
+    gftRegister.seekg(0, gftRegister.end);
+    int tam_archv = gftRegister.tellg();
+    gftRegister.seekg(0, gftRegister.beg);
 
-    // calc el # de clts
-    num_gfts = tam_archv / sizeof(gift);
+    int num_gfts = tam_archv / sizeof(gift);
     return num_gfts;
 }
 
 int getLstGftID()
 {
-    cltRegister = fopen("recompensas.dat", "r");
-    if (cltRegister == NULL)
+    ifstream gftRegister("recompensas.dat", ios::binary);
+    if (!gftRegister.is_open())
     {
         cerr << "Error al abrir el archivo de RECOMPENSAS para obtener el ultimo ID..." << endl;
         return idGft;
     }
 
     int lastId = -1;
-    fseek(gftRegister, -sizeof(gift), SEEK_END);
-    if (fread(&gft[0], sizeof(gift), 1, gftRegister) == 1)
+    gftRegister.seekg(-sizeof(gift), gftRegister.end);
+    if (gftRegister.read(reinterpret_cast<char*>(&gft[0]), sizeof(gift)))
     {
         lastId = gft[0].gft_id;
     }
-    fclose(gftRegister);
+    gftRegister.close();
 
     return (lastId == -1) ? idGft : (lastId + 1);
 }
+
 ////////// ARCH DE CMP
 void saveCMP()
 {
-    FILE *cmpRegister = fopen("compras.dat", "w");
-    if (cmpRegister == NULL)
+    ofstream cmpRegister("compras.dat", ios::binary);
+    if (!cmpRegister.is_open())
     {
         cerr << "Error al abrir el archivo de compras para escribir..." << endl;
         return;
     }
     // Suponiendo que 'compras' es un arreglo de estructuras de compras
-    fwrite(cmp, sizeof(reg_compra), lastREgCmp, cmpRegister);
-    fclose(cmpRegister);
+    cmpRegister.write(reinterpret_cast<char*>(&cmp), sizeof(reg_compra) * lastREgCmp);
+    cmpRegister.close();
 }
 
 void readCMP()
 {
-    FILE *cmpRegister = fopen("compras.dat", "r");
-    if (cmpRegister == NULL)
+    ifstream cmpRegister("compras.dat", ios::binary);
+    if (!cmpRegister.is_open())
     {
         cerr << "Error al abrir el archivo de compras para leer" << endl;
         return;
     }
     lastREgCmp = cntCMP(cmpRegister); // Ajusta 'cntCompra()' según tus necesidades
     // Suponiendo que 'compras' es un arreglo de estructuras de compras
-    fread(cmp, sizeof(reg_compra), MAX, cmpRegister);
-    fclose(cmpRegister);
+    cmpRegister.read(reinterpret_cast<char*>(cmp), sizeof(reg_compra) * MAX);
+    cmpRegister.close();
 }
 
-int cntCMP(FILE *cmpRegister)
+int cntCMP(ifstream& cmpRegister)
 {
-    int tam_archv, num_compras;
-    // obtiene el tamaño del archv
-    fseek(cmpRegister, 0, SEEK_END);
-    tam_archv = ftell(cmpRegister);
-    rewind(cmpRegister);
+    cmpRegister.seekg(0, cmpRegister.end);
+    int tam_archv = cmpRegister.tellg();
+    cmpRegister.seekg(0, cmpRegister.beg);
 
-    // calc el # de compras
-    num_compras = tam_archv / sizeof(cmp);
+    int num_compras = tam_archv / sizeof(reg_compra);
 
-    if (tam_archv % sizeof(cmp) != 0)
+    if (tam_archv % sizeof(reg_compra) != 0)
     {
         num_compras++;
     }
 
     return num_compras;
 }
-//hst
-void saveHst()
-{
-    FILE *hstReg = fopen("historial.dat", "w");
-    if (hstReg == NULL)
-    {
-        cerr << "Error al abrir el archivo de HISTORIAL para escribir..." << endl;
-        return;
-    }
-    fwrite(hst, sizeof(historial), lastRHST, hstReg);
-    fclose(hstReg);
-}
-
-void readHst()
-{
-    FILE *hstReg = fopen("historial.dat", "r");
-    if (hstReg == NULL)
-    {
-        cerr << "Error al abrir el archivo de HISTORIAL para leer..." << endl;
-        return;
-    }
-    lastRHST = cntHST(hstReg);
-    fread(hst, sizeof(historial), MAX, hstReg);
-
-    fclose(hstReg);
-}
-
-int cntHST(FILE *hstReg)
-{
-    int tam_archv, num_hst;
-    // obtiene el tamaño del archv
-    fseek(hstReg, 0, SEEK_END);
-    tam_archv = ftell(hstReg);
-    rewind(hstReg);
-
-    // calc el # de clts
-    num_hst = tam_archv / sizeof(historial);
-    return num_hst;
-}
 
 // fin de archivos
-
 #endif
