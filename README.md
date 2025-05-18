@@ -1,57 +1,60 @@
-# echo-exchange 
-### Proyecto de Metodología y Programación Estructurada
-###### // Nota
-#### **Importante:**
+# 🔁 Echo-Exchange
 
-- Añadir función para operar con los puntos: haga desgloses de los puntos a los clientes.
-- Añadir función para desglose del inventario de recompensas.
-###### // Fin de Nota
+**Echo-Exchange** is a terminal-based C++ application designed to manage a **loyalty rewards system** for clients. The platform allows administrators to register clients, log purchases, assign reward points, and enable clients to redeem points for gifts — all within an interactive and styled CLI.
 
-##### **Funciones:**
+Developed as a final project for the *Structured Programming and Methodology* course, this system follows clean logic, modular C++ design, and ANSI color-coded interface prompts for enhanced UX—especially tailored for **macOS terminals**.
 
-###### // Acceso al programa
-- **void login():** Switch simple imprime 2 opciones de entrada al sistema 1.Admin. 2.Clientes/Trabajadores.
-- **void log_adm():** Acceso estatico para el admin con ID y pass único.
-- **void log_clt():** Acceso para clientes, este recibira información como el ID y pass directamente de la Struct. Accedera a un espacio con opciones limitadas en comparación al Admin. 
-- **bool verification_clt():** Booleano envia la confirmación de acceso al Admin.
-- **bool verification_adm():** Booleano envia la confirmación de acceso para los Clientes.
+---
 
-###### // Menus 
-- **void Madmin():** Menu principal del Admin, aqui se encuentran acciones esenciales como el Crud de cliente y recompensas.
-- **void Mdclient():** Menu de Crud de clientes.
-- **void searchMclt():** Menu de busqueda de clientes, aqui se encuentran 6 opciones de busqueda. Por nombre, apellido, ID, E-mail, numero telefonico y la opcion de mostrar todos los registros.
+## 🎯 Project Objectives
 
-###### // CRUD clientes
+- 🧾 Register and manage clients.
+- 💳 Track purchases and assign points (conversion: C$100 = 1 point).
+- 🎁 Handle a rewards inventory with dynamic stock and cost per item.
+- 🔐 Provide separate access for administrators and clients.
+- 📜 Maintain a purchase history with date and point tracking.
 
-###### // Create
-- **void addClt():** Hace un seguimiento al numero de clientes almacenados en el arreglo.
-- **void initClt(int cltPos):** Inicializa los datos del cliente con valores nulos como "" ó '\0'
+---
 
-###### //Read
+## 🛠️ Key Features
 
-- **String.h:** Para el uso de strcmp(comparador de cadenas) su estructura es int strcmp(const char *s1, const char *s2); ejemplo:
+### 👤 Admin Features
+- Client CRUD (add, search, update, delete).
+- Reward management (inventory CRUD).
+- Purchase logging.
+- Global point and history consultation.
 
-searchCltmail(): como parametro de la funcion esta char enteredClt_mail y char client_mail. strcmp opera con const char*, por eso usamos el "reinterpret_cast" que permite convertir un tipo de puntero en otro y <const char*> para declarar el tipo a convertir. Al final el code queda así:
-`strcmp(reinterpret_cast<const char *>(enteredClt_mail, clt[i].client_mail) == 0)`
- 
+### 👥 Client Features
+- Login with ID.
+- View accumulated points.
+- Redeem points for rewards (with cash fallback if insufficient).
+- View personal purchase history.
 
-- **void showClt():** Muestra los datos del cliente según "int pos".
-- **void searchCltname(char client_name[]):** Hace una comparación de los nombres con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
-- **void searchCltlstname(int client_lstName[]):** Hace una comparación de los apellidos con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
-- **int searchCltId(int client_id):** Hace una comparación de los ID con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
-- **void searchCltmail(char client_mail[]):** Hace una comparación de los e-mails con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
-- **int searchCltelf(char client_telf[]):** Hace una comparación de los numeros telefonicos con cadena de caracteres con el strcmp y si el el resultado es 0 imprime los datos del cliente buscado.
+### 🔐 Login & Role-Based Access
+- Admin login requires credentials.
+- Clients access via their stored ID.
+- Super-admin role allows choosing between access types at startup.
 
-###### //Uptade
-- **void uptdClt():** Modifica los datos guardados en el arreglo de clientes. Por medio de la posicion (i).
+### 🎨 Terminal UX
+- Color-coded menus (ANSI escape codes).
+- Clean console layout for clarity.
+- Input validation for names, emails, and phone numbers.
 
-###### //Delete
-- **void delClt():** Borra los datos guardados en el arreglo de clientes. Por medio de la posicion (i).
+---
 
-###### // Modulos de sistema
-- **void clientS():**
-- **void regPurchase():** Registro de compra, realizara el cambio de moneda a puntos el cambio será $5 = 1pts. 
-- **void rewards():** Es un crud para las recompensas(arreglo donde se almacenan).
-- **void redeem():** Realiza el intercambio de puntos a recompensas.
-- **void checkPts():** Imprimira los puntos ahorrados por cada cliente.
-- **void record():** Historial de compras realizadas se categorizará por día, mes o año.
+## 🧪 Tech Stack
+
+- **Language:** C++
+- **Interface:** CLI (macOS Terminal optimized)
+- **Libraries Used:** `<iostream>`, `<cstring>`, `<iomanip>`, `<unistd.h>`, `<fstream>`
+
+---
+
+## 🚀 How to Compile & Run
+
+```bash
+# Compile
+g++ base.cpp -o echo-exchange
+
+# Run
+./echo-exchange
